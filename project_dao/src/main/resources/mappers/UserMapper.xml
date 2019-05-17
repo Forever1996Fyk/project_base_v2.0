@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.javaweb.MichaelKai.mapper.UserMapper">
+
+    <!-- 新增用户 -->
+    <insert id="addUser">
+        INSERT INTO tb_user(<include refid="user_add_key"><property name="alias" value="" /></include>)
+        VALUES (<include refid="user_add_val"><property name="alias" value="" /></include>)
+    </insert>
+
+    <!-- 批量新增用户 -->
+    <insert id="addUsers">
+        INSERT INTO tb_user(<include refid="user_add_key"><property name="alias" value="" /></include>)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (<include refid="user_add_val"><property name="alias" value="item."/></include>)
+        </foreach>
+    </insert>
+
+    <!-- 修改用户 -->
+    <update id="editUserById">
+        UPDATE tb_user
+        <set>
+            <include refid="user_set_if"><property name="alias" value="" /></include>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 批量修改用户 -->
+    <update id="editUserByIds">
+        UPDATE tb_user
+        <set>
+            <include refid="user_set_if"><property name="alias" value="" /></include>
+        </set>
+        WHERE id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+    
+    <!-- 删除用户 -->
+    <update id="delUserById">
+        update tb_user SET status = 0 WHERE id = #{id}
+    </update>
+
+    <!-- 批量删除用户 -->
+    <update id="delUserByIds">
+        UPDATE tb_user SET status = 0 WHERE id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 真删除用户 -->
+    <delete id="delUserRealById">
+        DELETE FROM tb_user WHERE id = #{id}
+    </delete>
+
+    <!-- 真批量删除用户 -->
+    <delete id="delUserRealByIds">
+        DELETE FROM tb_user WHERE id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 清空用户 -->
+    <delete id="delUserReals">
+        DELETE FROM tb_user
+    </delete>
+
+    <!-- 查询用户管理列表 -->
+    <select id="getUsers" parameterType="Map" resultType="Map">
+        SELECT <include refid="user_select_cond" />
+        FROM tb_user a
+        <where>
+            <include refid="user_where_if" />
+            AND a.status in (1, 2)
+        </where>
+        ORDER BY a.status ASC, a.create_time DESC
+    </select>
+
+    <!-- 根据id查询用户 -->
+    <select id="getUserById" resultType="Map">
+        SELECT <include refid="user_select_cond_one"/>
+        FROM tb_user a
+        WHERE a.status in (1, 2) and a.id = #{id}
+    </select>
+
+
+    <!-- 查询的选择项, 增删字段时调整 -->
+    <sql id="user_select_cond">
+        a.id id, a.account account, a.user_name userName, a.salt salt, a.password password, a.nick_name nickName, a.user_icon userIcon, a.last_login_time lastLoginTime
+        ,a.age age, a.sex sex, a.marry_flag marryFlag, a.education education, a.phone phone, a.email email, a.prov prov, a.city city, a.dist dist, a.address address
+        ,a.idcard idcard, a.remark remark, a.status status, a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime
+    </sql>
+
+    <!-- (单个)查询的选择项, 增删字段时调整 -->
+    <sql id="user_select_cond_one">
+        a.id id, a.account account, a.user_name userName, a.salt salt, a.password password, a.nick_name nickName, a.user_icon userIcon, a.last_login_time lastLoginTime
+        ,a.age age, a.sex sex, a.marry_flag marryFlag, a.education education, a.phone phone, a.email email, a.prov prov, a.city city, a.dist dist, a.address address
+        ,a.idcard idcard, a.remark remark, a.status status, a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime
+    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="user_where_if">
+        <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
+            AND a.id = #{id}
+        </if>
+        <if test="account != null and account != '' and account != 'null' and account != 'undefined'">
+            AND a.account = #{account}
+        </if>
+        <if test="userName != null and userName != '' and userName != 'null' and userName != 'undefined'">
+            AND a.user_name = #{userName}
+        </if>
+        <if test="nickName != null and nickName != '' and nickName != 'null' and nickName != 'undefined'">
+            AND a.nick_name = #{nickName}
+        </if>
+        <if test="userIcon != null and userIcon != '' and userIcon != 'null' and userIcon != 'undefined'">
+            AND a.user_icon = #{userIcon}
+        </if>
+        <if test="age != null">
+            AND a.age = #{age}
+        </if>
+        <if test="sex != null">
+            AND a.sex = #{sex}
+        </if>
+        <if test="marryFlag != null and marryFlag != '' and marryFlag != 'null' and marryFlag != 'undefined'">
+            AND a.marry_flag = #{marryFlag}
+        </if>
+        <if test="education != null">
+            AND a.education = #{education}
+        </if>
+        <if test="email != null and email != '' and email != 'null' and email != 'undefined'">
+            AND a.email = #{email}
+        </if>
+        <if test="address != null and address != '' and address != 'null' and address != 'undefined'">
+            AND a.address = #{address}
+        </if>
+        <if test="idcard != null and idcard != '' and idcard != 'null' and idcard != 'undefined'">
+            AND a.idcard = #{idcard}
+        </if>
+        <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
+            AND a.remark = #{remark}
+        </if>
+        <if test="status != null">
+            AND a.status = #{status}
+        </if>
+    </sql>
+
+
+    <!-- (批量)新增键, 增删字段时调整 -->
+    <sql id="user_add_key">
+        id,account,user_name,salt,password,nick_name,user_icon,last_login_time,age,sex,marry_flag,education,phone,email
+        ,prov,city,dist,address,idcard,remark,status
+    </sql>
+
+    <!-- (批量)新增值, 增删字段时调整 -->
+    <sql id="user_add_val">
+        #{id},#{account},#{userName},#{salt},#{password},#{nickName},#{userIcon},#{lastLoginTime},#{age},#{sex},#{marryFlag},#{education}
+        ,#{phone},#{email},#{prov},#{city},#{dist},#{address},#{idcard},#{remark},#{status}
+    </sql>
+
+    <!-- (批量修改的条件,增减字段时调整) -->
+    <sql id="user_set_if">
+        <if test="account != null and account != '' and account != 'null' and account != 'undefined'">
+            account = #{account},
+        </if>
+        <if test="userName != null and userName != '' and userName != 'null' and userName != 'undefined'">
+            user_name = #{userName},
+        </if>
+        <if test="nickName != null and nickName != '' and nickName != 'null' and nickName != 'undefined'">
+            nick_name = #{nickName},
+        </if>
+        <if test="userIcon != null and userIcon != '' and userIcon != 'null' and userIcon != 'undefined'">
+            user_icon = #{userIcon},
+        </if>
+        <if test="age != null">
+            age = #{age},
+        </if>
+        <if test="sex != null">
+            sex = #{sex},
+        </if>
+        <if test="marryFlag != null and marryFlag != '' and marryFlag != 'null' and marryFlag != 'undefined'">
+            marry_flag = #{marryFlag},
+        </if>
+        <if test="education != null">
+            education = #{education},
+        </if>
+        <if test="email != null and email != '' and email != 'null' and email != 'undefined'">
+            email = #{account},
+        </if>
+        <if test="address != null and address != '' and address != 'null' and address != 'undefined'">
+            address = #{address},
+        </if>
+        <if test="idcard != null and idcard != '' and idcard != 'null' and idcard != 'undefined'">
+            idcard = #{idcard},
+        </if>
+        <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
+            remark = #{remark},
+        </if>
+        <if test="status != null">
+            status = #{status},
+        </if>
+    </sql>
+
+</mapper>
