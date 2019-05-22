@@ -94,5 +94,17 @@ public interface UserMapper {
      */
     List<Map<String, Object>> getUsers(Map<String, Object> map);
 
+    /**
+     * 根据userId获取所有的角色
+     * @param userId
+     * @return
+     */
+    List<Map<String, Object>> getAllRolesByUserId(String userId);
 
+    /**
+     * 根据userId获取所有的权限
+     * @param userId
+     * @return
+     */
+    List<Map<String, Object>> getAllPermissionsByUserId(String userId);
 }

@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.javaweb.MichaelKai.mapper.PermissionMapper">
+        <!-- 新增 -->
+        <insert id="addPermission">
+            INSERT INTO tb_permission(<include refid="permission_add_key"><property name="alias" value="" /></include>)
+            VALUES (<include refid="permission_add_val"><property name="alias" value="" /></include>)
+        </insert>
+
+        <!-- 批量新增 -->
+        <insert id="addPermissions">
+            INSERT INTO tb_permission(<include refid="permission_add_key"><property name="alias" value="" /></include>)
+            VALUES
+            <foreach collection="list" item="item" index="index" separator=",">
+                (<include refid="permission_add_val"><property name="alias" value="item."/></include>)
+            </foreach>
+        </insert>
+
+        <!-- 修改 -->
+        <update id="editPermissionById">
+            UPDATE tb_permission
+            <set>
+                <include refid="permission_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id = #{id}
+        </update>
+
+        <!-- 批量修改 -->
+        <update id="editPermissionByIds">
+            UPDATE tb_permission
+            <set>
+                <include refid="permission_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id IN
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 删除 -->
+        <update id="delPermissionById">
+            update tb_permission SET status = 0 WHERE id = #{id}
+        </update>
+
+        <!-- 批量删除 -->
+        <update id="delPermissionByIds">
+            UPDATE tb_permission SET status = 0 WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 真删除 -->
+        <delete id="delPermissionRealById">
+            DELETE FROM tb_permission WHERE id = #{id}
+        </delete>
+
+        <!-- 真批量删除 -->
+        <delete id="delPermissionRealByIds">
+            DELETE FROM tb_permission WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </delete>
+
+        <!-- 清空 -->
+        <delete id="delPermissionReals">
+            DELETE FROM tb_permission
+        </delete>
+
+        <!-- 查询用户管理列表 -->
+        <select id="getPermissions" parameterType="Map" resultType="Map">
+            SELECT <include refid="permission_select_cond" />
+            FROM tb_permission a
+            <where>
+                <include refid="permission_where_if" />
+                AND a.status in (1, 2)
+            </where>
+            ORDER BY a.status ASC, a.create_time DESC
+        </select>
+
+        <!-- 根据id查询用户 -->
+        <select id="getPermissionById" resultType="Map">
+            SELECT <include refid="permission_select_cond_one"/>
+            FROM tb_permission a
+            WHERE a.status in (1, 2) and a.id = #{id}
+        </select>
+
+
+        <!-- 查询的选择项, 增删字段时调整 -->
+        <sql id="permission_select_cond">
+                    a.id id ,
+                    a.name name ,
+                    a.pid pid ,
+                    a.sort sort ,
+                    a.level level ,
+                    a.remark remark ,
+                    a.status status ,
+                    a.create_user_id createUserId ,
+                    a.create_time createTime ,
+                    a.update_user_id updateUserId ,
+                    a.update_time updateTime ,
+                    a.url url ,
+                    a.perm perm
+                </sql>
+
+        <!-- (单个)查询的选择项, 增删字段时调整 -->
+        <sql id="permission_select_cond_one">
+                            a.id id ,
+                            a.name name ,
+                            a.pid pid ,
+                            a.sort sort ,
+                            a.level level ,
+                            a.remark remark ,
+                            a.status status ,
+                            a.create_user_id createUserId ,
+                            a.create_time createTime ,
+                            a.update_user_id updateUserId ,
+                            a.update_time updateTime ,
+                            a.url url ,
+                            a.perm perm
+                    </sql>
+
+        <!-- 查询条件 -->
+        <sql id="permission_where_if">
+                                            <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
+                    AND a.id = #{id}
+                </if>
+                                                            <if test="name != null and name != '' and name != 'null' and name != 'undefined'">
+                    AND a.name = #{name}
+                </if>
+                                                            <if test="pid != null and pid != '' and pid != 'null' and pid != 'undefined'">
+                    AND a.pid = #{pid}
+                </if>
+                                                            <if test="sort != null">
+                    AND a.sort = #{sort}
+                </if>
+                                                            <if test="level != null">
+                    AND a.level = #{level}
+                </if>
+                                                            <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
+                    AND a.remark = #{remark}
+                </if>
+                                                            <if test="status != null">
+                    AND a.status = #{status}
+                </if>
+                                                            <if test="createUserId != null and createUserId != '' and createUserId != 'null' and createUserId != 'undefined'">
+                    AND a.create_user_id = #{createUserId}
+                </if>
+                                                            <if test="createTime != null and createTime != '' and createTime != 'null' and createTime != 'undefined'">
+                    AND a.create_time = #{createTime}
+                </if>
+                                                            <if test="updateUserId != null and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined'">
+                    AND a.update_user_id = #{updateUserId}
+                </if>
+                                                            <if test="updateTime != null and updateTime != '' and updateTime != 'null' and updateTime != 'undefined'">
+                    AND a.update_time = #{updateTime}
+                </if>
+                                                            <if test="url != null and url != '' and url != 'null' and url != 'undefined'">
+                    AND a.url = #{url}
+                </if>
+                                                            <if test="perm != null and perm != '' and perm != 'null' and perm != 'undefined'">
+                    AND a.perm = #{perm}
+                </if>
+                                    </sql>
+
+
+        <!-- (批量)新增键, 增删字段时调整 -->
+        <sql id="permission_add_key">
+                            id ,
+                            name ,
+                            pid ,
+                            sort ,
+                            level ,
+                            remark ,
+                            status ,
+                            create_user_id ,
+                            create_time ,
+                            update_user_id ,
+                            update_time ,
+                            url ,
+                            perm ,
+                    </sql>
+
+        <!-- (批量)新增值, 增删字段时调整 -->
+        <sql id="permission_add_val">
+                            #{id} ,
+                            #{name} ,
+                            #{pid} ,
+                            #{sort} ,
+                            #{level} ,
+                            #{remark} ,
+                            #{status} ,
+                            #{createUserId} ,
+                            #{createTime} ,
+                            #{updateUserId} ,
+                            #{updateTime} ,
+                            #{url} ,
+                            #{perm} ,
+                    </sql>
+
+        <!-- (批量修改的条件,增减字段时调整) -->
+        <sql id="permission_set_if">
+                                            <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
+                     a.id = #{id}
+                </if>
+                                                            <if test="name != null and name != '' and name != 'null' and name != 'undefined'">
+                     a.name = #{name}
+                </if>
+                                                            <if test="pid != null and pid != '' and pid != 'null' and pid != 'undefined'">
+                     a.pid = #{pid}
+                </if>
+                                                            <if test="sort != null">
+                     a.sort = #{sort}
+                </if>
+                                                            <if test="level != null">
+                     a.level = #{level}
+                </if>
+                                                            <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
+                     a.remark = #{remark}
+                </if>
+                                                            <if test="status != null">
+                     a.status = #{status}
+                </if>
+                                                            <if test="createUserId != null and createUserId != '' and createUserId != 'null' and createUserId != 'undefined'">
+                     a.create_user_id = #{createUserId}
+                </if>
+                                                            <if test="createTime != null and createTime != '' and createTime != 'null' and createTime != 'undefined'">
+                     a.create_time = #{createTime}
+                </if>
+                                                            <if test="updateUserId != null and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined'">
+                     a.update_user_id = #{updateUserId}
+                </if>
+                                                            <if test="updateTime != null and updateTime != '' and updateTime != 'null' and updateTime != 'undefined'">
+                     a.update_time = #{updateTime}
+                </if>
+                                                            <if test="url != null and url != '' and url != 'null' and url != 'undefined'">
+                     a.url = #{url}
+                </if>
+                                                            <if test="perm != null and perm != '' and perm != 'null' and perm != 'undefined'">
+                     a.perm = #{perm}
+                </if>
+                                    </sql>
+</mapper>

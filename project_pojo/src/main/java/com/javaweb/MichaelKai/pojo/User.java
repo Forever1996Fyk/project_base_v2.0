@@ -9,6 +9,7 @@ import java.util.Date;
  *
  */
 public class User implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	private String id;//用户标识
 	private String account;//用户账号
@@ -31,6 +32,9 @@ public class User implements Serializable{
 	private String remark;//备注
 	private Integer status;//状态:0  已禁用 1 正在使用
 	private String salt;//盐
+
+	public User() {
+	}
 
 	public String getId() {
 		return id;

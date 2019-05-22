@@ -1,9 +1,13 @@
 package com.javaweb.MichaelKai.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.vo.Result;
+import com.javaweb.MichaelKai.common.vo.PageResult;
 import com.javaweb.MichaelKai.pojo.User;
+import com.javaweb.MichaelKai.pojo.UserRole;
 import com.javaweb.MichaelKai.service.UserService;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +30,7 @@ public class UserController {
     /**
      * 添加用户
      * @param user
-     * @return
+     * @returneducation
      */
     @PostMapping("/user")
     public Result addUser(@RequestBody User user) {
@@ -79,17 +83,22 @@ public class UserController {
 
     /**
      * 获取所有用户
-     * @param start 开始记录
-     * @param pageSize 分页大小
+     * @param page 开始记录
+     * @param limit 分页大小
      * @param map 参数
      * @return
      */
     @GetMapping("/getUsers")
-    public Result getUsers(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
-                           @RequestParam(value = "length", required = false, defaultValue = "0") int pageSize,
+    public Result getUsers(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                           @RequestParam(value = "limit", required = false, defaultValue = "30") int limit,
                            @RequestParam Map<String, Object> map) {
-        List<Map<String, Object>> list = userService.getUsers(start, pageSize, map);
-        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), list);
+        PageInfo<Map<String, Object>> pageList = userService.getUsers(page, limit, map);
+        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
+    }
+
+    @PostMapping("/user/roleAssign")
+    public Result roleAssign(@RequestBody UserRole userRole) {
+        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage());
     }
 
 }

@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.javaweb.MichaelKai.mapper.AttachmentMapper">
+        <!-- 新增 -->
+        <insert id="addAttachment">
+            INSERT INTO tb_attachment(<include refid="attachment_add_key"><property name="alias" value="" /></include>)
+            VALUES (<include refid="attachment_add_val"><property name="alias" value="" /></include>)
+        </insert>
+
+        <!-- 批量新增 -->
+        <insert id="addAttachments">
+            INSERT INTO tb_attachment(<include refid="attachment_add_key"><property name="alias" value="" /></include>)
+            VALUES
+            <foreach collection="list" item="item" index="index" separator=",">
+                (<include refid="attachment_add_val"><property name="alias" value="item."/></include>)
+            </foreach>
+        </insert>
+
+        <!-- 修改 -->
+        <update id="editAttachmentById">
+            UPDATE tb_attachment
+            <set>
+                <include refid="attachment_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id = #{id}
+        </update>
+
+        <!-- 批量修改 -->
+        <update id="editAttachmentByIds">
+            UPDATE tb_attachment
+            <set>
+                <include refid="attachment_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id IN
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 删除 -->
+        <update id="delAttachmentById">
+            update tb_attachment SET status = 0 WHERE id = #{id}
+        </update>
+
+        <!-- 批量删除 -->
+        <update id="delAttachmentByIds">
+            UPDATE tb_attachment SET status = 0 WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 真删除 -->
+        <delete id="delAttachmentRealById">
+            DELETE FROM tb_attachment WHERE id = #{id}
+        </delete>
+
+        <!-- 真批量删除 -->
+        <delete id="delAttachmentRealByIds">
+            DELETE FROM tb_attachment WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </delete>
+
+        <!-- 清空 -->
+        <delete id="delAttachmentReals">
+            DELETE FROM tb_attachment
+        </delete>
+
+        <!-- 查询用户管理列表 -->
+        <select id="getAttachments" parameterType="Map" resultType="Map">
+            SELECT <include refid="attachment_select_cond" />
+            FROM tb_attachment a
+            <where>
+                <include refid="attachment_where_if" />
+                AND a.status in (1, 2)
+            </where>
+            ORDER BY a.status ASC, a.create_time DESC
+        </select>
+
+        <!-- 根据id查询用户 -->
+        <select id="getAttachmentById" resultType="Map">
+            SELECT <include refid="attachment_select_cond_one"/>
+            FROM tb_attachment a
+            WHERE a.status in (1, 2) and a.id = #{id}
+        </select>
+
+
+        <!-- 查询的选择项, 增删字段时调整 -->
+        <sql id="attachment_select_cond">
+                    a.id id ,
+                    a.attach_md5 attachMd5 ,
+                    a.attach_sha1 attachSha1 ,
+                    a.attach_origin_title attachOriginTitle ,
+                    a.attach_utily attachUtily ,
+                    a.attach_type attachType ,
+                    a.attach_name attachName ,
+                    a.attach_size attachSize ,
+                    a.attach_postfix attachPostfix ,
+                    a.attachment attachment ,
+                    a.remark remark ,
+                    a.status status ,
+                    a.create_user_id createUserId ,
+                    a.create_time createTime ,
+                    a.update_user_id updateUserId ,
+                    a.update_time updateTime ,
+                    a.attach_path attachPath ,
+                </sql>
+
+        <!-- (单个)查询的选择项, 增删字段时调整 -->
+        <sql id="attachment_select_cond_one">
+                            a.id id ,
+                            a.attach_md5 attachMd5 ,
+                            a.attach_sha1 attachSha1 ,
+                            a.attach_origin_title attachOriginTitle ,
+                            a.attach_utily attachUtily ,
+                            a.attach_type attachType ,
+                            a.attach_name attachName ,
+                            a.attach_size attachSize ,
+                            a.attach_postfix attachPostfix ,
+                            a.attachment attachment ,
+                            a.remark remark ,
+                            a.status status ,
+                            a.create_user_id createUserId ,
+                            a.create_time createTime ,
+                            a.update_user_id updateUserId ,
+                            a.update_time updateTime ,
+                            a.attach_path attachPath ,
+                    </sql>
+
+        <!-- 查询条件 -->
+        <sql id="attachment_where_if">
+                                            <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
+                    AND a.id = #{id}
+                </if>
+                                                            <if test="attachMd5 != null and attachMd5 != '' and attachMd5 != 'null' and attachMd5 != 'undefined'">
+                    AND a.attach_md5 = #{attachMd5}
+                </if>
+                                                            <if test="attachSha1 != null and attachSha1 != '' and attachSha1 != 'null' and attachSha1 != 'undefined'">
+                    AND a.attach_sha1 = #{attachSha1}
+                </if>
+                                                            <if test="attachOriginTitle != null and attachOriginTitle != '' and attachOriginTitle != 'null' and attachOriginTitle != 'undefined'">
+                    AND a.attach_origin_title = #{attachOriginTitle}
+                </if>
+                                                            <if test="attachUtily != null and attachUtily != '' and attachUtily != 'null' and attachUtily != 'undefined'">
+                    AND a.attach_utily = #{attachUtily}
+                </if>
+                                                            <if test="attachType != null">
+                    AND a.attach_type = #{attachType}
+                </if>
+                                                            <if test="attachName != null and attachName != '' and attachName != 'null' and attachName != 'undefined'">
+                    AND a.attach_name = #{attachName}
+                </if>
+                                                            <if test="attachSize != null and attachSize != '' and attachSize != 'null' and attachSize != 'undefined'">
+                    AND a.attach_size = #{attachSize}
+                </if>
+                                                            <if test="attachPostfix != null and attachPostfix != '' and attachPostfix != 'null' and attachPostfix != 'undefined'">
+                    AND a.attach_postfix = #{attachPostfix}
+                </if>
+                                                            <if test="attachment != null and attachment != '' and attachment != 'null' and attachment != 'undefined'">
+                    AND a.attachment = #{attachment}
+                </if>
+                                                            <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
+                    AND a.remark = #{remark}
+                </if>
+                                                            <if test="status != null">
+                    AND a.status = #{status}
+                </if>
+                                                            <if test="createUserId != null and createUserId != '' and createUserId != 'null' and createUserId != 'undefined'">
+                    AND a.create_user_id = #{createUserId}
+                </if>
+                                                            <if test="createTime != null and createTime != '' and createTime != 'null' and createTime != 'undefined'">
+                    AND a.create_time = #{createTime}
+                </if>
+                                                            <if test="updateUserId != null and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined'">
+                    AND a.update_user_id = #{updateUserId}
+                </if>
+                                                            <if test="updateTime != null and updateTime != '' and updateTime != 'null' and updateTime != 'undefined'">
+                    AND a.update_time = #{updateTime}
+                </if>
+                                                            <if test="attachPath != null and attachPath != '' and attachPath != 'null' and attachPath != 'undefined'">
+                    AND a.attach_path = #{attachPath}
+                </if>
+                                    </sql>
+
+
+        <!-- (批量)新增键, 增删字段时调整 -->
+        <sql id="attachment_add_key">
+                            
+                    id ,
+                                            
+                    attach_md5 ,
+                                            
+                    attach_sha1 ,
+                                            
+                    attach_origin_title ,
+                                            
+                    attach_utily ,
+                                            
+                    attach_type ,
+                                            
+                    attach_name ,
+                                            
+                    attach_size ,
+                                            
+                    attach_postfix ,
+                                            
+                    attachment ,
+                                            
+                    remark ,
+                                            
+                    status ,
+                                                                                                                                                            
+                    attach_path
+                                    </sql>
+
+        <!-- (批量)新增值, 增删字段时调整 -->
+        <sql id="attachment_add_val">
+            #{id} ,
+            #{attachMd5} ,
+            #{attachSha1} ,
+            #{attachOriginTitle} ,
+            #{attachUtily} ,
+            #{attachType} ,
+            #{attachName} ,
+            #{attachSize} ,
+            #{attachPostfix} ,
+            #{attachment} ,
+            #{remark} ,
+            #{status} ,
+            #{createUserId} ,
+            #{createTime} ,
+            #{updateUserId} ,
+            #{updateTime} ,
+            #{attachPath}
+        </sql>
+
+        <!-- (批量修改的条件,增减字段时调整) -->
+        <sql id="attachment_set_if">
+            <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
+                 a.id = #{id}
+            </if>
+            <if test="attachMd5 != null and attachMd5 != '' and attachMd5 != 'null' and attachMd5 != 'undefined'">
+                 a.attach_md5 = #{attachMd5}
+            </if>
+            <if test="attachSha1 != null and attachSha1 != '' and attachSha1 != 'null' and attachSha1 != 'undefined'">
+                 a.attach_sha1 = #{attachSha1}
+            </if>
+            <if test="attachOriginTitle != null and attachOriginTitle != '' and attachOriginTitle != 'null' and attachOriginTitle != 'undefined'">
+                 a.attach_origin_title = #{attachOriginTitle}
+            </if>
+            <if test="attachUtily != null and attachUtily != '' and attachUtily != 'null' and attachUtily != 'undefined'">
+                 a.attach_utily = #{attachUtily}
+            </if>
+                                                        <if test="attachType != null">
+                 a.attach_type = #{attachType}
+            </if>
+                                                        <if test="attachName != null and attachName != '' and attachName != 'null' and attachName != 'undefined'">
+                 a.attach_name = #{attachName}
+            </if>
+                                                        <if test="attachSize != null and attachSize != '' and attachSize != 'null' and attachSize != 'undefined'">
+                 a.attach_size = #{attachSize}
+            </if>
+                                                        <if test="attachPostfix != null and attachPostfix != '' and attachPostfix != 'null' and attachPostfix != 'undefined'">
+                 a.attach_postfix = #{attachPostfix}
+            </if>
+                                                        <if test="attachment != null and attachment != '' and attachment != 'null' and attachment != 'undefined'">
+                 a.attachment = #{attachment}
+            </if>
+                                                        <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
+                 a.remark = #{remark}
+            </if>
+                                                        <if test="status != null">
+                 a.status = #{status}
+            </if>
+                                                        <if test="createUserId != null and createUserId != '' and createUserId != 'null' and createUserId != 'undefined'">
+                 a.create_user_id = #{createUserId}
+            </if>
+                                                        <if test="createTime != null and createTime != '' and createTime != 'null' and createTime != 'undefined'">
+                 a.create_time = #{createTime}
+            </if>
+                                                        <if test="updateUserId != null and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined'">
+                 a.update_user_id = #{updateUserId}
+            </if>
+                                                        <if test="updateTime != null and updateTime != '' and updateTime != 'null' and updateTime != 'undefined'">
+                 a.update_time = #{updateTime}
+            </if>
+                                                        <if test="attachPath != null and attachPath != '' and attachPath != 'null' and attachPath != 'undefined'">
+                 a.attach_path = #{attachPath}
+            </if>
+        </sql>
+</mapper>

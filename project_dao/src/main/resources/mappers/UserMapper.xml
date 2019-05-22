@@ -87,6 +87,32 @@
         WHERE a.status in (1, 2) and a.id = #{id}
     </select>
 
+    <!-- 获取用户角色 -->
+    <select id="getAllRolesByUserId" resultType="Map">
+        SELECT a.id id ,
+                    a.role_name roleName ,
+                    a.remark remark ,
+                    a.status status ,
+                    a.create_user_id createUserId ,
+                    a.create_time createTime ,
+                    a.update_user_id updateUserId ,
+                    a.update_time updateTime
+        FROM tb_role a INNER JOIN tb_user_role b on b.role_id = a.id
+        WHERE b.user_id = #{userId}
+    </select>
+
+    <!-- 获取用户权限 -->
+    <select id="getAllPermissionsByUserId" resultType="Map">
+        SELECT b.id id, b.name name, b.pid pid, b.sort sort, b.level level, b.remark remark
+        FROM tb_permission  b
+        LEFT JOIN tb_role_permission c on c.permission_id = b.id
+        WHERE c.role_id IN (
+            SELECT a.role_id
+            FROM tb_user_role a
+            WHERE a.user_id = #{userId}
+        )
+    </select>
+
 
     <!-- 查询的选择项, 增删字段时调整 -->
     <sql id="user_select_cond">
@@ -181,7 +207,7 @@
         <if test="sex != null">
             sex = #{sex},
         </if>
-        <if test="marryFlag != null and marryFlag != '' and marryFlag != 'null' and marryFlag != 'undefined'">
+        <if test="marryFlag != null">
             marry_flag = #{marryFlag},
         </if>
         <if test="education != null">

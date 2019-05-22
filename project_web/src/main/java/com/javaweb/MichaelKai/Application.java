@@ -1,10 +1,8 @@
 package com.javaweb.MichaelKai;
 
-import com.javaweb.MichaelKai.common.utils.IdWorker;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
 /**
  * @program: project_base

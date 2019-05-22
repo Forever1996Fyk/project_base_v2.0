@@ -1,119 +1,198 @@
 package com.javaweb.MichaelKai.pojo;
 
 import java.io.Serializable;
+
+
 /**
- * 实体类
- * @author Administrator
- *
+ * 
+ * 
+ * @author YuKai Fan
+ * @create 2019-05-20 16:53:28
  */
-public class Attachment implements Serializable{
-
-	private String id;//附件标识
-	private String attach_md5;//文件md5
-	private String attach_sha1;//文件SHA1值
-	private String attach_origin_title;//文件原名
-	private String attach_utily;//附件属性，例身份证证明
-	private Integer attach_type;//附件类型0图片1附件
-	private String attach_name;//文件名
-	private Long attach_size;//文件大小
-	private String attach_postfix;//文件后缀
-	private String attachment;//附件
-	private String remark;//备注
-	private Integer status;//状态:0  已禁用 1 正在使用
-	private String attach_path;//文件路径
-
+public class Attachment implements Serializable {
+	private static final long serialVersionUID = 1L;
 	
-	public String getId() {		
-		return id;
-	}
+	//附件标识
+	private String id;
+	//文件md5
+	private String attachMd5;
+	//文件SHA1值
+	private String attachSha1;
+	//文件原名
+	private String attachOriginTitle;
+	//附件属性，例身份证证明
+	private String attachUtily;
+	//附件类型0图片1附件
+	private Integer attachType;
+	//文件名
+	private String attachName;
+	//文件大小
+	private Long attachSize;
+	//文件后缀
+	private String attachPostfix;
+	//附件
+	private String attachment;
+	//备注
+	private String remark;
+	//状态:0  已禁用 1 正在使用
+	private Integer status;
+	//文件路径
+	private String attachPath;
+	
+	/**
+	 * 设置：附件标识
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
-
-	public String getAttach_md5() {		
-		return attach_md5;
+	/**
+	 * 获取：附件标识
+	 */
+	public String getId() {
+		return id;
 	}
-	public void setAttach_md5(String attach_md5) {
-		this.attach_md5 = attach_md5;
+	/**
+	 * 设置：文件md5
+	 */
+	public void setAttachMd5(String attachMd5) {
+		this.attachMd5 = attachMd5;
 	}
-
-	public String getAttach_sha1() {		
-		return attach_sha1;
+	/**
+	 * 获取：文件md5
+	 */
+	public String getAttachMd5() {
+		return attachMd5;
 	}
-	public void setAttach_sha1(String attach_sha1) {
-		this.attach_sha1 = attach_sha1;
+	/**
+	 * 设置：文件SHA1值
+	 */
+	public void setAttachSha1(String attachSha1) {
+		this.attachSha1 = attachSha1;
 	}
-
-	public String getAttach_origin_title() {		
-		return attach_origin_title;
+	/**
+	 * 获取：文件SHA1值
+	 */
+	public String getAttachSha1() {
+		return attachSha1;
 	}
-	public void setAttach_origin_title(String attach_origin_title) {
-		this.attach_origin_title = attach_origin_title;
+	/**
+	 * 设置：文件原名
+	 */
+	public void setAttachOriginTitle(String attachOriginTitle) {
+		this.attachOriginTitle = attachOriginTitle;
 	}
-
-	public String getAttach_utily() {		
-		return attach_utily;
+	/**
+	 * 获取：文件原名
+	 */
+	public String getAttachOriginTitle() {
+		return attachOriginTitle;
 	}
-	public void setAttach_utily(String attach_utily) {
-		this.attach_utily = attach_utily;
+	/**
+	 * 设置：附件属性，例身份证证明
+	 */
+	public void setAttachUtily(String attachUtily) {
+		this.attachUtily = attachUtily;
 	}
-
-	public Integer getAttach_type() {		
-		return attach_type;
+	/**
+	 * 获取：附件属性，例身份证证明
+	 */
+	public String getAttachUtily() {
+		return attachUtily;
 	}
-	public void setAttach_type(Integer attach_type) {
-		this.attach_type = attach_type;
+	/**
+	 * 设置：附件类型0图片1附件
+	 */
+	public void setAttachType(Integer attachType) {
+		this.attachType = attachType;
 	}
-
-	public String getAttach_name() {		
-		return attach_name;
+	/**
+	 * 获取：附件类型0图片1附件
+	 */
+	public Integer getAttachType() {
+		return attachType;
 	}
-	public void setAttach_name(String attach_name) {
-		this.attach_name = attach_name;
+	/**
+	 * 设置：文件名
+	 */
+	public void setAttachName(String attachName) {
+		this.attachName = attachName;
 	}
-
-	public Long getAttach_size() {		
-		return attach_size;
+	/**
+	 * 获取：文件名
+	 */
+	public String getAttachName() {
+		return attachName;
 	}
-	public void setAttach_size(Long attach_size) {
-		this.attach_size = attach_size;
+	/**
+	 * 设置：文件大小
+	 */
+	public void setAttachSize(Long attachSize) {
+		this.attachSize = attachSize;
 	}
-
-	public String getAttach_postfix() {		
-		return attach_postfix;
+	/**
+	 * 获取：文件大小
+	 */
+	public Long getAttachSize() {
+		return attachSize;
 	}
-	public void setAttach_postfix(String attach_postfix) {
-		this.attach_postfix = attach_postfix;
+	/**
+	 * 设置：文件后缀
+	 */
+	public void setAttachPostfix(String attachPostfix) {
+		this.attachPostfix = attachPostfix;
 	}
-
-	public String getAttachment() {		
-		return attachment;
+	/**
+	 * 获取：文件后缀
+	 */
+	public String getAttachPostfix() {
+		return attachPostfix;
 	}
+	/**
+	 * 设置：附件
+	 */
 	public void setAttachment(String attachment) {
 		this.attachment = attachment;
 	}
-
-	public String getRemark() {		
-		return remark;
+	/**
+	 * 获取：附件
+	 */
+	public String getAttachment() {
+		return attachment;
 	}
+	/**
+	 * 设置：备注
+	 */
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-
-	public Integer getStatus() {		
-		return status;
+	/**
+	 * 获取：备注
+	 */
+	public String getRemark() {
+		return remark;
 	}
+	/**
+	 * 设置：状态:0  已禁用 1 正在使用
+	 */
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-
-	public String getAttach_path() {
-		return attach_path;
+	/**
+	 * 获取：状态:0  已禁用 1 正在使用
+	 */
+	public Integer getStatus() {
+		return status;
 	}
-	public void setAttach_path(String attach_path) {
-		this.attach_path = attach_path;
+	/**
+	 * 设置：文件路径
+	 */
+	public void setAttachPath(String attachPath) {
+		this.attachPath = attachPath;
 	}
-
-
-	
+	/**
+	 * 获取：文件路径
+	 */
+	public String getAttachPath() {
+		return attachPath;
+	}
 }
