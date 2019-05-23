@@ -163,8 +163,8 @@ layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
         });
     });
 
-    /* get方式异步 */
-    $(document).on("click", ".ajax-get", function (e) {
+    /* 删除del方式异步 */
+    $(document).on("click", ".ajax-del", function (e) {
         e.preventDefault();
         var msg = $(this).data("msg");
         if (msg !== undefined) {
@@ -172,8 +172,12 @@ layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
                 title: '提示',
                 btn: ['确认', '取消']
             }, function () {
-                $.get(e.target.href, function (result) {
-                    $.fn.Messager(result);
+                $.ajax({
+                    url: e.target.href,
+                    type: 'DELETE',
+                    success:function (res) {
+                        $.fn.Messager(res);
+                    }
                 });
             });
         } else {
@@ -201,6 +205,28 @@ layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
                     $.fn.Messager(res);
                 }
             });
+        }
+
+    });
+
+    // ajax方式异步-操作状态
+    $(".ajax-status-thy").on("click", function (e) {
+        e.preventDefault();
+        var checked = [];
+        var tdcheckbox = $(".timo-table td .timo-checkbox :checkbox:checked");
+        if (tdcheckbox.length > 0) {
+            tdcheckbox.each(function (key, val) {
+                checked.push( $(val).attr("value"));
+            });
+            $.ajax({
+                url: e.target.href + checked,
+                type: 'DELETE',
+                success:function (res) {
+                    $.fn.Messager(res);
+                }
+            });
+        } else {
+            layer.msg('请选择一条记录');
         }
 
     });

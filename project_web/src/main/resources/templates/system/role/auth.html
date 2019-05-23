@@ -20,9 +20,9 @@
 </head>
 <body>
 <div class="layui-form timo-compile">
-    <ul id="authTree" class="ztree" th:attr="data-url=@{/system/role/authList(ids=${id})}"></ul>
+    <ul id="authTree" class="ztree" th:attr="data-url=@{/api/role/authList(id=${id})}"></ul>
     <div class="layui-form-item timo-finally">
-        <button id="submit" class="layui-btn" th:attr="data-url=@{/system/role/auth}, data-id=${id}"><i class="fa fa-check-circle"></i> 保存</button>
+        <button id="submit" class="layui-btn" th:attr="data-url=@{/api/role/saveAuth}, data-id=${id}"><i class="fa fa-check-circle"></i> 保存</button>
         <button class="layui-btn btn-secondary close-popup"><i class="fa fa-times-circle"></i> 关闭</button>
     </div>
 </div>
@@ -53,7 +53,7 @@
                 var menu = {
                     id: item.id,
                     pId: item.pid,
-                    name: item.title
+                    name: item.name
                 };
                 if(item.pid === 0){
                     menu.open = true;
@@ -64,12 +64,12 @@
                         pId: item.id,
                         name: "列表"
                     };
-                    if(item.remark === "auth:true"){
+                    if(item.selected === 1){
                         index.checked = true;
                     }
                     zNodes.push(index);
                 }
-                if(item.remark === "auth:true"){
+                if(item.selected === 1){
                     menu.checked = true;
                 }
                 zNodes.push(menu);
@@ -81,17 +81,30 @@
             var zTreeObj = $.fn.zTree.getZTreeObj("authTree");
             var authList = zTreeObj.getCheckedNodes(true);
             var authIds = [];
-            authIds.push("id="+$(this).data("id"));
+            var obj = {roleId: '', permissionIds: ''};
+            obj.roleId = $(this).data("id");
             authList.forEach(function(item){
                 if(item.id > 0){
-                    authIds.push("authId="+item.id);
+                    //obj.permissionId = item.id
+                    /*if (obj.permissionId !== '') {
+                        obj[v.name] = obj[v.name] + "," + v.value;
+                    } else {
+                        obj[v.name] = v.value;
+                    }*/
+                    authIds.push(item.id);
                 }
             });
-            $.post($(this).data("url"), authIds.join("&"), function(result){
-                if (result.data == null) {
-                    result.data = 'submit[refresh]';
+            authIds.join(",");
+            obj.permissionIds = authIds;
+            console.log(obj);
+            $.ajax({
+                url: $(this).data("url"),
+                type: 'post',
+                data: JSON.stringify(obj),
+                contentType: 'application/json',
+                success:function (res) {
+                    $.fn.Messager(res);
                 }
-                $.fn.Messager(result);
             });
         });
     });

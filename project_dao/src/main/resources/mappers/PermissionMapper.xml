@@ -168,78 +168,55 @@
 
         <!-- (批量)新增键, 增删字段时调整 -->
         <sql id="permission_add_key">
-                            id ,
-                            name ,
-                            pid ,
-                            sort ,
-                            level ,
-                            remark ,
-                            status ,
-                            create_user_id ,
-                            create_time ,
-                            update_user_id ,
-                            update_time ,
-                            url ,
-                            perm ,
-                    </sql>
+            id ,
+            name ,
+            pid ,
+            sort ,
+            level ,
+            remark ,
+            status ,
+            url ,
+            perm
+        </sql>
 
         <!-- (批量)新增值, 增删字段时调整 -->
         <sql id="permission_add_val">
-                            #{id} ,
-                            #{name} ,
-                            #{pid} ,
-                            #{sort} ,
-                            #{level} ,
-                            #{remark} ,
-                            #{status} ,
-                            #{createUserId} ,
-                            #{createTime} ,
-                            #{updateUserId} ,
-                            #{updateTime} ,
-                            #{url} ,
-                            #{perm} ,
-                    </sql>
+            #{id} ,
+            #{name} ,
+            #{pid} ,
+            #{sort} ,
+            #{level} ,
+            #{remark} ,
+            #{status} ,
+            #{url} ,
+            #{perm}
+        </sql>
 
         <!-- (批量修改的条件,增减字段时调整) -->
         <sql id="permission_set_if">
-                                            <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
-                     a.id = #{id}
-                </if>
-                                                            <if test="name != null and name != '' and name != 'null' and name != 'undefined'">
-                     a.name = #{name}
-                </if>
-                                                            <if test="pid != null and pid != '' and pid != 'null' and pid != 'undefined'">
-                     a.pid = #{pid}
-                </if>
-                                                            <if test="sort != null">
-                     a.sort = #{sort}
-                </if>
-                                                            <if test="level != null">
-                     a.level = #{level}
-                </if>
-                                                            <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
-                     a.remark = #{remark}
-                </if>
-                                                            <if test="status != null">
-                     a.status = #{status}
-                </if>
-                                                            <if test="createUserId != null and createUserId != '' and createUserId != 'null' and createUserId != 'undefined'">
-                     a.create_user_id = #{createUserId}
-                </if>
-                                                            <if test="createTime != null and createTime != '' and createTime != 'null' and createTime != 'undefined'">
-                     a.create_time = #{createTime}
-                </if>
-                                                            <if test="updateUserId != null and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined'">
-                     a.update_user_id = #{updateUserId}
-                </if>
-                                                            <if test="updateTime != null and updateTime != '' and updateTime != 'null' and updateTime != 'undefined'">
-                     a.update_time = #{updateTime}
-                </if>
-                                                            <if test="url != null and url != '' and url != 'null' and url != 'undefined'">
-                     a.url = #{url}
-                </if>
-                                                            <if test="perm != null and perm != '' and perm != 'null' and perm != 'undefined'">
-                     a.perm = #{perm}
-                </if>
-                                    </sql>
+                                                                                                    <if test="name != null and name != '' and name != 'null' and name != 'undefined'">
+                            name = #{name},
+                        </if>
+                                                                                                            <if test="pid != null and pid != '' and pid != 'null' and pid != 'undefined'">
+                            pid = #{pid},
+                        </if>
+                                                                                                                <if test="sort != null">
+                        sort = #{sort},
+                    </if>
+                                                                                                                <if test="level != null">
+                        level = #{level},
+                    </if>
+                                                                                                            <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
+                            remark = #{remark},
+                        </if>
+                                                                                                                <if test="status != null">
+                        status = #{status},
+                    </if>
+                                                                                                            <if test="url != null and url != '' and url != 'null' and url != 'undefined'">
+                            url = #{url},
+                        </if>
+                                                                                                            <if test="perm != null and perm != '' and perm != 'null' and perm != 'undefined'">
+                            perm = #{perm}
+                        </if>
+                                                        </sql>
 </mapper>

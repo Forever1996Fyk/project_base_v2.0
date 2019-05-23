@@ -7,11 +7,13 @@ import com.javaweb.MichaelKai.common.utils.IdWorker;
 import com.javaweb.MichaelKai.mapper.UserMapper;
 import com.javaweb.MichaelKai.pojo.Role;
 import com.javaweb.MichaelKai.pojo.User;
+import com.javaweb.MichaelKai.pojo.UserRole;
 import com.javaweb.MichaelKai.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -85,5 +87,31 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Map<String, Object>> getAllPermissionsByUserId(String userId) {
         return userMapper.getAllPermissionsByUserId(userId);
+    }
+
+    @Override
+    public void roleAssign(UserRole userRole) {
+        //先删除表中的角色
+        userMapper.delUserRole(userRole.getUserId());
+
+        //在新增角色
+        try {
+            if (userRole.getRoleId() != null) {
+                String[] roleIds = userRole.getRoleId().split(",");
+                if (roleIds.length > 0) {
+                    List<UserRole> list = new ArrayList<>();
+                    for (String roleId : roleIds) {
+                        UserRole uR = new UserRole();
+                        uR.setUserId(userRole.getUserId());
+                        uR.setRoleId(roleId);
+
+                        list.add(uR);
+                    }
+                    userMapper.addUserRole(list);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

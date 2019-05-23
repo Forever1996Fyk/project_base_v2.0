@@ -2,12 +2,11 @@ package com.javaweb.MichaelKai.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
-import com.javaweb.MichaelKai.common.vo.Result;
 import com.javaweb.MichaelKai.common.vo.PageResult;
+import com.javaweb.MichaelKai.common.vo.Result;
 import com.javaweb.MichaelKai.pojo.User;
 import com.javaweb.MichaelKai.pojo.UserRole;
 import com.javaweb.MichaelKai.service.UserService;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -96,8 +95,14 @@ public class UserController {
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
     }
 
+    /**
+     * 分配角色
+     * @param userRole
+     * @return
+     */
     @PostMapping("/user/roleAssign")
     public Result roleAssign(@RequestBody UserRole userRole) {
+        userService.roleAssign(userRole);
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage());
     }
 

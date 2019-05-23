@@ -113,6 +113,20 @@
         )
     </select>
 
+    <!-- 添加用户角色 -->
+    <insert id="addUserRole">
+        INSERT INTO tb_user_role(user_id, role_id)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userId}, #{item.roleId})
+        </foreach>
+    </insert>
+
+    <!-- 删除用户角色 -->
+    <delete id="delUserRole">
+        DELETE FROM tb_user_role WHERE user_id = #{userId}
+    </delete>
+
 
     <!-- 查询的选择项, 增删字段时调整 -->
     <sql id="user_select_cond">

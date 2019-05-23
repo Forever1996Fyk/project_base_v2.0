@@ -2,6 +2,7 @@ package com.javaweb.MichaelKai.service;
 
 import com.github.pagehelper.PageInfo;
 import com.javaweb.MichaelKai.pojo.Role;
+import com.javaweb.MichaelKai.pojo.RolePermission;
 import com.javaweb.MichaelKai.pojo.User;
 import org.apache.ibatis.annotations.Param;
 
@@ -76,4 +77,17 @@ public interface RoleService {
      * @return 结果集合
      */
     List<Map<String, Object>> getRoles(Map<String, Object> map);
-}
+
+  /**
+   * 获取角色权限
+   * @param id
+   * @return
+   */
+    List<Map<String,Object>> getAllPermissionsByRoleId(String id);
+
+  /**
+   * 保存角色权限
+   * @param rolePermission
+   */
+  RolePermission saveRoleAuth(RolePermission rolePermission);
+ }

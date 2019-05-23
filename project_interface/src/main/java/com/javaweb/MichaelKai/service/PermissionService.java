@@ -2,6 +2,7 @@ package com.javaweb.MichaelKai.service;
 
 import com.javaweb.MichaelKai.pojo.Permission;
 import org.apache.ibatis.annotations.Param;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Map;
   * @program: project_base
   * @description: 权限表
   * @author: YuKai Fan
-  * @create: 2019-05-20 15:32:55
+  * @create: 2019-05-23 10:45:55
   **/
 public interface PermissionService {
 	
@@ -66,7 +67,7 @@ public interface PermissionService {
      * @param map 参数
      * @return
      */
-    List<Map<String, Object>> getPermissions(int start, int pageSize, Map<String, Object> map);
+    PageInfo<Map<String, Object>> getPermissions(int start, int pageSize, Map<String, Object> map);
 
     /**
      * 获取所有数据.

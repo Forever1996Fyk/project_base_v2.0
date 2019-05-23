@@ -3,6 +3,7 @@ package com.javaweb.MichaelKai.mapper;
 import java.util.List;
 import java.util.Map;
 import com.javaweb.MichaelKai.pojo.Role;
+import com.javaweb.MichaelKai.pojo.RolePermission;
 import org.apache.ibatis.annotations.Param;
 
 
@@ -95,4 +96,22 @@ public interface RoleMapper {
      */
     List<Map<String, Object>> getRoles(Map<String, Object> map);
 
+    /**
+     * 获取角色权限
+     * @param roleId
+     * @return
+     */
+    List<Map<String,Object>> getAllPermissionsByRoleId(String roleId);
+
+    /**
+     * 根据roleId删除角色权限
+     * @param roleId
+     */
+    void delPermissonsByRoleId(String roleId);
+
+    /**
+     * 添加角色权限
+     * @param list
+     */
+    void addRolePermission(@Param(value = "list")List<Map<String, Object>> list);
 }

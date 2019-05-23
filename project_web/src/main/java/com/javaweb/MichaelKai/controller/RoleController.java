@@ -3,6 +3,8 @@ package com.javaweb.MichaelKai.controller;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.vo.Result;
 import com.javaweb.MichaelKai.pojo.Role;
+import com.javaweb.MichaelKai.pojo.RolePermission;
+import com.javaweb.MichaelKai.service.PermissionService;
 import com.javaweb.MichaelKai.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,8 @@ import java.util.Map;
 public class RoleController {
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private PermissionService permissionService;
 
     /**
      * 添加
@@ -95,6 +99,42 @@ public class RoleController {
         PageInfo<Map<String, Object>> pageList = roleService.getRoles(start, limit, map);
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
     }
+
+    /**
+     * 获取角色权限
+     * @param id
+     * @return
+     */
+    @GetMapping("/role/authList")
+    public Result getRoles(@RequestParam String id) {
+        //获取所有权限
+        List<Map<String, Object>> permissions = permissionService.getPermissions(null);
+
+        if (permissions.size() > 0) {
+            //根据roleId获取该角色的权限
+            List<Map<String, Object>> allPermissionsByRoleId = roleService.getAllPermissionsByRoleId(id);
+            //判断是否包含
+            for (Map<String, Object> permission : permissions) {
+                if (allPermissionsByRoleId.contains(permission)) {
+                    permission.put("selected", 1);
+                } else {
+                    permission.put("selected", 0);
+                }
+            }
+        }
+
+        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), permissions);
+    }
+
+    /**
+     * 保存角色权限
+     * @return
+     */
+    @PostMapping("/role/saveAuth")
+    public Result saveRoleAuth(@RequestBody RolePermission rolePermission) {
+        return new Result(true, ResultEnum.SUCCESS.getValue(), "保存" + ResultEnum.SUCCESS.getMessage(), roleService.saveRoleAuth(rolePermission));
+    }
+
 
 
 }

@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Param;
  * 权限表
  * 
  * @author earl
- * @date 2019-05-20 15:32:55
+ * @date 2019-05-23 10:45:55
  */
 public interface PermissionMapper {
 

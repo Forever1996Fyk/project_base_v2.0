@@ -3,6 +3,7 @@ package com.javaweb.MichaelKai.service;
 import com.github.pagehelper.PageInfo;
 import com.javaweb.MichaelKai.pojo.Role;
 import com.javaweb.MichaelKai.pojo.User;
+import com.javaweb.MichaelKai.pojo.UserRole;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -86,4 +87,9 @@ public interface UserService {
      */
     List<Map<String, Object>> getAllPermissionsByUserId(String userId);
 
+    /**
+     * 角色分配
+     * @param userRole
+     */
+    void roleAssign(UserRole userRole);
 }

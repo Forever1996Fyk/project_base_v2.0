@@ -118,7 +118,7 @@
                 var nav = {
                     id: val.id,
                     pId: val.pid,
-                    name: val.title
+                    name: val.name
                 };
                 if(nav.pId == 0){
                     nav.isParent = true;
@@ -166,7 +166,7 @@
             self.expandTree(treeList, rank, function (item, rank) {
                 var callback = template.replace(regex,function($1){
                     var point = $1.substring(2,$1.length-2);
-                    if(point == "title"){
+                    if(point == "name"){
                         var icon = self.options.treeIcon;
                         if(item.children == undefined){
                             icon = self.options.treeFill;
@@ -296,7 +296,7 @@
                 var nav = {
                     id: val.id,
                     pId: val.pid,
-                    name: val.title
+                    name: val.name
                 };
                 if(nav.pId == 0){
                     nav.isParent = true;

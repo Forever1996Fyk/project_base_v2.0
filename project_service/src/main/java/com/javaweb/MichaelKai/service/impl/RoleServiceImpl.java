@@ -3,6 +3,7 @@ package com.javaweb.MichaelKai.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.javaweb.MichaelKai.common.enums.StatusEnum;
 import com.javaweb.MichaelKai.common.utils.IdWorker;
+import com.javaweb.MichaelKai.pojo.RolePermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,12 +11,12 @@ import com.javaweb.MichaelKai.service.RoleService;
 import com.javaweb.MichaelKai.mapper.RoleMapper;
 import com.javaweb.MichaelKai.pojo.Role;
 import com.github.pagehelper.PageInfo;
+import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
- /**
+/**
   * @program: project_base
   * @description: 角色表
   * @author: YuKai Fan
@@ -76,4 +77,31 @@ public class RoleServiceImpl implements  RoleService {
     public List<Map<String, Object>> getRoles(Map<String, Object> map) {
         return roleMapper.getRoles(map);
     }
-}
+
+     @Override
+     public List<Map<String, Object>> getAllPermissionsByRoleId(String id) {
+         return roleMapper.getAllPermissionsByRoleId(id);
+     }
+
+     @Override
+     public RolePermission saveRoleAuth(RolePermission rolePermission) {
+         //先删除该角色的权限
+         roleMapper.delPermissonsByRoleId(rolePermission.getRoleId());
+
+         //再新增权限
+         Set<String> permissionIds = rolePermission.getPermissionIds();
+         if (!CollectionUtils.isEmpty(permissionIds)) {
+             List<Map<String, Object>> list = new ArrayList<>();
+             for (String permissionId : permissionIds) {
+                 Map<String, Object> map = new HashMap<>();
+                 map.put("roleId", rolePermission.getRoleId());
+                 map.put("permissionId", permissionId);
+
+                 list.add(map);
+             }
+             roleMapper.addRolePermission(list);
+         }
+
+         return rolePermission;
+     }
+ }

@@ -87,6 +87,39 @@
             WHERE a.status in (1, 2) and a.id = #{id}
         </select>
 
+        <!-- 根据roleId删除角色权限 -->
+        <delete id="delPermissonsByRoleId">
+            DELETE FROM tb_role_permission where role_id = #{roleId}
+        </delete>
+
+        <!-- 添加角色权限 -->
+        <insert id="addRolePermission">
+            INSERT INTO tb_role_permission (role_id, permission_id)
+            VALUES
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.roleId}, #{item.permissionId})
+            </foreach>
+        </insert>
+
+        <!-- 查询角色权限 -->
+        <select id="getAllPermissionsByRoleId" resultType="Map">
+            SELECT a.id id ,
+                    a.name name ,
+                    a.pid pid ,
+                    a.sort sort ,
+                    a.level level ,
+                    a.remark remark ,
+                    a.status status ,
+                    a.create_user_id createUserId ,
+                    a.create_time createTime ,
+                    a.update_user_id updateUserId ,
+                    a.update_time updateTime ,
+                    a.url url ,
+                    a.perm perm
+            FROM tb_permission a LEFT JOIN tb_role_permission b on b.permission_id = a.id
+            WHERE b.role_id = #{roleId}
+        </select>
+
 
         <!-- 查询的选择项, 增删字段时调整 -->
         <sql id="role_select_cond">

@@ -1,6 +1,7 @@
 package com.javaweb.MichaelKai.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.javaweb.MichaelKai.common.enums.StatusEnum;
 import com.javaweb.MichaelKai.common.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.javaweb.MichaelKai.service.PermissionService;
 import com.javaweb.MichaelKai.mapper.PermissionMapper;
 import com.javaweb.MichaelKai.pojo.Permission;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +19,7 @@ import java.util.Map;
   * @program: project_base
   * @description: 权限表
   * @author: YuKai Fan
-  * @create: 2019-05-20 15:32:55
+  * @create: 2019-05-23 10:45:55
   **/
 @Service
 @Transactional
@@ -32,6 +34,7 @@ public class PermissionServiceImpl implements  PermissionService {
     @Override
     public Permission addPermission(Permission permission) {
         permission.setId(String.valueOf(idWorker.nextId()));
+        permission.setStatus(StatusEnum.Normal.getValue());
         permissionMapper.addPermission(permission);
         return permission;
     }
@@ -62,9 +65,11 @@ public class PermissionServiceImpl implements  PermissionService {
     }
 
     @Override
-    public List<Map<String, Object>> getPermissions(int start, int pageSize, Map<String, Object> map) {
+    public PageInfo<Map<String, Object>> getPermissions(int start, int pageSize, Map<String, Object> map) {
         PageHelper.offsetPage(start, pageSize);
-        return this.getPermissions(map);
+        List<Map<String, Object>> list = this.getPermissions(map);
+        PageInfo<Map<String, Object>> page = new PageInfo<Map<String, Object>>(list);
+        return page;
     }
 
     @Override

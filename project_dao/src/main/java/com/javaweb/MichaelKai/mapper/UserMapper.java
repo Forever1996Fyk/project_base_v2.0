@@ -1,6 +1,7 @@
 package com.javaweb.MichaelKai.mapper;
 
 import com.javaweb.MichaelKai.pojo.User;
+import com.javaweb.MichaelKai.pojo.UserRole;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -107,4 +108,16 @@ public interface UserMapper {
      * @return
      */
     List<Map<String, Object>> getAllPermissionsByUserId(String userId);
+
+    /**
+     * 添加用户角色
+     * @param list
+     */
+    void addUserRole(@Param(value = "list")List<UserRole> list);
+
+    /**
+     * 删除用户角色
+     * @param userId
+     */
+    void delUserRole(String userId);
 }
