@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:mo="https://gitee.com/aun/Timo">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+</head>
+<body>
+<div class="layui-form timo-compile">
+    <form th:action="@{/api/dictItem}">
+        <input type="hidden" name="id" th:if="${dictItem}" th:value="${dictItem.id}"/>
+        <input type="hidden" name="dicId" th:value="${dicId}"/>
+                                                <div class="layui-form-item">
+                    <label class="layui-form-label required">字典项编码</label>
+                    <div class="layui-input-inline">
+                                                    <input class="layui-input" type="text" name="itemCode"  placeholder="请输入字典项编码" th:value="${dictItem?.itemCode}">
+                                            </div>
+                </div>
+                                                <div class="layui-form-item">
+                    <label class="layui-form-label required">字典项名称</label>
+                    <div class="layui-input-inline">
+                                                    <input class="layui-input" type="text" name="itemName"  placeholder="请输入字典项名称" th:value="${dictItem?.itemName}">
+                                            </div>
+                </div>
+                                                <div class="layui-form-item">
+                    <label class="layui-form-label required">排序</label>
+                    <div class="layui-input-inline">
+                                                    <input class="layui-input" type="text" name="itemSort"  placeholder="请输入排序" th:value="${dictItem?.itemSort}">
+                                            </div>
+                </div>
+                                                <div class="layui-form-item">
+                    <label class="layui-form-label required"></label>
+                    <div class="layui-input-inline">
+                                                    <textarea placeholder="请输入内容" class="layui-textarea" name="remark">[[${dictItem?.remark}]]</textarea>
+                                            </div>
+                </div>
+                                                                                                                                <div class="layui-form-item timo-finally">
+            <button class="layui-btn ajax-submit"><i class="fa fa-check-circle"></i> 保存</button>
+            <button class="layui-btn btn-secondary close-popup"><i class="fa fa-times-circle"></i> 关闭</button>
+        </div>
+    </form>
+</div>
+<script th:replace="/common/template :: script"></script>
+</body>
+</html>

@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.javaweb.MichaelKai.service.AttachmentService;
 import com.javaweb.MichaelKai.mapper.AttachmentMapper;
 import com.javaweb.MichaelKai.pojo.Attachment;
+import com.javaweb.MichaelKai.common.enums.StatusEnum;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +19,7 @@ import java.util.Map;
   * @program: project_base
   * @description: 
   * @author: YuKai Fan
-  * @create: 2019-05-20 16:53:28
+  * @create: 2019-05-24 13:51:55
   **/
 @Service
 @Transactional
@@ -32,7 +34,8 @@ public class AttachmentServiceImpl implements  AttachmentService {
     @Override
     public Attachment addAttachment(Attachment attachment) {
         attachment.setId(String.valueOf(idWorker.nextId()));
-        attachmentMapper.addAttachment(attachment);
+                                                                                                                                                                                                                                                                attachment.setStatus(StatusEnum.Normal.getValue());
+                                                                                                                                attachmentMapper.addAttachment(attachment);
         return attachment;
     }
 
@@ -62,9 +65,11 @@ public class AttachmentServiceImpl implements  AttachmentService {
     }
 
     @Override
-    public List<Map<String, Object>> getAttachments(int start, int pageSize, Map<String, Object> map) {
+    public PageInfo<Map<String, Object>> getAttachments(int start, int pageSize, Map<String, Object> map) {
         PageHelper.offsetPage(start, pageSize);
-        return this.getAttachments(map);
+        List<Map<String, Object>> list = this.getAttachments(map);
+        PageInfo<Map<String, Object>> page = new PageInfo<Map<String, Object>>(list);
+        return page;
     }
 
     @Override

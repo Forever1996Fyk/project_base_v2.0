@@ -106,7 +106,7 @@
                     a.create_time createTime ,
                     a.update_user_id updateUserId ,
                     a.update_time updateTime ,
-                    a.attach_path attachPath ,
+                    a.attach_path attachPath
                 </sql>
 
         <!-- (单个)查询的选择项, 增删字段时调整 -->
@@ -127,7 +127,7 @@
                             a.create_time createTime ,
                             a.update_user_id updateUserId ,
                             a.update_time updateTime ,
-                            a.attach_path attachPath ,
+                            a.attach_path attachPath
                     </sql>
 
         <!-- 查询条件 -->
@@ -218,77 +218,70 @@
 
         <!-- (批量)新增值, 增删字段时调整 -->
         <sql id="attachment_add_val">
-            #{id} ,
-            #{attachMd5} ,
-            #{attachSha1} ,
-            #{attachOriginTitle} ,
-            #{attachUtily} ,
-            #{attachType} ,
-            #{attachName} ,
-            #{attachSize} ,
-            #{attachPostfix} ,
-            #{attachment} ,
-            #{remark} ,
-            #{status} ,
-            #{createUserId} ,
-            #{createTime} ,
-            #{updateUserId} ,
-            #{updateTime} ,
-            #{attachPath}
-        </sql>
+                                                #{id} ,
+                                                                #{attachMd5} ,
+                                                                #{attachSha1} ,
+                                                                #{attachOriginTitle} ,
+                                                                #{attachUtily} ,
+                                                                #{attachType} ,
+                                                                #{attachName} ,
+                                                                #{attachSize} ,
+                                                                #{attachPostfix} ,
+                                                                #{attachment} ,
+                                                                #{remark} ,
+                                                                #{status}
+                                                                                                                                                                                #{attachPath} ,
+                                    </sql>
 
         <!-- (批量修改的条件,增减字段时调整) -->
         <sql id="attachment_set_if">
-            <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
-                 a.id = #{id}
-            </if>
-            <if test="attachMd5 != null and attachMd5 != '' and attachMd5 != 'null' and attachMd5 != 'undefined'">
-                 a.attach_md5 = #{attachMd5}
-            </if>
-            <if test="attachSha1 != null and attachSha1 != '' and attachSha1 != 'null' and attachSha1 != 'undefined'">
-                 a.attach_sha1 = #{attachSha1}
-            </if>
-            <if test="attachOriginTitle != null and attachOriginTitle != '' and attachOriginTitle != 'null' and attachOriginTitle != 'undefined'">
-                 a.attach_origin_title = #{attachOriginTitle}
-            </if>
-            <if test="attachUtily != null and attachUtily != '' and attachUtily != 'null' and attachUtily != 'undefined'">
-                 a.attach_utily = #{attachUtily}
-            </if>
-                                                        <if test="attachType != null">
-                 a.attach_type = #{attachType}
-            </if>
-                                                        <if test="attachName != null and attachName != '' and attachName != 'null' and attachName != 'undefined'">
-                 a.attach_name = #{attachName}
-            </if>
-                                                        <if test="attachSize != null and attachSize != '' and attachSize != 'null' and attachSize != 'undefined'">
-                 a.attach_size = #{attachSize}
-            </if>
-                                                        <if test="attachPostfix != null and attachPostfix != '' and attachPostfix != 'null' and attachPostfix != 'undefined'">
-                 a.attach_postfix = #{attachPostfix}
-            </if>
-                                                        <if test="attachment != null and attachment != '' and attachment != 'null' and attachment != 'undefined'">
-                 a.attachment = #{attachment}
-            </if>
-                                                        <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
-                 a.remark = #{remark}
-            </if>
-                                                        <if test="status != null">
-                 a.status = #{status}
-            </if>
-                                                        <if test="createUserId != null and createUserId != '' and createUserId != 'null' and createUserId != 'undefined'">
-                 a.create_user_id = #{createUserId}
-            </if>
-                                                        <if test="createTime != null and createTime != '' and createTime != 'null' and createTime != 'undefined'">
-                 a.create_time = #{createTime}
-            </if>
-                                                        <if test="updateUserId != null and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined'">
-                 a.update_user_id = #{updateUserId}
-            </if>
-                                                        <if test="updateTime != null and updateTime != '' and updateTime != 'null' and updateTime != 'undefined'">
-                 a.update_time = #{updateTime}
-            </if>
-                                                        <if test="attachPath != null and attachPath != '' and attachPath != 'null' and attachPath != 'undefined'">
-                 a.attach_path = #{attachPath}
-            </if>
-        </sql>
+                                                                                                    <if test="attachMd5 != null and attachMd5 != '' and attachMd5 != 'null' and attachMd5 != 'undefined'">
+                            attach_md5 = #{attachMd5},
+                        </if>
+                                                                                                            <if test="attachSha1 != null and attachSha1 != '' and attachSha1 != 'null' and attachSha1 != 'undefined'">
+                            attach_sha1 = #{attachSha1},
+                        </if>
+                                                                                                            <if test="attachOriginTitle != null and attachOriginTitle != '' and attachOriginTitle != 'null' and attachOriginTitle != 'undefined'">
+                            attach_origin_title = #{attachOriginTitle},
+                        </if>
+                                                                                                            <if test="attachUtily != null and attachUtily != '' and attachUtily != 'null' and attachUtily != 'undefined'">
+                            attach_utily = #{attachUtily},
+                        </if>
+                                                                                                                <if test="attachType != null">
+                        attach_type = #{attachType},
+                    </if>
+                                                                                                            <if test="attachName != null and attachName != '' and attachName != 'null' and attachName != 'undefined'">
+                            attach_name = #{attachName},
+                        </if>
+                                                                                                            <if test="attachSize != null and attachSize != '' and attachSize != 'null' and attachSize != 'undefined'">
+                            attach_size = #{attachSize},
+                        </if>
+                                                                                                            <if test="attachPostfix != null and attachPostfix != '' and attachPostfix != 'null' and attachPostfix != 'undefined'">
+                            attach_postfix = #{attachPostfix},
+                        </if>
+                                                                                                            <if test="attachment != null and attachment != '' and attachment != 'null' and attachment != 'undefined'">
+                            attachment = #{attachment},
+                        </if>
+                                                                                                            <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
+                            remark = #{remark},
+                        </if>
+                                                                                                                <if test="status != null">
+                        status = #{status},
+                    </if>
+                                                                                                            <if test="createUserId != null and createUserId != '' and createUserId != 'null' and createUserId != 'undefined'">
+                            create_user_id = #{createUserId},
+                        </if>
+                                                                                                            <if test="createTime != null and createTime != '' and createTime != 'null' and createTime != 'undefined'">
+                            create_time = #{createTime},
+                        </if>
+                                                                                                            <if test="updateUserId != null and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined'">
+                            update_user_id = #{updateUserId},
+                        </if>
+                                                                                                            <if test="updateTime != null and updateTime != '' and updateTime != 'null' and updateTime != 'undefined'">
+                            update_time = #{updateTime},
+                        </if>
+                                                                                                            <if test="attachPath != null and attachPath != '' and attachPath != 'null' and attachPath != 'undefined'">
+                            attach_path = #{attachPath}
+                        </if>
+                                                        </sql>
 </mapper>

@@ -2,6 +2,7 @@ package com.javaweb.MichaelKai.service;
 
 import com.javaweb.MichaelKai.pojo.Attachment;
 import org.apache.ibatis.annotations.Param;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Map;
   * @program: project_base
   * @description: 
   * @author: YuKai Fan
-  * @create: 2019-05-20 16:53:28
+  * @create: 2019-05-24 13:51:55
   **/
 public interface AttachmentService {
 	
@@ -66,7 +67,7 @@ public interface AttachmentService {
      * @param map 参数
      * @return
      */
-    List<Map<String, Object>> getAttachments(int start, int pageSize, Map<String, Object> map);
+    PageInfo<Map<String, Object>> getAttachments(int start, int pageSize, Map<String, Object> map);
 
     /**
      * 获取所有数据.

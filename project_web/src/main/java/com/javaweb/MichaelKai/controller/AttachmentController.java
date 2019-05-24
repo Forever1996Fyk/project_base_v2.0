@@ -6,6 +6,8 @@ import com.javaweb.MichaelKai.pojo.Attachment;
 import com.javaweb.MichaelKai.service.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import com.github.pagehelper.PageInfo;
+import com.javaweb.MichaelKai.common.vo.PageResult;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.Map;
  * @program: project_base
  * @description: 
  * @author: YuKai Fan
- * @create: 2019-05-20 16:53:28
+ * @create: 2019-05-24 13:51:55
  *
  */
 @RestController
@@ -82,16 +84,16 @@ public class AttachmentController {
     /**
      * 获取所有
      * @param start 开始记录
-     * @param pageSize 分页大小
+     * @param limit 分页大小
      * @param map 参数
      * @return
      */
     @GetMapping("/getAttachments")
     public Result getUsers(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
-                           @RequestParam(value = "length", required = false, defaultValue = "0") int pageSize,
+                           @RequestParam(value = "limit", required = false, defaultValue = "0") int limit,
                            @RequestParam Map<String, Object> map) {
-        List<Map<String, Object>> list = attachmentService.getAttachments(start, pageSize, map);
-        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), list);
+        PageInfo<Map<String, Object>> pageList = attachmentService.getAttachments(start, limit, map);
+        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
     }
 
 

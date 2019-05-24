@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.javaweb.MichaelKai.mapper.DictMapper">
+        <!-- 新增 -->
+        <insert id="addDict">
+            INSERT INTO tb_dict(<include refid="dict_add_key"><property name="alias" value="" /></include>)
+            VALUES (<include refid="dict_add_val"><property name="alias" value="" /></include>)
+        </insert>
+
+        <!-- 批量新增 -->
+        <insert id="addDicts">
+            INSERT INTO tb_dict(<include refid="dict_add_key"><property name="alias" value="" /></include>)
+            VALUES
+            <foreach collection="list" item="item" index="index" separator=",">
+                (<include refid="dict_add_val"><property name="alias" value="item."/></include>)
+            </foreach>
+        </insert>
+
+        <!-- 修改 -->
+        <update id="editDictById">
+            UPDATE tb_dict
+            <set>
+                <include refid="dict_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id = #{id}
+        </update>
+
+        <!-- 批量修改 -->
+        <update id="editDictByIds">
+            UPDATE tb_dict
+            <set>
+                <include refid="dict_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id IN
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 删除 -->
+        <update id="delDictById">
+            update tb_dict SET status = 0 WHERE id = #{id}
+        </update>
+
+        <!-- 批量删除 -->
+        <update id="delDictByIds">
+            UPDATE tb_dict SET status = 0 WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 真删除 -->
+        <delete id="delDictRealById">
+            DELETE FROM tb_dict WHERE id = #{id}
+        </delete>
+
+        <!-- 真批量删除 -->
+        <delete id="delDictRealByIds">
+            DELETE FROM tb_dict WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </delete>
+
+        <!-- 清空 -->
+        <delete id="delDictReals">
+            DELETE FROM tb_dict
+        </delete>
+
+        <!-- 查询用户管理列表 -->
+        <select id="getDicts" parameterType="Map" resultType="Map">
+            SELECT <include refid="dict_select_cond" />
+            FROM tb_dict a
+            <where>
+                <include refid="dict_where_if" />
+                AND a.status in (1, 2)
+            </where>
+            ORDER BY a.status ASC, a.create_time DESC
+        </select>
+
+        <!-- 根据id查询用户 -->
+        <select id="getDictById" resultType="Map">
+            SELECT <include refid="dict_select_cond_one"/>
+            FROM tb_dict a
+            WHERE a.status in (1, 2) and a.id = #{id}
+        </select>
+
+
+        <!-- 查询的选择项, 增删字段时调整 -->
+        <sql id="dict_select_cond">
+                    a.id id ,
+                    a.dic_code dicCode ,
+                    a.dic_name dicName ,
+                    a.remark remark ,
+                    a.status status ,
+                    a.create_user_id createUserId ,
+                    a.create_time createTime ,
+                    a.update_user_id updateUserId ,
+                    a.update_time updateTime
+                </sql>
+
+        <!-- (单个)查询的选择项, 增删字段时调整 -->
+        <sql id="dict_select_cond_one">
+                            a.id id ,
+                            a.dic_code dicCode ,
+                            a.dic_name dicName ,
+                            a.remark remark ,
+                            a.status status ,
+                            a.create_user_id createUserId ,
+                            a.create_time createTime ,
+                            a.update_user_id updateUserId ,
+                            a.update_time updateTime
+                    </sql>
+
+        <!-- 查询条件 -->
+        <sql id="dict_where_if">
+                                            <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
+                    AND a.id = #{id}
+                </if>
+                                                            <if test="dicCode != null and dicCode != '' and dicCode != 'null' and dicCode != 'undefined'">
+                    AND a.dic_code = #{dicCode}
+                </if>
+                                                            <if test="dicName != null and dicName != '' and dicName != 'null' and dicName != 'undefined'">
+                    AND a.dic_name = #{dicName}
+                </if>
+                                                            <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
+                    AND a.remark = #{remark}
+                </if>
+                                                            <if test="status != null">
+                    AND a.status = #{status}
+                </if>
+                                                            <if test="createUserId != null and createUserId != '' and createUserId != 'null' and createUserId != 'undefined'">
+                    AND a.create_user_id = #{createUserId}
+                </if>
+                                                            <if test="createTime != null and createTime != '' and createTime != 'null' and createTime != 'undefined'">
+                    AND a.create_time = #{createTime}
+                </if>
+                                                            <if test="updateUserId != null and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined'">
+                    AND a.update_user_id = #{updateUserId}
+                </if>
+                                                            <if test="updateTime != null and updateTime != '' and updateTime != 'null' and updateTime != 'undefined'">
+                    AND a.update_time = #{updateTime}
+                </if>
+                                    </sql>
+
+
+        <!-- (批量)新增键, 增删字段时调整 -->
+        <sql id="dict_add_key">
+                            
+                    id ,
+                                            
+                    dic_code ,
+                                            
+                    dic_name ,
+                                            
+                    remark ,
+                                            
+                    status
+        </sql>
+
+        <!-- (批量)新增值, 增删字段时调整 -->
+        <sql id="dict_add_val">
+                #{id} ,
+                #{dicCode} ,
+                #{dicName} ,
+                #{remark} ,
+                #{status}
+        </sql>
+
+        <!-- (批量修改的条件,增减字段时调整) -->
+        <sql id="dict_set_if">
+            <if test="dicCode != null and dicCode != '' and dicCode != 'null' and dicCode != 'undefined'">
+                dic_code = #{dicCode},
+            </if>
+            <if test="dicName != null and dicName != '' and dicName != 'null' and dicName != 'undefined'">
+                dic_name = #{dicName},
+            </if>
+            <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
+                remark = #{remark},
+            </if>
+            <if test="status != null">
+            status = #{status}
+            </if>
+        </sql>
+</mapper>

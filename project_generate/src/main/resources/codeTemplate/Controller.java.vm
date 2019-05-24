@@ -1,0 +1,100 @@
+package ${package}.controller;
+
+import ${package}.common.enums.ResultEnum;
+import ${package}.common.vo.Result;
+import ${package}.pojo.${className};
+import ${package}.service.${className}Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import com.github.pagehelper.PageInfo;
+import ${package}.common.vo.PageResult;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+
+/**
+ * @program: project_base
+ * @description: ${comments}
+ * @author: YuKai Fan
+ * @create: ${datetime}
+ *
+ */
+@RestController
+@RequestMapping("/api")
+public class ${className}Controller {
+    @Autowired
+    private ${className}Service ${classname}Service;
+
+    /**
+     * 添加
+     * @param ${classname}
+     * @return
+     */
+    @PostMapping("/${classname}")
+    public Result add${className}(@RequestBody ${className} ${classname}) {
+        return new Result(true, ResultEnum.SUCCESS.getValue(), "新增" + ResultEnum.SUCCESS.getMessage(), ${classname}Service.add${className}(${classname}));
+    }
+
+    /**
+     * 编辑修改
+     * @param ${classname}
+     * @return
+     */
+    @PutMapping("/${classname}")
+    public Result edit${className}ById(@RequestBody ${className} ${classname}) {
+        ${classname}Service.edit${className}ById(${classname});
+        return new Result(true, ResultEnum.SUCCESS.getValue(), "修改" + ResultEnum.SUCCESS.getMessage(), ${classname});
+    }
+
+    /**
+     * 根据id删除
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/${classname}")
+    public Result edit${className}ById(@RequestParam String id) {
+        ${classname}Service.del${className}ById(id);
+        return new Result(true, ResultEnum.SUCCESS.getValue(), "删除" + ResultEnum.SUCCESS.getMessage());
+    }
+
+    /**
+     * 根据id批量删除
+     * @param ids
+     * @return
+     */
+    @DeleteMapping("/${classname}s/{ids}")
+    public Result edit${className}ByIds(@PathVariable("ids") String[] ids) {
+        ${classname}Service.del${className}ByIds(Arrays.asList(ids));
+        return new Result(true, ResultEnum.SUCCESS.getValue(), "批量删除" + ResultEnum.SUCCESS.getMessage());
+    }
+
+    /**
+     * 获取所有(不分页)
+     * @param map 参数
+     * @return
+     */
+    @GetMapping("/get${className}s/noPage")
+    public Result get${className}s(@RequestParam Map<String, Object> map) {
+        List<Map<String, Object>> list = ${classname}Service.get${className}s(map);
+        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), list);
+    }
+
+    /**
+     * 获取所有
+     * @param start 开始记录
+     * @param limit 分页大小
+     * @param map 参数
+     * @return
+     */
+    @GetMapping("/get${className}s")
+    public Result getUsers(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+                           @RequestParam(value = "limit", required = false, defaultValue = "0") int limit,
+                           @RequestParam Map<String, Object> map) {
+        PageInfo<Map<String, Object>> pageList = ${classname}Service.get${className}s(start, limit, map);
+        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
+    }
+
+
+}

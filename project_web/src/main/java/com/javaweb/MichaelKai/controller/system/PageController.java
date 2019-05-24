@@ -1,8 +1,7 @@
 package com.javaweb.MichaelKai.controller.system;
 
-import com.javaweb.MichaelKai.service.PermissionService;
-import com.javaweb.MichaelKai.service.RoleService;
-import com.javaweb.MichaelKai.service.UserService;
+import com.javaweb.MichaelKai.common.utils.HttpServletUtil;
+import com.javaweb.MichaelKai.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +28,12 @@ public class PageController {
     private RoleService roleService;
     @Autowired
     private PermissionService permissionService;
+    @Autowired
+    private SysGeneratorService sysGeneratorService;
+    @Autowired
+    private DictService dictService;
+    @Autowired
+    private DictItemService dictItemService;
     /**
      * 用户管理列表
      * @return
@@ -138,7 +143,9 @@ public class PageController {
      * @return
      */
     @RequestMapping("/permission/permissionList")
-    public String permissionList() {
+    public String permissionList(Model model) {
+        String search = HttpServletUtil.getRequest().getQueryString();
+        model.addAttribute("search", search);
         return "system/permission/permission";
     }
 
@@ -167,5 +174,99 @@ public class PageController {
         model.addAttribute("permission", permission);
         model.addAttribute("pPermission", pPermission);
         return "system/permission/add";
+    }
+
+    /**
+     * 代码生成页面(数据库表，字段列表)
+     * @return
+     */
+    @RequestMapping("/generator/code")
+    public String generatorTableColumn() {
+        return "system/generator/tableColumn";
+    }
+
+    /**
+     * 代码生成页面(数据库表，字段列表)
+     * @return
+     */
+    @RequestMapping("/generator/columnsView/{tableName}")
+    public String columnsView(@PathVariable(value = "tableName") String tableName, Model model) {
+        List<Map<String, String>> list = sysGeneratorService.queryColumns(tableName);
+        model.addAttribute("list", list);
+        model.addAttribute("tableName", tableName);
+        return "system/generator/columnsView";
+    }
+
+    /**
+     * 数据字典管理列表
+     * @return
+     */
+    @RequestMapping("/basicDict/dictList")
+    public String dictList() {
+        return "system/basicDict/dict";
+    }
+
+    /**
+     * 数据字典添加页面
+     * @return
+     */
+    @RequestMapping("/basicDict/addDict")
+    public String addDict() {
+        return "system/basicDict/addDict";
+    }
+
+    /**
+     * 数据字典修改
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping("/basicDict/editDict")
+    public String editDict(String id, Model model) {
+        Map<String, Object> dictById = dictService.getDictById(id);
+        model.addAttribute("dict", dictById);
+        return "system/basicDict/addDict";
+    }
+
+    /**
+     * 根据dic_id获取数据字典项
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping("/basicDict/dictItemsView")
+    public String dictItemsView(String id, Model model) {
+        Map<String, Object> dictById = dictService.getDictById(id);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("dic_id", id);
+        List<Map<String, Object>> dictItems = dictItemService.getDictItems(map);
+
+        model.addAttribute("dict", dictById);
+        model.addAttribute("list", dictItems);
+        return "system/basicDict/dictItem";
+    }
+
+    /**
+     * 数据字典添加页面
+     * @return
+     */
+    @RequestMapping("/basicDict/addDictItem/{dicId}")
+    public String addDictItem(@PathVariable(value = "dicId") String dicId, Model model) {
+        model.addAttribute("dicId", dicId);
+        return "system/basicDict/addDictItem";
+    }
+
+    /**
+     * 数据字典修改
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping("/basicDict/editDictItem")
+    public String editDictItem(String id, Model model) {
+        Map<String, Object> dictItemById = dictItemService.getDictItemById(id);
+        model.addAttribute("dictItem", dictItemById);
+        return "system/basicDict/addDictItem";
     }
 }

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="${package}.mapper.${className}Mapper">
+        <!-- 新增 -->
+        <insert id="add${className}">
+            INSERT INTO ${tableName}(<include refid="${classname}_add_key"><property name="alias" value="" /></include>)
+            VALUES (<include refid="${classname}_add_val"><property name="alias" value="" /></include>)
+        </insert>
+
+        <!-- 批量新增 -->
+        <insert id="add${className}s">
+            INSERT INTO ${tableName}(<include refid="${classname}_add_key"><property name="alias" value="" /></include>)
+            VALUES
+            <foreach collection="list" item="item" index="index" separator=",">
+                (<include refid="${classname}_add_val"><property name="alias" value="item."/></include>)
+            </foreach>
+        </insert>
+
+        <!-- 修改 -->
+        <update id="edit${className}ById">
+            UPDATE ${tableName}
+            <set>
+                <include refid="${classname}_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id = #{id}
+        </update>
+
+        <!-- 批量修改 -->
+        <update id="edit${className}ByIds">
+            UPDATE ${tableName}
+            <set>
+                <include refid="${classname}_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id IN
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 删除 -->
+        <update id="del${className}ById">
+            update ${tableName} SET status = 0 WHERE id = #{id}
+        </update>
+
+        <!-- 批量删除 -->
+        <update id="del${className}ByIds">
+            UPDATE ${tableName} SET status = 0 WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 真删除 -->
+        <delete id="del${className}RealById">
+            DELETE FROM ${tableName} WHERE id = #{id}
+        </delete>
+
+        <!-- 真批量删除 -->
+        <delete id="del${className}RealByIds">
+            DELETE FROM ${tableName} WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </delete>
+
+        <!-- 清空 -->
+        <delete id="del${className}Reals">
+            DELETE FROM ${tableName}
+        </delete>
+
+        <!-- 查询用户管理列表 -->
+        <select id="get${className}s" parameterType="Map" resultType="Map">
+            SELECT <include refid="${classname}_select_cond" />
+            FROM ${tableName} a
+            <where>
+                <include refid="${classname}_where_if" />
+                AND a.status in (1, 2)
+            </where>
+            ORDER BY a.status ASC, a.create_time DESC
+        </select>
+
+        <!-- 根据id查询用户 -->
+        <select id="get${className}ById" resultType="Map">
+            SELECT <include refid="${classname}_select_cond_one"/>
+            FROM ${tableName} a
+            WHERE a.status in (1, 2) and a.id = #{id}
+        </select>
+
+
+        <!-- 查询的选择项, 增删字段时调整 -->
+        <sql id="${classname}_select_cond">
+        #foreach($column in $columns)
+            a.$column.columnName $column.attrname ,
+        #end
+        </sql>
+
+        <!-- (单个)查询的选择项, 增删字段时调整 -->
+        <sql id="${classname}_select_cond_one">
+            #foreach($column in $columns)
+                a.$column.columnName $column.attrname ,
+            #end
+        </sql>
+
+        <!-- 查询条件 -->
+        <sql id="${classname}_where_if">
+            #foreach($column in $columns)
+                #if($column.attrType != 'Integer')
+                <if test="$column.attrname != null and $column.attrname != '' and $column.attrname != 'null' and $column.attrname != 'undefined'">
+                    AND a.$column.columnName = #{$column.attrname}
+                </if>
+                #else
+                <if test="$column.attrname != null">
+                    AND a.$column.columnName = #{$column.attrname}
+                </if>
+                #end
+            #end
+        </sql>
+
+
+        <!-- (批量)新增键, 增删字段时调整 -->
+        <sql id="${classname}_add_key">
+            #foreach($column in $columns)
+                #if($column.columnName != 'create_user_id' && $column.columnName != 'update_user_id'
+                    && $column.columnName != 'create_time' && $column.columnName != 'update_time')
+
+                    $column.columnName ,
+                #end
+            #end
+        </sql>
+
+        <!-- (批量)新增值, 增删字段时调整 -->
+        <sql id="${classname}_add_val">
+            #foreach($column in $columns)
+                #if($column.attrname != 'createUserId' && $column.attrname != 'updateUserId'
+                                    && $column.attrname != 'createTime' && $column.attrname != 'updateTime')
+                    #{$column.attrname} ,
+                #end
+            #end
+        </sql>
+
+        <!-- (批量修改的条件,增减字段时调整) -->
+        <sql id="${classname}_set_if">
+            #foreach($column in $columns)
+                #if($column.attrname != 'id')
+                    #if($column.columnName != 'create_user_id' && $column.columnName != 'update_user_id'
+                      && $column.columnName != 'create_time' && $column.columnName != 'update_time')
+                        #if($column.attrType != 'Integer')
+                            <if test="$column.attrname != null and $column.attrname != '' and $column.attrname != 'null' and $column.attrname != 'undefined'">
+                                $column.columnName = #{$column.attrname},
+                            </if>
+                        #else
+                                <if test="$column.attrname != null">
+                            $column.columnName = #{$column.attrname},
+                        </if>
+                        #end
+                    #end
+                #end
+            #end
+        </sql>
+</mapper>

@@ -235,6 +235,7 @@ layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
     $(document).on("click", ".open-popup, .open-popup-param", function () {
         var title = $(this).data("title");
         var url = $(this).attr("data-url");
+        var paramElem = $(this).attr("param");
         if ($(this).hasClass("open-popup-param")) {
             var checkStatus = table.checkStatus('id');//注意这个id不是html中table元素上的id，而是table:render中定义的id
             var data = checkStatus.data
@@ -252,6 +253,11 @@ layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
                 ids.push(checkStatus.data[i].id);
             }
             url += "/" + ids;
+        } else {
+            debugger;
+            if (paramElem !== undefined) {
+                url += "/" + paramElem;
+            }
         }
         var size = $(this).attr("data-size");
         if (size === undefined || size === "auto") {
@@ -316,7 +322,6 @@ layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
     // 携带参数跳转
     var paramSkip = function () {
         var getSearch = "";
-        debugger;
         // 搜索框参数
         $('.timo-search-box').find('input').each(function (key, val) {
             if ($(val).val() !== "" && $(val).val() !== undefined) {
@@ -327,11 +332,12 @@ layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
         if (getSearch !== "") {
             getSearch = "?" + getSearch.substr(0, getSearch.length - 1);
         }
+
         window.location.href = window.location.pathname + getSearch;
     };
 
     /* 展示列表数据搜索 */
-    $(document).on("click", ".timo-search-btn", function () {
+    $(document).on("click", ".timo-search-btn-thy", function () {
         paramSkip();
     });
     /* 改变显示页数 */

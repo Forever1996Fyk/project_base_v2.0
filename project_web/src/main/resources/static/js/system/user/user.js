@@ -4,19 +4,6 @@
 layui.use(['table', 'layer', 'form', 'formSelects'], function() {
     var layer = layui.layer;
     var table = layui.table;
-    var formSelects = layui.formSelects;
-
-    formSelects.data('select1', 'local', {
-        arr: [
-            {"name": "分组-1", "type": "optgroup"},
-            {"name": "北京", "value": 1},
-            {"name": "上海", "value": 2},
-            {"name": "分组-2", "type": "optgroup"},
-            {"name": "广州", "value": 3},
-            {"name": "深圳", "value": 4},
-            {"name": "天津", "value": 5}
-        ]
-    });
 
     var tableObject = table.render({
         id:"id"
@@ -52,10 +39,10 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
             }}
             , {field: 'marryFlag', title: '婚否', align: 'center', templet: function (data) {
                 var result = '';
-                if (data.marry_flag) {
-                    if (data.marry_flag === 1) {
+                if (data.marryFlag) {
+                    if (data.marryFlag === 1) {
                         result = '已婚';
-                    } else if (data.marry_flag === 0) {
+                    } else if (data.marryFlag === 0) {
                         result = '未婚';
                     }
                 }
@@ -77,9 +64,6 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
             }}
             , {title: '操作', toolbar: '#btn', align: 'center'}
         ]]
-        , done: function () {
-            $('td').find('checkbox').attr('class', 'tb-checkbox');
-        }
     });
     /*
      表格点击事件写法,其中tool('这是表格的lay-filter'),监听点击事件         */
@@ -133,38 +117,12 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
                     nickName: $('#frmSearch [name=nickName]').val()
                 }
             })
-        },
-
-        //分配角色
-        assignRole: function () {
-            var checkStatus = table.checkStatus('id');//注意这个id不是html中table元素上的id，而是table:render中定义的id
-            if (checkStatus.data.length === 0) {
-                layer.msg('请选择用户');
-                return;
-            } else if (checkStatus.data.length > 1) {
-                layer.msg('只能选择一条数据');
-                return;
-            }
-            layer.open({
-                type: 2
-                ,title: '角色分配'
-                ,content: '/system/roleManager/assignRole'
-                ,maxmin: true
-                ,area: ['500px', '450px']
-                ,btn: ['确定', '取消']
-                ,yes: function(index, layero){
-                    $scope.layerFrame('layui-layer-iframe', 'roleSubmit', index, layero, tableObject, checkStatus.data);
-                }
-                ,success:function (layero, index) {//弹出框,弹出成功后操作
-
-                    $scope.findRole(layero, checkStatus.data[0]);
-                    //iframeWindow.layui.form.render();
-                }
-            })
         }
     };
     $('.layui-btn').on('click', function(){
         var type = $(this).data('type');
         active[type] ? active[type].call(this) : '';
     });
+
+
 });
