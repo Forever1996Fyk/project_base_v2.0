@@ -6,23 +6,11 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
     var table = layui.table;
     var formSelects = layui.formSelects;
 
-    formSelects.data('select1', 'local', {
-        arr: [
-            {"name": "分组-1", "type": "optgroup"},
-            {"name": "北京", "value": 1},
-            {"name": "上海", "value": 2},
-            {"name": "分组-2", "type": "optgroup"},
-            {"name": "广州", "value": 3},
-            {"name": "深圳", "value": 4},
-            {"name": "天津", "value": 5}
-        ]
-    });
-
     var tableObject = table.render({
         id: "id"
         , elem: '#tableColumnListTable'
         , height: 500
-        , url: '/api/generator/getDBTables'//数据接口
+        , url: ctxPath + '/api/generator/getDBTables'//数据接口
         , page: true
         , limits: [10, 20, 30, 40, 50]
         , limit: 10
@@ -60,7 +48,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
             var columsView = layer.open({
                 type: 2
                 ,title: '查看数据库表字段'
-                ,content: '/system/generator/columnsView/' + data.tableName
+                ,content: ctxPath + '/system/generator/columnsView/' + data.tableName
                 ,maxmin: true
                 ,area: ['700px', '700px']
             });
@@ -88,7 +76,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
                 tableNames.push(checkStatus.data[i].tableName);
             }
 
-            window.location.href = '/api/generator/code/' + tableNames.join(",");
+            window.location.href = ctxPath + '/api/generator/code/' + tableNames.join(",");
         }
     };
     $('.layui-btn').on('click', function(){

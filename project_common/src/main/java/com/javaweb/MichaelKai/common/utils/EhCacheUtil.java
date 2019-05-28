@@ -1,7 +1,7 @@
 package com.javaweb.MichaelKai.common.utils;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
+import org.apache.shiro.cache.Cache;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 
 /**
  * @program: project_base
@@ -14,8 +14,8 @@ public class EhCacheUtil {
     /**
      * 获取EhCacheManager管理对象
      */
-    public static CacheManager getCacheManager(){
-        return SpringContextUtil.getBean(CacheManager.class);
+    public static EhCacheManager getCacheManager(){
+        return SpringContextUtil.getBean(EhCacheManager.class);
     }
 
     /**

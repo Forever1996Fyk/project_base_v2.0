@@ -33,6 +33,7 @@ public class AuthFilter extends AccessControlFilter {
                 return true;
         } else {
             Subject subject = getSubject(servletRequest, servletResponse);
+            System.out.println(subject.getPrincipal() != null);
             return subject.getPrincipal() != null;
         }
     }

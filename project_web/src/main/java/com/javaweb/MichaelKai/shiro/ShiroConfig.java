@@ -60,6 +60,7 @@ public class ShiroConfig {
         filterMap.put("/login", "anon");
         filterMap.put("/logout", "anon");
         filterMap.put("/noAuth", "anon");
+        filterMap.put("/captcha", "anon");
         filterMap.put("/css/**", "anon");
         filterMap.put("/js/**", "anon");
         filterMap.put("/images/**", "anon");
@@ -131,8 +132,8 @@ public class ShiroConfig {
     public DefaultWebSessionManager sessionManager(EhCacheManager cacheManager, ShiroProperties shiroProperties) {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
         sessionManager.setCacheManager(cacheManager);
-        sessionManager.setGlobalSessionTimeout(shiroProperties.getGlobalSessionTimeout());
-        sessionManager.setSessionValidationInterval(shiroProperties.getSessionValidationInterval());
+        sessionManager.setGlobalSessionTimeout(shiroProperties.getGlobalSessionTimeout() * 1000);
+        sessionManager.setSessionValidationInterval(shiroProperties.getSessionValidationInterval() * 1000);
         sessionManager.setDeleteInvalidSessions(true);
         sessionManager.validateSessions();
         //去掉登录页面地址栏的jssessionid

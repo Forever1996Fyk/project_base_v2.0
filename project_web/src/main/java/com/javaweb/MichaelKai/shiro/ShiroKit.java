@@ -6,6 +6,8 @@ import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.subject.Subject;
 
+import java.util.Map;
+
 /**
  * @program: project_parent
  * @description: shiro工具类
@@ -53,7 +55,7 @@ public class ShiroKit {
      * @return user
      */
     public static User getUser() {
-        return (User) SecurityUtils.getSubject();
+        return (User) SecurityUtils.getSubject().getPrincipal();
     }
 
     /**

@@ -11,7 +11,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
             layer.open({
                 type: 2
                 ,title: '编辑'
-                ,content: '/system/basicDict/addDictItem/' + $('#dictItemAdd').data('dicid')
+                ,content: ctxPath + '/system/basicDict/addDictItem/' + $('#dictItemAdd').data('dicid')
                 ,maxmin: true
                 ,area: ['500px', '450px']
             })

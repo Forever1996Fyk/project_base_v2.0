@@ -1,11 +1,16 @@
 package com.javaweb.MichaelKai.controller.login;
 
-import com.javaweb.MichaelKai.common.properties.ProjectProperties;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.exception.ExceptionHandle;
 import com.javaweb.MichaelKai.common.exception.ResultException;
+import com.javaweb.MichaelKai.common.properties.ProjectProperties;
+import com.javaweb.MichaelKai.common.utils.DateUtil;
+import com.javaweb.MichaelKai.common.utils.HttpServletUtil;
 import com.javaweb.MichaelKai.common.utils.SpringContextUtil;
 import com.javaweb.MichaelKai.common.vo.Result;
+import com.javaweb.MichaelKai.pojo.User;
+import com.javaweb.MichaelKai.service.UserService;
+import com.javaweb.MichaelKai.shiro.ShiroKit;
 import com.javaweb.MichaelKai.vo.UserVo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -21,8 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.Date;
 
 /**
  * @program: project_base
@@ -35,6 +39,8 @@ public class LoginController {
 
     @Autowired
     private ExceptionHandle exceptionHandle;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/")
     public String toLogin(Model model) {
@@ -63,12 +69,15 @@ public class LoginController {
         try {
             subject.login(token);
 
-            return new Result(true, ResultEnum.SUCCESS.getValue(), "登录" + ResultEnum.SUCCESS.getMessage(), new URL("/index"));
+            //登录成功修改最后登录时间
+            User loginUser = ShiroKit.getUser();
+            loginUser.setLastLoginTime(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            userService.editUserById(loginUser);
+
+            return new Result(true, ResultEnum.SUCCESS.getValue(), "登录" + ResultEnum.SUCCESS.getMessage(), "/index");
         } catch (LockedAccountException e) {
             return exceptionHandle.exception(e);
         } catch (AuthenticationException e) {
-            return exceptionHandle.exception(e);
-        } catch (MalformedURLException e) {
             return exceptionHandle.exception(e);
         }
     }

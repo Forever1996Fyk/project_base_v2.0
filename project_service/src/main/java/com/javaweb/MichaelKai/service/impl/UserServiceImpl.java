@@ -9,9 +9,11 @@ import com.javaweb.MichaelKai.pojo.Role;
 import com.javaweb.MichaelKai.pojo.User;
 import com.javaweb.MichaelKai.pojo.UserRole;
 import com.javaweb.MichaelKai.service.UserService;
+import com.javaweb.MichaelKai.thymeleaf.util.DictUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +78,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Map<String, Object>> getUsers(Map<String, Object> map) {
-        return userMapper.getUsers(map);
+        List<Map<String, Object>> users = userMapper.getUsers(map);
+        for (Map<String, Object> user : users) {
+            user.put("educationName", DictUtil.keyValue("EDUCATION_TYPE", user.get("education").toString()));
+            user.put("marryFlagName", DictUtil.keyValue("MARRAY_TYPE", user.get("marryFlag").toString()));
+            user.put("statusName", DictUtil.keyValue("STATUS_TYPE", user.get("status").toString()));
+        }
+        return users;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.javaweb.MichaelKai.shiro;
 
 import com.javaweb.MichaelKai.common.constants.AdminConstant;
+import com.javaweb.MichaelKai.common.utils.MapUtil;
 import com.javaweb.MichaelKai.pojo.User;
 import com.javaweb.MichaelKai.service.RoleService;
 import com.javaweb.MichaelKai.service.UserService;
@@ -82,17 +83,22 @@ public class ShiroRealm extends AuthorizingRealm{
             throw new AccountException("账号错误");
         }
 
-        Map<String, Object> user = users.get(0);
-        // 对盐进行加密处理
-        ByteSource salt = ByteSource.Util.bytes(user.get("salt"));
+        try {
+            User user = (User) MapUtil.mapToObject(User.class, users.get(0));
+            // 对盐进行加密处理
+            ByteSource salt = ByteSource.Util.bytes(user.getSalt());
 
-        /* 传入密码自动判断是否正确
-         * 参数1：传入对象给Principal
-         * 参数2：正确的用户密码(从数据库中查询的已加密的密码),在下面的自定义密码验证中会进行验证
-         * 参数3：加盐处理
-         * 参数4：固定写法
-         */
-        return new SimpleAuthenticationInfo(user, user.get("password"), salt, getName());
+            /* 传入密码自动判断是否正确
+             * 参数1：传入对象给Principal
+             * 参数2：正确的用户密码(从数据库中查询的已加密的密码),在下面的自定义密码验证中会进行验证
+             * 参数3：加盐处理
+             * 参数4：固定写法
+             */
+            return new SimpleAuthenticationInfo(user, user.getPassword(), salt, getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**

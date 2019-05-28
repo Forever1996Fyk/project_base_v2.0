@@ -7,6 +7,7 @@ import com.javaweb.MichaelKai.pojo.Permission;
 import com.javaweb.MichaelKai.pojo.User;
 import com.javaweb.MichaelKai.service.PermissionService;
 import com.javaweb.MichaelKai.service.UserService;
+import com.javaweb.MichaelKai.shiro.ShiroKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,19 +36,16 @@ public class IndexController {
      * @return
      */
     @RequestMapping("/index")
-    public String index(Model model) {
+    public String index(Model model) throws Exception {
 
-        //获取当前用户 todo
-        Map<String, Object> map = new HashMap<>();
-        map.put("status", 1);
-        List<Map<String, Object>> users = userService.getUsers(map);
+        //获取当前用户
+        User user = (User) ShiroKit.getUser();
 
         Map<String, Permission> keyMenu = new HashMap<>();
         try {
-            User user = (User) MapUtil.mapToObject(User.class, users.get(0));
             //如果是超级管理员，则实时更新菜单
             if (user.getId().equals(AdminConstant.ADMIN_ID)) {
-                List<Map<String, Object>> permissions = permissionService.getPermissions(map);
+                List<Map<String, Object>> permissions = permissionService.getPermissions(null);
                 for (Map<String, Object> permissionMap : permissions) {
                     Permission permission = (Permission) MapUtil.mapToObject(Permission.class, permissionMap);
                     keyMenu.put(permission.getId(), permission);
@@ -79,7 +77,7 @@ public class IndexController {
                 }
             }
 
-            model.addAttribute("user", users.get(0));
+            model.addAttribute("user", user);
             model.addAttribute("treeMenu", treeMap);
 
             return "main";

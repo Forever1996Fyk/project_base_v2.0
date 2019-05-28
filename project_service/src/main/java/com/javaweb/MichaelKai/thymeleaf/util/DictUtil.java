@@ -1,7 +1,9 @@
 package com.javaweb.MichaelKai.thymeleaf.util;
 
+import com.javaweb.MichaelKai.common.utils.EhCacheUtil;
 import com.javaweb.MichaelKai.common.utils.SpringContextUtil;
 import com.javaweb.MichaelKai.service.BasicDictService;
+import org.apache.shiro.cache.Cache;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -17,7 +19,7 @@ import java.util.Map;
 public class DictUtil {
 
     //必须要先开启cache,可以使用redis,也可以使用ehcache
-    //private static Cache dictCache = EhCacheUtil.getDictCache();
+    private static Cache dictCache = EhCacheUtil.getDictCache();
 
     /**
      * 获取字典值集合
@@ -26,20 +28,9 @@ public class DictUtil {
     public static Map<String, String> value(String label){
         Map<String, String> value = null;
 
-        BasicDictService basicDictService = SpringContextUtil.getBean(BasicDictService.class);
-        Map<String, Object> map = new HashMap<>();
-        map.put("code", label);
-        List<Map<String, Object>> dictItems = basicDictService.getDictItem(map);
-        if (dictItems.size() > 0) {
-            value = new LinkedHashMap<>();
-            for (Map<String, Object> dictItem : dictItems) {
-                value.put(dictItem.get("itemCode").toString(), dictItem.get("itemName").toString());
-            }
-        }
-
-        /*Element element = dictCache.get(label);
-        if (element != null) {
-            value = (Map<String, String>) element.getObjectValue();
+        Object obj = dictCache.get(label);
+        if (obj != null) {
+            value =  (Map<String, String>) obj;
         } else {
             BasicDictService basicDictService = SpringContextUtil.getBean(BasicDictService.class);
             Map<String, Object> map = new HashMap<>();
@@ -51,8 +42,8 @@ public class DictUtil {
                     value.put(dictItem.get("itemCode").toString(), dictItem.get("itemName").toString());
                 }
             }
-            dictCache.put(new Element(label, value));
-        }*/
+            dictCache.put(label, value);
+        }
 
         return value;
     }
@@ -85,9 +76,9 @@ public class DictUtil {
      * @param label 字典标识
      */
     public static void clearCache(String label){
-        /*Element dictEle = dictCache.get(label);
-        if (dictEle != null){
+        Object o = dictCache.get(label);
+        if (o != null){
             dictCache.remove(label);
-        }*/
+        }
     }
 }

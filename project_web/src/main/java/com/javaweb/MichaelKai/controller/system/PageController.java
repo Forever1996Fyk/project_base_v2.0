@@ -2,6 +2,7 @@ package com.javaweb.MichaelKai.controller.system;
 
 import com.javaweb.MichaelKai.common.utils.HttpServletUtil;
 import com.javaweb.MichaelKai.service.*;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +40,7 @@ public class PageController {
      * @return
      */
     @RequestMapping("/user/userList")
+    @RequiresPermissions("*:*:*")
     public String userList() {
         return "system/user/user";
     }

@@ -14,17 +14,18 @@ layui.use(['element', 'layer', 'form'], function () {
         var data = obj.field;
         console.log(data);
         $.ajax({
-            url: '/login',
+            url: ctxPath + '/login',
             type: 'POST',
             data: JSON.stringify(data),
             success: function (res) {
+                console.log(res);
                 if (res.code === 200) {
                     layer.msg(res.message, {
                         offset: '15px'
                         ,icon: 1
                         ,time: 1000
                     }, function () {
-                        window.location.href = res.data;
+                        window.location.href = ctxPath + '/index';
                     })
                 } else {
                     $('.captcha-img').click();

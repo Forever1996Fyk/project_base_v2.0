@@ -17,7 +17,7 @@ public class User implements Serializable{
 	private String password;//密码
 	private String nickName;//用户昵称
 	private String userIcon;//头像
-	private Date lastLoginTime;//最后登录时间
+	private String lastLoginTime;//最后登录时间
 	private Integer age;//年龄
 	private Integer sex;//性别 1男  0女
 	private Integer marryFlag;//婚否
@@ -84,11 +84,15 @@ public class User implements Serializable{
 		this.userIcon = userIcon;
 	}
 
-	public Date getLastLoginTime() {
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public String getLastLoginTime() {
 		return lastLoginTime;
 	}
 
-	public void setLastLoginTime(Date lastLoginTime) {
+	public void setLastLoginTime(String lastLoginTime) {
 		this.lastLoginTime = lastLoginTime;
 	}
 

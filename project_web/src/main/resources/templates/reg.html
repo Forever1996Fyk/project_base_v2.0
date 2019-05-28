@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+    <title>xxx系统注册</title>
+</head>
+<body class="layui-layout-login">
+<div class="login-bg">
+    <div class="cover"></div>
+</div>
+<div class="login-content">
+    <h1 class="login-box-title"><i class="fa fa-fw fa-user"></i>注册</h1>
+    <div class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-icon layui-icon-username" for="account"></label>
+            <input class="layui-input" type="text" name="account" id="account" placeholder="账号">
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-icon layui-icon-password" for="password"></label>
+            <input class="layui-input" type="password" name="password" id="password" placeholder="密码">
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-icon layui-icon-password" for="rePassword"></label>
+            <input class="layui-input" type="password" name="rePassword" id="rePassword" placeholder="再次输入密码">
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-icon layui-icon-cellphone" for="phone"></label>
+            <input class="layui-input" type="text" name="phone" id="phone" placeholder="请输入手机号">
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-col-xs7">
+                    <label class="layui-icon-vercode"
+                           for="vercode"></label>
+                    <input type="text" name="vercode" id="vercode" lay-verify="required"
+                           placeholder="验证码" class="layui-input">
+                </div>
+                <div class="layui-col-xs5">
+                    <div style="margin-left: 10px;">
+                        <button type="button" class="layui-btn layui-btn-primary layui-btn-fluid"
+                                id="getsmscode">获取验证码
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <input type="checkbox" name="rememberMe" title="记住我" lay-skin="primary">
+            <a class="layui-layout-right forget-password" href="javascript:alert('请联系超级管理员！')">忘记密码?</a>
+        </div>
+        <button type="submit" class="layui-btn layui-btn-fluid ajax-login" lay-submit lay-filter="loginSubmit"><i class="fa fa-sign-in fa-lg fa-fw"></i> 登录</button>
+    </div>
+</div>
+<script th:replace="/common/template :: script"></script>
+<script th:src="@{/js/login.js}" charset="utf-8"></script>
+</body>
+</html>
+

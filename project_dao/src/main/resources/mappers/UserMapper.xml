@@ -103,7 +103,7 @@
 
     <!-- 获取用户权限 -->
     <select id="getAllPermissionsByUserId" resultType="Map">
-        SELECT b.id id, b.name name, b.pid pid, b.sort sort, b.level level, b.remark remark
+        SELECT b.id id, b.name name, b.pid pid, b.sort sort, b.level level, b.url url, b.perm perm, b.remark remark
         FROM tb_permission  b
         LEFT JOIN tb_role_permission c on c.permission_id = b.id
         WHERE c.role_id IN (
@@ -214,6 +214,9 @@
         </if>
         <if test="userIcon != null and userIcon != '' and userIcon != 'null' and userIcon != 'undefined'">
             user_icon = #{userIcon},
+        </if>
+        <if test="lastLoginTime != null and lastLoginTime != '' and lastLoginTime != 'null' and lastLoginTime != 'undefined'">
+            last_login_time = #{lastLoginTime},
         </if>
         <if test="age != null">
             age = #{age},

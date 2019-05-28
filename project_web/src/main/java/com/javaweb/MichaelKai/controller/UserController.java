@@ -1,13 +1,18 @@
 package com.javaweb.MichaelKai.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.javaweb.MichaelKai.common.constants.Constant;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
+import com.javaweb.MichaelKai.common.utils.MD5Util;
+import com.javaweb.MichaelKai.common.utils.PinYinUtil;
 import com.javaweb.MichaelKai.common.vo.PageResult;
 import com.javaweb.MichaelKai.common.vo.Result;
 import com.javaweb.MichaelKai.pojo.User;
 import com.javaweb.MichaelKai.pojo.UserRole;
 import com.javaweb.MichaelKai.service.UserService;
+import com.javaweb.MichaelKai.shiro.ShiroKit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -33,6 +38,21 @@ public class UserController {
      */
     @PostMapping("/user")
     public Result addUser(@RequestBody User user) {
+        //生成随机盐
+        String salt = MD5Util.createSalt();
+        String pwdMD5;
+        if (StringUtils.isEmpty(user.getAccount())) {//如果账号为空,则设置默认账号为用户名拼音
+            user.setAccount(PinYinUtil.toPinyin(user.getUserName()));
+        }
+        if (StringUtils.isEmpty(user.getPassword())) {//密码为空表示管理员创建用户,默认密码为111111
+            pwdMD5 = Constant.DEFAULT_PWD;
+        } else {
+            pwdMD5 = user.getPassword();
+        }
+
+        user.setPassword(ShiroKit.md5(pwdMD5, user.getAccount() + salt));
+        user.setSalt(salt);
+
         return new Result(true, ResultEnum.SUCCESS.getValue(), "新增" + ResultEnum.SUCCESS.getMessage(), userService.addUser(user));
     }
 

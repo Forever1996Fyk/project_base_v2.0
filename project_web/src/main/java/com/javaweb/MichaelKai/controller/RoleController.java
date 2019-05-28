@@ -12,6 +12,7 @@ import com.github.pagehelper.PageInfo;
 import com.javaweb.MichaelKai.common.vo.PageResult;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -108,7 +109,9 @@ public class RoleController {
     @GetMapping("/role/authList")
     public Result getRoles(@RequestParam String id) {
         //获取所有权限
-        List<Map<String, Object>> permissions = permissionService.getPermissions(null);
+        Map<String, Object> map = new HashMap<>();
+        map.put("flag", "1");
+        List<Map<String, Object>> permissions = permissionService.getPermissions(map);
 
         if (permissions.size() > 0) {
             //根据roleId获取该角色的权限

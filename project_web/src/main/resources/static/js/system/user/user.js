@@ -9,7 +9,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
         id:"id"
         ,elem: '#userListTable'
         , height: 500
-        , url: '/api/getUsers'//数据接口
+        , url: ctxPath + '/api/getUsers'//数据接口
         , page: true
         , limits: [10,20,30,40,50]
         , limit: 10
@@ -37,31 +37,14 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
                 }
                 return result;
             }}
-            , {field: 'marryFlag', title: '婚否', align: 'center', templet: function (data) {
-                var result = '';
-                if (data.marryFlag) {
-                    if (data.marryFlag === 1) {
-                        result = '已婚';
-                    } else if (data.marryFlag === 0) {
-                        result = '未婚';
-                    }
-                }
-                return result;
-            }}
+            , {field: 'marryFlagName', title: '婚否', align: 'center'}
             , {field: 'phone', title: '手机号',align: 'center'}
+            , {field: 'educationName', title: '学历', align: 'center'}
             , {field: 'email', title: '邮箱', align: 'center'}
             , {field: 'address', title: '地址', align: 'center'}
             , {field: 'idcard', title: '身份证号', align: 'center'}
             , {field: 'createTime', title: '创建时间', align: 'center'}
-            , {field: 'status', title: '是否禁用', align: 'center', templet: function (data) {
-                var result;
-                if (data.status === 1) {
-                    result = '正常';
-                } else {
-                    result = '禁用';
-                }
-                return result;
-            }}
+            , {field: 'statusName', title: '是否禁用', align: 'center'}
             , {title: '操作', toolbar: '#btn', align: 'center'}
         ]]
     });
@@ -82,7 +65,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
             layer.open({
                 type: 2
                 ,title: '编辑用户'
-                ,content: '/system/user/edit?id=' + data.id
+                ,content: ctxPath + '/system/user/edit?id=' + data.id
                 ,maxmin: true
                 ,area: ['500px', '450px']
             })
@@ -92,7 +75,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
         delete:function (data) {
             layer.confirm ('确定删除吗?', function (index) {
                 $.ajax({
-                    url: '/api/user?id=' + data.id,
+                    url: ctxPath + '/api/user?id=' + data.id,
                     type: 'delete',
                     success:function(res){
                         if (res.code === 200) {
@@ -110,7 +93,6 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
         },
         //搜索
         search:function () {
-            debugger;
             tableObject.reload({
                 where:{
                     userName: $('#frmSearch [name=userName]').val(),

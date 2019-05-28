@@ -35,6 +35,12 @@
         <script type="text/javascript" th:src="@{/js/plugins/jquery-3.3.1.min.js}"></script>
         <script th:src="@{/lib/layui-v2.3.0/layui.js}" charset="utf-8"></script>
         <script th:src="@{/js/main.js}" charset="utf-8"></script>
+        <script  type="text/javascript" th:inline="javascript">
+            var _ctxPath = /*[[@{/}]]*/ null;
+            debugger;
+            var ctxPath = _ctxPath.toString().substring(0, _ctxPath.toString().length-1);
+            var baseAdmin = ctxPath + "/baseAdmin";
+        </script>
     </th:block>
 </body>
 </html>

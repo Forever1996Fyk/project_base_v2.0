@@ -9,7 +9,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
         id:"id"
         ,elem: '#dictListTable'
         , height: 500
-        , url: '/api/getDicts'//数据接口
+        , url: ctxPath + '/api/getDicts'//数据接口
         , page: true
         , limits: [10,20,30,40,50]
         , limit: 10
@@ -61,7 +61,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
             layer.open({
                 type: 2
                 ,title: '编辑'
-                ,content: '/system/basicDict/editDict?id=' + data.id
+                ,content: ctxPath + '/system/basicDict/editDict?id=' + data.id
                 ,maxmin: true
                 ,area: ['500px', '450px']
             })
@@ -72,7 +72,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
             var dictItemsView = layer.open({
                 type: 2
                 ,title: '数据字典项'
-                ,content: '/system/basicDict/dictItemsView?id=' + data.id
+                ,content: ctxPath + '/system/basicDict/dictItemsView?id=' + data.id
                 ,maxmin: true
                 ,area: ['700px', '700px']
             });
@@ -84,7 +84,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
         delete:function (data) {
             layer.confirm ('确定删除吗?', function (index) {
                 $.ajax({
-                    url: '/api/dict?id=' + data.id,
+                    url: ctxPath + '/api/dict?id=' + data.id,
                     type: 'delete',
                     success:function(res){
                         if (res.code === 200) {
@@ -107,7 +107,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
                     dicName: $('#frmSearch [name=dicName]').val()
                 }
             })
-        },
+        }
 
     };
     $('.layui-btn').on('click', function(){

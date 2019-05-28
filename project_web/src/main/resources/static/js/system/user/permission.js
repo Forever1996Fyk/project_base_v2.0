@@ -4,13 +4,12 @@
 layui.use(['table', 'layer', 'form', 'formSelects'], function() {
     var layer = layui.layer;
     var table = layui.table;
-    var formSelects = layui.formSelects;
 
     var tableObject = table.render({
         id:"id"
         ,elem: '#permissionListTable'
         , height: 500
-        , url: '/api/getPermissions'//数据接口
+        , url: ctxPath + '/api/getPermissions'//数据接口
         , page: true
         , limits: [10,20,30,40,50]
         , limit: 10
@@ -60,7 +59,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
             layer.open({
                 type: 2
                 ,title: '编辑'
-                ,content: '/system/permission/edit?id=' + data.id
+                ,content: ctxPath + '/system/permission/edit?id=' + data.id
                 ,maxmin: true
                 ,area: ['500px', '450px']
             })
@@ -70,7 +69,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
         delete:function (data) {
             layer.confirm ('确定删除吗?', function (index) {
                 $.ajax({
-                    url: '/api/permission?id=' + data.id,
+                    url: ctxPath + '/api/permission?id=' + data.id,
                     type: 'delete',
                     success:function(res){
                         if (res.code === 200) {
