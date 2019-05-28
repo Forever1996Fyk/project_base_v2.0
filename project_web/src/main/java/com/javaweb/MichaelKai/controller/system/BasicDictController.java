@@ -36,14 +36,4 @@ public class BasicDictController {
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), list);
     }
 
-    /**
-     * 添加数据字典
-     * @param map
-     * @return
-     */
-    @PostMapping("/addDict")
-    public Result addDict(Map<String, Object> map) {
-        basicDictService.addDict(map);
-        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage());
-    }
 }

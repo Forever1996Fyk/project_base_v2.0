@@ -1,6 +1,6 @@
 package com.javaweb.MichaelKai.thymeleaf.attribute;
 
-import com.javaweb.MichaelKai.common.utils.thymeleafUtil.DictUtil;
+import com.javaweb.MichaelKai.thymeleaf.util.DictUtil;
 import org.thymeleaf.IEngineConfiguration;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeName;

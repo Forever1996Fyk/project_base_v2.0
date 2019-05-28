@@ -26,9 +26,4 @@ public class BasicDictServiceImpl implements BasicDictService {
     public List<Map<String, Object>> getDictItem(Map<String, Object> map) {
         return basicDictMapper.getDictItemsByParam(map);
     }
-
-    @Override
-    public void addDict(Map<String, Object> map) {
-        //basicDictMapper.addDict(map);
-    }
 }

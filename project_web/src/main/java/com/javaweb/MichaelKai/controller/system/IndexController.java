@@ -34,7 +34,7 @@ public class IndexController {
      * @param model
      * @return
      */
-    @RequestMapping("/")
+    @RequestMapping("/index")
     public String index(Model model) {
 
         //获取当前用户 todo

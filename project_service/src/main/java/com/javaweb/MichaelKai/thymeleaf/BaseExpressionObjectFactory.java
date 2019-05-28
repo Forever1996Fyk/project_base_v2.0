@@ -1,6 +1,6 @@
 package com.javaweb.MichaelKai.thymeleaf;
 
-import com.javaweb.MichaelKai.common.utils.thymeleafUtil.DictUtil;
+import com.javaweb.MichaelKai.thymeleaf.util.DictUtil;
 import org.thymeleaf.context.IExpressionContext;
 import org.thymeleaf.expression.IExpressionObjectFactory;
 

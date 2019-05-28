@@ -117,7 +117,7 @@
                     a.url url ,
                     a.perm perm
             FROM tb_permission a LEFT JOIN tb_role_permission b on b.permission_id = a.id
-            WHERE b.role_id = #{roleId}
+            WHERE b.role_id = #{roleId} AND a.status = 1
         </select>
 
 

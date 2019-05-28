@@ -18,10 +18,4 @@ public interface BasicDictService {
      */
     List<Map<String, Object>> getDictItem(Map<String, Object> map);
 
-    /**
-     * 添加数据字典
-     * @param map
-     */
-    void addDict(Map<String, Object> map);
-
 }

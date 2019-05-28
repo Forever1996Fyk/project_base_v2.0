@@ -239,7 +239,7 @@ public class PageController {
         Map<String, Object> dictById = dictService.getDictById(id);
 
         Map<String, Object> map = new HashMap<>();
-        map.put("dic_id", id);
+        map.put("dicId", id);
         List<Map<String, Object>> dictItems = dictItemService.getDictItems(map);
 
         model.addAttribute("dict", dictById);
@@ -263,8 +263,8 @@ public class PageController {
      * @param model
      * @return
      */
-    @RequestMapping("/basicDict/editDictItem")
-    public String editDictItem(String id, Model model) {
+    @RequestMapping("/basicDict/editDictItem/{id}")
+    public String editDictItem(@PathVariable("id") String id, Model model) {
         Map<String, Object> dictItemById = dictItemService.getDictItemById(id);
         model.addAttribute("dictItem", dictItemById);
         return "system/basicDict/addDictItem";

@@ -205,17 +205,5 @@
                                                                                                                 <if test="status != null">
                         status = #{status},
                     </if>
-                                                                                                            <if test="createUserId != null and createUserId != '' and createUserId != 'null' and createUserId != 'undefined'">
-                            create_user_id = #{createUserId},
-                        </if>
-                                                                                                            <if test="createTime != null and createTime != '' and createTime != 'null' and createTime != 'undefined'">
-                            create_time = #{createTime},
-                        </if>
-                                                                                                            <if test="updateUserId != null and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined'">
-                            update_user_id = #{updateUserId},
-                        </if>
-                                                                                                            <if test="updateTime != null and updateTime != '' and updateTime != 'null' and updateTime != 'undefined'">
-                            update_time = #{updateTime}
-                        </if>
                                                         </sql>
 </mapper>

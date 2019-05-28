@@ -95,6 +95,7 @@ layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
 
     /* AJAX请求默认选项，处理连接超时问题 */
     $.ajaxSetup({
+        //请求完成后
         complete: function (xhr, status) {
             if (xhr.status == 401) {
                 layer.confirm('session连接超时，是否重新登录？', {
@@ -105,7 +106,13 @@ layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
                     }
                 });
             }
+        },
+
+        //请求前
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Content-type", 'Application/JSON; charset=utf-8');
         }
+
     });
 
     /*  漂浮消息 */
@@ -254,7 +261,6 @@ layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
             }
             url += "/" + ids;
         } else {
-            debugger;
             if (paramElem !== undefined) {
                 url += "/" + paramElem;
             }

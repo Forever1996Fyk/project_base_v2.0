@@ -13,20 +13,6 @@
     <div class="layui-card-body">
         <div class="layui-row timo-card-screen put-row">
             <div class="pull-left layui-form-pane search-box">
-                <form id="frmSearch">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">搜索条件</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="userName" placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <!-- 这里使用a标签，因为在form标签中按钮会直接触发action,导致请求两次接口 -->
-                        <a class="layui-btn" data-type="search">
-                            <i class="fa fa-search"></i>
-                        </a>
-                    </div>
-                </form>
                 <div class="layui-inline">
                     <label class="layui-form-label" th:text="'数据字典编码: ' + ${dict.dicCode}"></label>
                 </div>
@@ -36,12 +22,12 @@
             </div>
             <div class="pull-right screen-btn-group">
                 <div class="btn-group-right">
-                    <button class="layui-btn open-popup" data-title="添加" th:attr="data-url=@{/system/dictItem/addDictItem},param=#{dict.id}"  data-size="auto">
+                    <button class="layui-btn" id="dictItemAdd" data-title="添加" data-type="add" th:attr="data-dicid=${dict.id}">
                         <i class="fa fa-plus"></i> 添加</button>
                     <div class="btn-group">
                         <button class="layui-btn">操作<span class="caret"></span></button>
                         <dl class="layui-nav-child layui-anim layui-anim-upbit">
-                            <dd><a class="ajax-status" th:href="@{/api/dictItems/}">删除</a></dd>
+                            <dd><a class="ajax-status-thy" th:href="@{/api/dictItems/}">删除</a></dd>
                         </dl>
                     </div>
                 </div>
@@ -59,16 +45,21 @@
                     <th class="sortable" data-field="itemName">字典项名称</th>
                     <th class="sortable" data-field="itemSort">排序</th>
                     <th class="sortable" data-field="remark">备注</th>
+                    <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="item:${list}">
-                    <td><label class="timo-checkbox"><input type="checkbox">
+                    <td><label class="timo-checkbox"><input type="checkbox" th:value="${item.id}">
                         <i class="layui-icon layui-icon-ok"></i></label></td>
                     <td th:text="${item.itemCode}">字典项编码</td>
                     <td th:text="${item.itemName}">字典项名称</td>
                     <td th:text="${item.itemSort}">排序</td>
                     <td th:text="${item.remark}">备注</td>
+                    <td>
+                        <a class="open-popup popup-edit" data-title="编辑菜单" th:attr="data-url=@{'/system/basicDict/editDictItem/'+${item.id}}" href="#">编辑</a>
+                        <a class="ajax-del popup-delete" th:attr="data-msg='您是否确定删除'" th:href="@{'/api/dictItem?id=' + ${item.id}}">删除</a>
+                    </td>
                 </tr>
                 </tbody>
             </table>

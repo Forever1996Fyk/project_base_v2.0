@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:mo="https://gitee.com/aun/Timo">
+      xmlns:base="https://github.com/Forever1996Fyk/project_base_v2.0">
 <head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
     <link rel="stylesheet" th:href="@{/lib/zTree_v3/css/zTreeStyle/zTreeStyle.css}" type="text/css">
 </head>
@@ -45,16 +45,16 @@
         <div class="layui-form-item">
             <label class="layui-form-label required">菜单类型</label>
             <div class="layui-input-inline">
-                <select name="type" mo:dict="MENU_TYPE" mo-empty="" lay-verify="type"></select>
+                <select name="level" base:dict="MENU_TYPE" base-selected="${permission?.level}" base-empty="" lay-verify="type"></select>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">排序</label>
             <div class="layui-input-inline">
-                <select class="select-sort" name="sort"
-                        th:attr="data-url=@{/system/menu/sortList}, data-id=${menu?.id}, data-sort=${permission?.sort}" lay-verify="sort"></select>
+                <input class="layui-input icon-input" type="text" name="sort"  placeholder="请输入排名" th:value="${permission?.sort}">
+                <!--<select class="select-sort" name="sort"
+                        th:attr="data-url=@{/system/menu/sortList}, data-id=${menu?.id}, data-sort=${permission?.sort}" lay-verify="sort"></select>-->
             </div>
-            <div class="layui-input-info">（之后）</div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">备注</label>

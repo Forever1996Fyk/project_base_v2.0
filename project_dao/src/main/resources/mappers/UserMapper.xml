@@ -98,7 +98,7 @@
                     a.update_user_id updateUserId ,
                     a.update_time updateTime
         FROM tb_role a INNER JOIN tb_user_role b on b.role_id = a.id
-        WHERE b.user_id = #{userId}
+        WHERE b.user_id = #{userId} AND a.status = 1
     </select>
 
     <!-- 获取用户权限 -->
@@ -110,7 +110,7 @@
             SELECT a.role_id
             FROM tb_user_role a
             WHERE a.user_id = #{userId}
-        )
+        ) AND b.status = 1
     </select>
 
     <!-- 添加用户角色 -->

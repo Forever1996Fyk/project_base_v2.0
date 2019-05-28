@@ -34,8 +34,8 @@ public class DictServiceImpl implements  DictService {
     @Override
     public Dict addDict(Dict dict) {
         dict.setId(String.valueOf(idWorker.nextId()));
-                                                                                                                    dict.setStatus(StatusEnum.Normal.getValue());
-                                                                                                            dictMapper.addDict(dict);
+        dict.setStatus(StatusEnum.Normal.getValue());
+        dictMapper.addDict(dict);
         return dict;
     }
 

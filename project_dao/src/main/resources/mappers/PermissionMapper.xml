@@ -69,7 +69,7 @@
             DELETE FROM tb_permission
         </delete>
 
-        <!-- 查询用户管理列表 -->
+        <!-- 查询权限管理列表 -->
         <select id="getPermissions" parameterType="Map" resultType="Map">
             SELECT <include refid="permission_select_cond" />
             FROM tb_permission a

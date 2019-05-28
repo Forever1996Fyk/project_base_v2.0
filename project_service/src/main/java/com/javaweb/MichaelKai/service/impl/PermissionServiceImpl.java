@@ -1,15 +1,16 @@
 package com.javaweb.MichaelKai.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.javaweb.MichaelKai.common.enums.StatusEnum;
 import com.javaweb.MichaelKai.common.utils.IdWorker;
+import com.javaweb.MichaelKai.mapper.PermissionMapper;
+import com.javaweb.MichaelKai.pojo.Permission;
+import com.javaweb.MichaelKai.service.PermissionService;
+import com.javaweb.MichaelKai.thymeleaf.util.DictUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.javaweb.MichaelKai.service.PermissionService;
-import com.javaweb.MichaelKai.mapper.PermissionMapper;
-import com.javaweb.MichaelKai.pojo.Permission;
-import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -74,6 +75,11 @@ public class PermissionServiceImpl implements  PermissionService {
 
     @Override
     public List<Map<String, Object>> getPermissions(Map<String, Object> map) {
+        List<Map<String, Object>> permissions = permissionMapper.getPermissions(map);
+        for (Map<String, Object> permission : permissions) {
+            permission.put("menuTypeName", DictUtil.keyValue("MENU_TYPE", permission.get("level").toString()));
+            permission.put("statusName", DictUtil.keyValue("STATUS_TYPE", permission.get("status").toString()));
+        }
         return permissionMapper.getPermissions(map);
     }
 }

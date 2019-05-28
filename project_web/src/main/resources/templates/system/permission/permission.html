@@ -80,8 +80,8 @@
                             <td>{{name}}</td>
                             <td>{{url}}</td>
                             <td>{{perm}}</td>
-                            <td>{{remark}}</td>
-                            <td>正常</td>
+                            <td>{{menuTypeName}}</td>
+                            <td>{{statusName}}</td>
                             <td>
                                 <a class="open-popup popup-edit" data-title="编辑菜单" th:attr="data-url=@{'/system/permission/edit/{{id}}'}" href="#">编辑</a>
                                 <a class="ajax-del popup-delete" th:attr="data-msg='您是否确定删除'" th:href="@{'/api/permission?id={{id}}'}">删除</a>

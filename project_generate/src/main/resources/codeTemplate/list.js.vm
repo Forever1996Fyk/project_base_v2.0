@@ -45,12 +45,14 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
     /*
      表格点击事件写法,其中tool('这是表格的lay-filter'),监听点击事件         */
     table.on('tool(tblist)', function (obj) {
-        if (obj.event === 'edit') {
-            active.edit(obj.data);
-        } else {
-            active.delete(obj.data);
+        switch (obj.event) {
+            case 'edit':
+                active.edit(obj.data);
+                break;
+            case 'del':
+                active.delete(obj.data);
+                break;
         }
-
     });
 
     var active = {

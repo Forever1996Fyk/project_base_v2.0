@@ -41,12 +41,16 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
     /*
      表格点击事件写法,其中tool('这是表格的lay-filter'),监听点击事件         */
     table.on('tool(tblist)', function (obj) {
-        if (obj.event === 'edit') {
-            active.edit(obj.data);
-        } else if(obj.event === 'dictItemsView') {
-            active.dictItemsView(obj.data);
-        } else {
-            active.delete(obj.data);
+        switch (obj.event) {
+            case 'edit':
+                active.edit(obj.data);
+                break;
+            case 'dictItemsView':
+                active.dictItemsView(obj.data);
+                break;
+            case 'del':
+                active.delete(obj.data);
+                break;
         }
 
     });
@@ -98,10 +102,9 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
         },
         //搜索
         search:function () {
-            debugger;
             tableObject.reload({
                 where:{
-                    
+                    dicName: $('#frmSearch [name=dicName]').val()
                 }
             })
         },
