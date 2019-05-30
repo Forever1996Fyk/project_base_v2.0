@@ -36,9 +36,6 @@ import java.util.Date;
  **/
 @Controller
 public class LoginController {
-
-    @Autowired
-    private ExceptionHandle exceptionHandle;
     @Autowired
     private UserService userService;
 
@@ -76,9 +73,9 @@ public class LoginController {
 
             return new Result(true, ResultEnum.SUCCESS.getValue(), "登录" + ResultEnum.SUCCESS.getMessage(), "/index");
         } catch (LockedAccountException e) {
-            return exceptionHandle.exception(e);
+            throw new ResultException(ResultEnum.ACCOUNT_LOCKED.getValue(), ResultEnum.ACCOUNT_LOCKED.getMessage());
         } catch (AuthenticationException e) {
-            return exceptionHandle.exception(e);
+            throw new ResultException(ResultEnum.ACCOUNT_PWD_ERROR.getValue(), ResultEnum.ACCOUNT_PWD_ERROR.getMessage());
         }
     }
 }

@@ -27,7 +27,7 @@ public class ResultException extends RuntimeException {
      * @param message
      * @param code
      */
-    public ResultException(String message, Integer code) {
+    public ResultException(Integer code, String message) {
         super(message);
         this.code = code;
     }

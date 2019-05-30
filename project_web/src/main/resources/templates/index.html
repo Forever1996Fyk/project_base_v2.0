@@ -35,8 +35,8 @@
                 <a class="timo-header-nickname" th:text="${user.nickName}">TIMO</a>
                 <div class="layui-nav-child">
                     <div class="timo-nav-child-box">
-                        <div><a class="open-popup" data-title="个人信息" th:attr="data-url=@{/userInfo}"
-                                data-size="680,464"><!--
+                        <div><a class="open-popup" data-title="个人信息" th:attr="data-url=@{/system/userInfo}"
+                                ><!--
               --><i class="fa fa-user-o"></i>个人信息</a></div>
                         <div><a class="open-popup" data-title="修改密码" th:attr="data-url=@{/editPwd}"
                                 data-size="456,296"><!--
@@ -52,8 +52,8 @@
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
             <div class="layui-side-user">
-                <img class="layui-side-user-avatar open-popup" th:attr="data-url=@{/userInfo}" data-size="680,464"
-                     th:src="@{'/system/user/picture?p='+${user.userIcon}}" alt="头像">
+                <img class="layui-side-user-avatar open-popup" th:attr="data-url=@{/system/userInfo}"
+                     th:src="@{'/api/attachments/'+${user.userIcon}+'/userIcon/image'}" alt="头像">
                 <div>
                     <p class="layui-side-user-name" th:text="${user.nickName}">TIMO</p>
                     <p class="layui-side-user-designation">在线</p>

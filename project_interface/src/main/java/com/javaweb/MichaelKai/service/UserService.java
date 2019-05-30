@@ -6,6 +6,7 @@ import com.javaweb.MichaelKai.pojo.User;
 import com.javaweb.MichaelKai.pojo.UserRole;
 import org.apache.ibatis.annotations.Param;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -92,4 +93,17 @@ public interface UserService {
      * @param userRole
      */
     void roleAssign(UserRole userRole);
+
+    /**
+     * 验证用户信息是否已经存在
+     * @param user
+     * @return
+     */
+    Map<String, Object> checkUser(User user);
+
+    /**
+     *
+     * @param request
+     */
+    User uploadUserIcon(HttpServletRequest request, String userId);
 }

@@ -2,6 +2,7 @@ package com.javaweb.MichaelKai.common.exception;
 
 import com.javaweb.MichaelKai.common.vo.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  **/
 @ControllerAdvice
 @Slf4j
+@Order(1)
 public class ExceptionHandle {
 
     /**
@@ -21,7 +23,7 @@ public class ExceptionHandle {
      * @param e
      * @return
      */
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(ResultException.class)
     @ResponseBody
     public Result exception(Exception e) {
         if (e instanceof ResultException) {

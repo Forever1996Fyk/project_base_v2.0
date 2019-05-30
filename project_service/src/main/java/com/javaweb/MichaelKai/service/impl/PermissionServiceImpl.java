@@ -78,8 +78,13 @@ public class PermissionServiceImpl implements  PermissionService {
         List<Map<String, Object>> permissions = permissionMapper.getPermissions(map);
         if (map != null && !"1".equals(map.get("flag"))) {
             for (Map<String, Object> permission : permissions) {
-                permission.put("menuTypeName", DictUtil.keyValue("MENU_TYPE", permission.get("level").toString()));
-                permission.put("statusName", DictUtil.keyValue("STATUS_TYPE", permission.get("status").toString()));
+                if (permission.get("level") != null) {
+                    permission.put("menuTypeName", DictUtil.keyValue("MENU_TYPE", permission.get("level").toString()));
+                }
+
+                if (permission.get("status") != null) {
+                    permission.put("statusName", DictUtil.keyValue("STATUS_TYPE", permission.get("status").toString()));
+                }
             }
         }
         return permissionMapper.getPermissions(map);

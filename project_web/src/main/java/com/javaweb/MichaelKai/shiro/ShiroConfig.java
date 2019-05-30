@@ -57,15 +57,28 @@ public class ShiroConfig {
          * 	—user 认证和自动登录可访问
          */
         LinkedHashMap<String, String> filterMap = new LinkedHashMap<>();
-        filterMap.put("/login", "anon");
-        filterMap.put("/logout", "anon");
-        filterMap.put("/noAuth", "anon");
-        filterMap.put("/captcha", "anon");
+
         filterMap.put("/css/**", "anon");
         filterMap.put("/js/**", "anon");
         filterMap.put("/images/**", "anon");
         filterMap.put("/lib/**", "anon");
         filterMap.put("/favicon.ico", "anon");
+
+        filterMap.put("/login", "anon");
+        filterMap.put("/reg", "anon");
+        filterMap.put("/logout", "anon");
+        filterMap.put("/noAuth", "anon");
+        filterMap.put("/captcha", "anon");
+
+        filterMap.put("/api/sendSmsCodeNotCheckPhone", "anon");
+        filterMap.put("/api/reg", "anon");
+        filterMap.put("/api/forget", "anon");
+        filterMap.put("/api/resetPassword", "anon");
+
+        filterMap.put("/system/toReg", "anon");
+        filterMap.put("/system/toForget", "anon");
+        filterMap.put("/system/toResetpass", "anon");
+
         //需要将拦截的接口放在最后拦截
         filterMap.put("/**", "auth");
 

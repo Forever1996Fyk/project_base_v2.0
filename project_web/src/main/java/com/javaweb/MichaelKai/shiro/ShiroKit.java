@@ -1,12 +1,17 @@
 package com.javaweb.MichaelKai.shiro;
 
+import com.javaweb.MichaelKai.common.utils.SpringContextUtil;
 import com.javaweb.MichaelKai.pojo.User;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.subject.Subject;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @program: project_parent
@@ -178,6 +183,18 @@ public class ShiroKit {
             return principal.toString();
         }
         return "";
+    }
+
+    /**
+     * 重置Cookie“记住我”序列化信息
+     */
+    public static void resetCookieRememberMe(){
+        RememberMeManager meManager = SpringContextUtil.getBean(RememberMeManager.class);
+        UsernamePasswordToken token = new UsernamePasswordToken();
+        token.setRememberMe(true);
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo();
+        info.setPrincipals(SecurityUtils.getSubject().getPrincipals());
+        meManager.onSuccessfulLogin(SecurityUtils.getSubject(), token, info);
     }
 
 }

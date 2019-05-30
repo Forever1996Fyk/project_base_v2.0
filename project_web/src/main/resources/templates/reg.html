@@ -1,55 +1,97 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+    <link th:href="@{/css/login.css}" rel="stylesheet" type="text/css" />
     <title>xxx系统注册</title>
 </head>
-<body class="layui-layout-login">
-<div class="login-bg">
-    <div class="cover"></div>
-</div>
-<div class="login-content">
-    <h1 class="login-box-title"><i class="fa fa-fw fa-user"></i>注册</h1>
-    <div class="layui-form">
-        <div class="layui-form-item">
-            <label class="layui-icon layui-icon-username" for="account"></label>
-            <input class="layui-input" type="text" name="account" id="account" placeholder="账号">
+<body>
+    <div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;">
+        <div class="login-bg">
+            <div class="cover"></div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-icon layui-icon-password" for="password"></label>
-            <input class="layui-input" type="password" name="password" id="password" placeholder="密码">
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-icon layui-icon-password" for="rePassword"></label>
-            <input class="layui-input" type="password" name="rePassword" id="rePassword" placeholder="再次输入密码">
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-icon layui-icon-cellphone" for="phone"></label>
-            <input class="layui-input" type="text" name="phone" id="phone" placeholder="请输入手机号">
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-row">
-                <div class="layui-col-xs7">
-                    <label class="layui-icon-vercode"
-                           for="vercode"></label>
-                    <input type="text" name="vercode" id="vercode" lay-verify="required"
-                           placeholder="验证码" class="layui-input">
+        <div class="layadmin-user-login-main">
+            <div class="layadmin-user-login-box layadmin-user-login-header">
+                <h2>用户注册</h2>
+                <p>layui 后台管理系统</p>
+            </div>
+            <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+                <div class="layui-form-item">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-cellphone"
+                           for="account"></label>
+                    <input type="text" name="account" id="account" lay-verify="account" placeholder="账号"
+                           class="layui-input">
                 </div>
-                <div class="layui-col-xs5">
-                    <div style="margin-left: 10px;">
-                        <button type="button" class="layui-btn layui-btn-primary layui-btn-fluid"
-                                id="getsmscode">获取验证码
-                        </button>
+                <div class="layui-form-item">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-password"
+                           for="password"></label>
+                    <input type="password" name="password" id="password" lay-verify="password" placeholder="密码"
+                           class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-password"
+                           for="repass"></label>
+                    <input type="password" name="repass" id="repass" lay-verify="required" placeholder="确认密码"
+                           class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-username"
+                           for="nickName"></label>
+                    <input type="text" name="nickName" id="nickName" lay-verify="nickName" placeholder="昵称"
+                           class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-cellphone"
+                           for="phone"></label>
+                    <input type="text" name="phone" id="phone" lay-verify="phone" placeholder="手机"
+                           class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-xs7">
+                            <label class="layadmin-user-login-icon layui-icon layui-icon-vercode"
+                                   for="vercode"></label>
+                            <input type="text" name="vercode" id="vercode" lay-verify="required"
+                                   placeholder="验证码" class="layui-input">
+                        </div>
+                        <div class="layui-col-xs5">
+                            <div style="margin-left: 10px;">
+                                <button type="button" class="layui-btn layui-btn-primary layui-btn-fluid"
+                                        id="getsmscode">获取验证码
+                                </button>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                <div class="layui-form-item">
+                    <input type="checkbox" name="agreement" lay-skin="primary" title="同意用户协议" checked>
+                </div>
+                <div class="layui-form-item">
+                    <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="regSubmit">注 册</button>
+                </div>
+                <div class="layui-trans layui-form-item layadmin-user-login-other">
+                    <label>社交账号注册</label>
+                    <a href="javascript:;"><i class="layui-icon layui-icon-login-qq"></i></a>
+                    <a href="javascript:;"><i class="layui-icon layui-icon-login-wechat"></i></a>
+                    <a href="javascript:;"><i class="layui-icon layui-icon-login-weibo"></i></a>
+
+                    <a th:href="@{/}" class="layadmin-user-jump-change layadmin-link layui-hide-xs">用已有帐号登入</a>
+                    <a th:href="@{/}"
+                       class="layadmin-user-jump-change layadmin-link layui-hide-sm layui-show-xs-inline-block">登入</a>
                 </div>
             </div>
         </div>
-        <div class="layui-form-item">
-            <input type="checkbox" name="rememberMe" title="记住我" lay-skin="primary">
-            <a class="layui-layout-right forget-password" href="javascript:alert('请联系超级管理员！')">忘记密码?</a>
+
+        <div class="layui-trans layadmin-user-login-footer">
+
+            <p>© 2018 <a href="http://www.layui.com/" target="_blank">layui.com</a></p>
+            <p>
+                <span><a href="http://www.layui.com/admin/#get" target="_blank">获取授权</a></span>
+                <span><a href="http://www.layui.com/admin/pro/" target="_blank">在线演示</a></span>
+                <span><a href="http://www.layui.com/admin/" target="_blank">前往官网</a></span>
+            </p>
         </div>
-        <button type="submit" class="layui-btn layui-btn-fluid ajax-login" lay-submit lay-filter="loginSubmit"><i class="fa fa-sign-in fa-lg fa-fw"></i> 登录</button>
+
     </div>
-</div>
 <script th:replace="/common/template :: script"></script>
 <script th:src="@{/js/login.js}" charset="utf-8"></script>
 </body>

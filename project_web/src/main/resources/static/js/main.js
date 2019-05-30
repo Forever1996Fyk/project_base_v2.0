@@ -108,10 +108,10 @@ layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
             }
         },
 
-        //请求前
+        /*//请求前
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Content-type", 'Application/JSON; charset=utf-8');
-        }
+        }*/
 
     });
 
@@ -182,6 +182,7 @@ layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
                 $.ajax({
                     url: e.target.href,
                     type: 'DELETE',
+                    contentType: 'Application/JSON; charset=utf-8',
                     success:function (res) {
                         $.fn.Messager(res);
                     }
@@ -208,6 +209,7 @@ layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
             $.ajax({
                url: e.target.href + ids,
                 type: 'DELETE',
+                contentType: 'Application/JSON; charset=utf-8',
                 success:function (res) {
                     $.fn.Messager(res);
                 }
@@ -228,6 +230,7 @@ layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
             $.ajax({
                 url: e.target.href + checked,
                 type: 'DELETE',
+                contentType: 'Application/JSON; charset=utf-8',
                 success:function (res) {
                     $.fn.Messager(res);
                 }

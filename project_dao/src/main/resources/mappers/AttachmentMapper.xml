@@ -213,7 +213,11 @@
                                             
                     status ,
                                                                                                                                                             
-                    attach_path
+                    attach_path,
+                    create_user_id,
+                    create_time,
+                    update_user_id,
+                    update_time
                                     </sql>
 
         <!-- (批量)新增值, 增删字段时调整 -->
@@ -229,8 +233,12 @@
                                                                 #{attachPostfix} ,
                                                                 #{attachment} ,
                                                                 #{remark} ,
-                                                                #{status}
-                                                                                                                                                                                #{attachPath} ,
+                                                                #{status},
+                                                                #{attachPath} ,
+                                                                #{createUserId},
+                                                                #{createTime},
+                                                                #{updateUserId},
+                                                                #{updateTime}
                                     </sql>
 
         <!-- (批量修改的条件,增减字段时调整) -->

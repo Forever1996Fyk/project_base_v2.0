@@ -168,6 +168,9 @@
         <if test="marryFlag != null and marryFlag != '' and marryFlag != 'null' and marryFlag != 'undefined'">
             AND a.marry_flag = #{marryFlag}
         </if>
+        <if test="phone != null and phone != '' and phone != 'null' and phone != 'undefined'">
+            AND a.phone = #{phone}
+        </if>
         <if test="education != null">
             AND a.education = #{education}
         </if>
@@ -211,6 +214,12 @@
         </if>
         <if test="nickName != null and nickName != '' and nickName != 'null' and nickName != 'undefined'">
             nick_name = #{nickName},
+        </if>
+        <if test="password != null and password != '' and password != 'null' and password != 'undefined'">
+            password = #{password},
+        </if>
+        <if test="salt != null and salt != '' and salt != 'null' and salt != 'undefined'">
+            salt = #{salt},
         </if>
         <if test="userIcon != null and userIcon != '' and userIcon != 'null' and userIcon != 'undefined'">
             user_icon = #{userIcon},

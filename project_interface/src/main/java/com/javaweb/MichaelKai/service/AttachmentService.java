@@ -4,6 +4,9 @@ import com.javaweb.MichaelKai.pojo.Attachment;
 import org.apache.ibatis.annotations.Param;
 import com.github.pagehelper.PageInfo;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +31,7 @@ public interface AttachmentService {
      * @param id  主键
      * @return
      */
-    Map<String, Object> getAttachmentById(String id);
+    Attachment getAttachmentById(String id);
 
     /**
      * 根据id修改
@@ -75,4 +78,19 @@ public interface AttachmentService {
      * @return 结果集合
      */
     List<Map<String, Object>> getAttachments(Map<String, Object> map);
+
+    /**
+     * 添加附件
+     * @param request
+     * @return
+     */
+    Attachment addAttachment(HttpServletRequest request);
+
+  /**
+   * 添加附件
+   * @param request
+   * @param userId
+   * @return
+   */
+    Attachment addAttachment(HttpServletRequest request, String userId, Integer attachType) throws Exception;
 }

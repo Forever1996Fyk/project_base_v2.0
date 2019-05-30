@@ -24,6 +24,9 @@ public enum ResultEnum {
     USER_CAPTCHA_ERROR(406, "验证码错误"),
     USER_PHONE_NOT_EXIST(407, "手机号不存在"),
 
+    ACCOUNT_PWD_ERROR(408, "用户名或密码错误"),
+    ACCOUNT_LOCKED(409, "账号已被锁定"),
+
     /**
      * 角色问题
      */
@@ -52,7 +55,13 @@ public enum ResultEnum {
     NO_ADMIN_STATUS(501, "不能修改超级管理员状态"),
     NO_ADMINROLE_AUTH(500, "不允许操作管理员角色"),
     NO_ADMINROLE_STATUS(501, "不能修改管理员角色状态"),
-        ;
+
+    /**
+     * 文件上传问题
+     */
+    UPLOAD_FAIL(500, "上传失败"),
+    NO_FILE_NULL(500, "文件不能为空"),
+    NO_FILE_TYPE(500, "不支持该文件类型");
 
     private Integer value;
 

@@ -80,7 +80,7 @@ public class IndexController {
             model.addAttribute("user", user);
             model.addAttribute("treeMenu", treeMap);
 
-            return "main";
+            return "index";
 
         } catch (Exception e) {
             e.printStackTrace();

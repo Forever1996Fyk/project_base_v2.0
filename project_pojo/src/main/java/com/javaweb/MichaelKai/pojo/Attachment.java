@@ -31,13 +31,19 @@ public class Attachment implements Serializable {
 	//文件后缀
 	private String attachPostfix;
 	//附件
-	private String attachment;
+	private byte[] attachment;
 	//备注
 	private String remark;
 	//状态:0  已禁用 1 正在使用
 	private Integer status;
 	//文件路径
 	private String attachPath;
+	//创建人
+	private String createUserId;
+	//更新人
+	private String updateUserId;
+	private String createTime;
+	private String updateTime;
 	
 	/**
 	 * 设置：附件标识
@@ -147,18 +153,15 @@ public class Attachment implements Serializable {
 	public String getAttachPostfix() {
 		return attachPostfix;
 	}
-	/**
-	 * 设置：附件
-	 */
-	public void setAttachment(String attachment) {
-		this.attachment = attachment;
-	}
-	/**
-	 * 获取：附件
-	 */
-	public String getAttachment() {
+
+	public byte[] getAttachment() {
 		return attachment;
 	}
+
+	public void setAttachment(byte[] attachment) {
+		this.attachment = attachment;
+	}
+
 	/**
 	 * 设置：备注
 	 */
@@ -194,5 +197,37 @@ public class Attachment implements Serializable {
 	 */
 	public String getAttachPath() {
 		return attachPath;
+	}
+
+	public String getCreateUserId() {
+		return createUserId;
+	}
+
+	public void setCreateUserId(String createUserId) {
+		this.createUserId = createUserId;
+	}
+
+	public String getUpdateUserId() {
+		return updateUserId;
+	}
+
+	public void setUpdateUserId(String updateUserId) {
+		this.updateUserId = updateUserId;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
 	}
 }

@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * @program: project_base
- * @description: 用户登录实体类
+ * @description: 用户登录注册实体类
  * @author: YuKai Fan
  * @create: 2019-05-27 11:38
  **/
@@ -12,5 +12,8 @@ import lombok.Data;
 public class UserVo {
     private String account;
     private String password;
+    private String nickName;
+    private String phone;
+    private String vercode;
     private String captcha;//验证码
 }

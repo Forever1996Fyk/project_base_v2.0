@@ -66,6 +66,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
                 $.ajax({
                     url: ctxPath + '/api/role?id=' + data.id,
                     type: 'delete',
+                    contentType: 'Application/JSON; charset=utf-8',
                     success:function(res){
                         if (res.code === 200) {
                             layer.msg(res.message);

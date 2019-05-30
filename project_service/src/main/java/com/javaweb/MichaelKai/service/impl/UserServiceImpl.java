@@ -2,12 +2,16 @@ package com.javaweb.MichaelKai.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.javaweb.MichaelKai.common.enums.FileTypeEnum;
 import com.javaweb.MichaelKai.common.enums.StatusEnum;
 import com.javaweb.MichaelKai.common.utils.IdWorker;
+import com.javaweb.MichaelKai.common.utils.MapUtil;
 import com.javaweb.MichaelKai.mapper.UserMapper;
+import com.javaweb.MichaelKai.pojo.Attachment;
 import com.javaweb.MichaelKai.pojo.Role;
 import com.javaweb.MichaelKai.pojo.User;
 import com.javaweb.MichaelKai.pojo.UserRole;
+import com.javaweb.MichaelKai.service.AttachmentService;
 import com.javaweb.MichaelKai.service.UserService;
 import com.javaweb.MichaelKai.thymeleaf.util.DictUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +42,8 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Autowired
     private IdWorker idWorker;
+    @Autowired
+    private AttachmentService attachmentService;
 
     @Override
     public User addUser(User user) {
@@ -80,9 +90,16 @@ public class UserServiceImpl implements UserService {
     public List<Map<String, Object>> getUsers(Map<String, Object> map) {
         List<Map<String, Object>> users = userMapper.getUsers(map);
         for (Map<String, Object> user : users) {
-            user.put("educationName", DictUtil.keyValue("EDUCATION_TYPE", user.get("education").toString()));
-            user.put("marryFlagName", DictUtil.keyValue("MARRAY_TYPE", user.get("marryFlag").toString()));
-            user.put("statusName", DictUtil.keyValue("STATUS_TYPE", user.get("status").toString()));
+            if (user.get("education") != null) {
+                user.put("educationName", DictUtil.keyValue("EDUCATION_TYPE", user.get("education").toString()));
+            }
+            if (user.get("marryFlag") != null) {
+                user.put("marryFlagName", DictUtil.keyValue("MARRAY_TYPE", user.get("marryFlag").toString()));
+            }
+            if (user.get("status") != null) {
+                user.put("statusName", DictUtil.keyValue("STATUS_TYPE", user.get("status").toString()));
+            }
+
         }
         return users;
     }
@@ -122,4 +139,93 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public Map<String, Object> checkUser(User user) {
+        Map<String, Object> map = new HashMap<>();
+
+        if (StringUtils.isEmpty(user.getAccount())) {
+            if(!checkParam("account", user.getAccount())) {
+                return returnResult(false, "账号已存在");
+            }
+        }
+
+        if (StringUtils.isEmpty(user.getNickName())) {
+            if (!checkParam("nickName", user.getNickName())) {
+                return returnResult(false, "昵称已存在");
+            }
+        }
+
+        if (StringUtils.isEmpty(user.getPhone())) {
+            if (!checkParam("phone", user.getPhone())) {
+                return returnResult(false, "手机号已存在");
+            }
+        }
+
+        map.put("flag", true);
+        return map;
+    }
+
+    @Override
+    public User uploadUserIcon(HttpServletRequest request, String userId) {
+        try {
+            Attachment attachment = attachmentService.addAttachment(request, userId, FileTypeEnum.PIC.getAttachType());
+            if (attachment != null) {
+                User user = new User();
+                user.setId(userId);
+                user.setUserIcon(attachment.getId());
+                userMapper.editUserById(user);
+                return user;
+            }
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    private Boolean checkParam(String key, String val) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(key, val);
+        switch (key) {
+            case "account":
+                return checkResult(map);
+            case "nickName":
+                return checkResult(map);
+            case "phone":
+                return checkResult(map);
+        }
+        return true;
+    }
+
+    //验证结果
+    private Boolean checkResult(Map<String, Object> map) {
+        List<Map<String, Object>> users = userMapper.getUsers(map);
+        if (users.size() > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    //返回结果
+    private Map<String, Object> returnResult(boolean flag, String message) {
+        Map<String, Object> map = new HashMap<>();
+        if (flag) {
+            map.put("flag", flag);
+        } else {
+            map.put("flag", flag);
+            map.put("message", message);
+        }
+        return map;
+    }
+
+
 }

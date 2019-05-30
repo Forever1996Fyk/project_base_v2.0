@@ -36,6 +36,7 @@
         jquery: "modules/jquery",
         mobile: "modules/mobile",
         formSelects: "modules/formSelects-v4",
+        croppers: "modules/croppers",
         "layui.all": "../layui.all"
     };
     n.prototype.cache = o, n.prototype.define = function (e, t) {

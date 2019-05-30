@@ -1,7 +1,9 @@
 package com.javaweb.MichaelKai.controller.system;
 
 import com.javaweb.MichaelKai.common.utils.HttpServletUtil;
+import com.javaweb.MichaelKai.pojo.User;
 import com.javaweb.MichaelKai.service.*;
+import com.javaweb.MichaelKai.shiro.ShiroKit;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,6 +37,58 @@ public class PageController {
     private DictService dictService;
     @Autowired
     private DictItemService dictItemService;
+
+    /**
+     * 跳转到注册页面
+     * @return
+     */
+    @GetMapping("/toReg")
+    public String toReg() {
+        return "reg";
+    }
+
+    /**
+     * 跳转到忘记密码页面
+     * @return
+     */
+    @GetMapping("/toForget")
+    public String toForget(Model model) {
+        model.addAttribute("type", "forget");
+        return "forget";
+    }
+
+    /**
+     * 跳转到忘记密码页面
+     * @return
+     */
+    @GetMapping("/toResetpass")
+    public String toResetpass(String phone, Model model) {
+        model.addAttribute("type", "resetpass");
+        model.addAttribute("phone", phone);
+        return "forget";
+    }
+
+    /**
+     * 用户信息页面
+     * @return
+     */
+    @GetMapping("/userInfo")
+    public String userInfo(Model model) {
+        User user = ShiroKit.getUser();
+        model.addAttribute("user", user);
+        return "system/main/userInfo";
+    }
+
+    /**
+     * 用户信息页面
+     * @return
+     */
+    @GetMapping("/cropperPic")
+    public String cropperPic() {
+        return "system/main/cropperPic";
+    }
+
+
     /**
      * 用户管理列表
      * @return

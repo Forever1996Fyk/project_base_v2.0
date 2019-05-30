@@ -3,6 +3,7 @@ package com.javaweb.MichaelKai.controller;
 import com.github.pagehelper.PageInfo;
 import com.javaweb.MichaelKai.common.constants.Constant;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
+import com.javaweb.MichaelKai.common.utils.BeanUtil;
 import com.javaweb.MichaelKai.common.utils.MD5Util;
 import com.javaweb.MichaelKai.common.utils.PinYinUtil;
 import com.javaweb.MichaelKai.common.vo.PageResult;
@@ -11,10 +12,13 @@ import com.javaweb.MichaelKai.pojo.User;
 import com.javaweb.MichaelKai.pojo.UserRole;
 import com.javaweb.MichaelKai.service.UserService;
 import com.javaweb.MichaelKai.shiro.ShiroKit;
+import jdk.nashorn.internal.ir.IfNode;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +68,22 @@ public class UserController {
     @PutMapping("/user")
     public Result editUserById(@RequestBody User user) {
         userService.editUserById(user);
+        return new Result(true, ResultEnum.SUCCESS.getValue(), "修改" + ResultEnum.SUCCESS.getMessage(), user);
+    }
+
+    /**
+     * 编辑修改个人
+     * @param user
+     * @return
+     */
+    @PutMapping("/userInfo")
+    public Result editUserInfo(@RequestBody User user) {
+        userService.editUserById(user);
+
+        //更新缓存用户信息
+        User subject = ShiroKit.getUser();
+        BeanUtils.copyProperties(user, subject, BeanUtil.getNullPropNames(user));
+        ShiroKit.resetCookieRememberMe();
         return new Result(true, ResultEnum.SUCCESS.getValue(), "修改" + ResultEnum.SUCCESS.getMessage(), user);
     }
 
@@ -124,6 +144,22 @@ public class UserController {
     public Result roleAssign(@RequestBody UserRole userRole) {
         userService.roleAssign(userRole);
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage());
+    }
+
+    /**
+     * 上传用户头像
+     * @param request
+     * @return
+     */
+    @PostMapping("/uploadUserIcon")
+    public Result uploadUserIcon(HttpServletRequest request) {
+        User user = userService.uploadUserIcon(request, ShiroKit.getUser().getId());
+        if (user != null) {
+            User subject = ShiroKit.getUser();
+            subject.setUserIcon(user.getUserIcon());
+            ShiroKit.resetCookieRememberMe();
+        }
+        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), user);
     }
 
 }
