@@ -197,4 +197,11 @@ public class ShiroKit {
         meManager.onSuccessfulLogin(SecurityUtils.getSubject(), token, info);
     }
 
+    /**
+     * 获取用户ip地址
+     * @return
+     */
+    public static String getIp() {
+        return SecurityUtils.getSubject().getSession().getHost();
+    }
 }

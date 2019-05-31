@@ -1,7 +1,7 @@
 package ${package}.impl;
 
 import com.github.pagehelper.PageHelper;
-import ${package}.common.utils.IdWorker;
+import ${package}.common.utils.AppUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +28,10 @@ public class ${className}ServiceImpl implements  ${className}Service {
 
 	@Autowired
 	private ${className}Mapper ${classname}Mapper;
-	@Autowired
-    private IdWorker idWorker;
 
     @Override
     public ${className} add${className}(${className} ${classname}) {
-        ${classname}.setId(String.valueOf(idWorker.nextId()));
+        ${classname}.setId(AppUtil.randomId());
         #foreach($column in $columns)
             #if($column.attrname == "status")
                 ${classname}.setStatus(StatusEnum.Normal.getValue());

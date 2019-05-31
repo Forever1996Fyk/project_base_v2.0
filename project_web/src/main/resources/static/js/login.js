@@ -4,7 +4,7 @@ layui.use(['element', 'layer', 'form'], function () {
     var form = layui.form;
 
     //刷新验证码
-    $(document).on('click', '.captcha-img', function () {
+    $(document).on('click', '.layadmin-user-login-codeimg', function () {
         var src = this.src.split("?")[0];
         this.src = src + "?" + Math.random();
     });
@@ -29,7 +29,7 @@ layui.use(['element', 'layer', 'form'], function () {
                         window.location.href = ctxPath + '/index';
                     })
                 } else {
-                    $('.captcha-img').click();
+                    $('.layadmin-user-login-codeimg').click();
                     return layer.msg(res.message);
                 }
             }
@@ -53,6 +53,7 @@ layui.use(['element', 'layer', 'form'], function () {
             url: ctxPath + '/api/reg',
             type: 'POST',
             data: JSON.stringify(data),
+            contentType: 'Application/JSON; charset=utf-8',
             success: function (res) {
                 console.log(res);
                 if (res.code === 200) {
@@ -88,6 +89,7 @@ layui.use(['element', 'layer', 'form'], function () {
             url: ctxPath + '/api/forget',
             type: 'POST',
             data: JSON.stringify(data),
+            contentType: 'Application/JSON; charset=utf-8',
             success: function (res) {
                 console.log(res);
                 if (res.code === 200) {
@@ -117,6 +119,7 @@ layui.use(['element', 'layer', 'form'], function () {
             url: ctxPath + '/api/resetPassword',
             type: 'POST',
             data: JSON.stringify(data),
+            contentType: 'Application/JSON; charset=utf-8',
             success: function (res) {
                 console.log(res);
                 if (res.code === 200) {
@@ -137,7 +140,7 @@ layui.use(['element', 'layer', 'form'], function () {
     //发送验证码
     $("#sendSmsCode").click(function (e) {
         $.ajax({
-           url: ctxPath + '/api/sendSmsCodeNotCheckPhone?phone=' + '17856941755' ,
+           url: ctxPath + '/api/sendSmsCode?phone=' + '17856941755' ,
             type: 'get',
             success: function (res) {
                 if (res.code === 200) {

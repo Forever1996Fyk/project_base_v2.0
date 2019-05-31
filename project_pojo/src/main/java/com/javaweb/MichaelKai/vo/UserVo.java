@@ -15,5 +15,5 @@ public class UserVo {
     private String nickName;
     private String phone;
     private String vercode;
-    private String captcha;//验证码
+    private String captchaCode;//验证码
 }

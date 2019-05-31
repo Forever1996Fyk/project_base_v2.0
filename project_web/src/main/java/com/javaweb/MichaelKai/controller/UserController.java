@@ -1,7 +1,9 @@
 package com.javaweb.MichaelKai.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.javaweb.MichaelKai.annotation.ActionLog;
 import com.javaweb.MichaelKai.common.constants.Constant;
+import com.javaweb.MichaelKai.common.enums.LogTypeEnum;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.utils.BeanUtil;
 import com.javaweb.MichaelKai.common.utils.MD5Util;
@@ -41,6 +43,7 @@ public class UserController {
      * @returneducation
      */
     @PostMapping("/user")
+    @ActionLog(name = "用户新增", LOG_TYPE_ENUM = LogTypeEnum.USER_ADD)
     public Result addUser(@RequestBody User user) {
         //生成随机盐
         String salt = MD5Util.createSalt();
@@ -66,6 +69,7 @@ public class UserController {
      * @return
      */
     @PutMapping("/user")
+    @ActionLog(name = "用户更新", LOG_TYPE_ENUM = LogTypeEnum.USER_EDIT)
     public Result editUserById(@RequestBody User user) {
         userService.editUserById(user);
         return new Result(true, ResultEnum.SUCCESS.getValue(), "修改" + ResultEnum.SUCCESS.getMessage(), user);
@@ -77,6 +81,7 @@ public class UserController {
      * @return
      */
     @PutMapping("/userInfo")
+    @ActionLog(name = "用户修改个人信息", LOG_TYPE_ENUM = LogTypeEnum.USER_EDIT)
     public Result editUserInfo(@RequestBody User user) {
         userService.editUserById(user);
 
@@ -93,6 +98,7 @@ public class UserController {
      * @return
      */
     @DeleteMapping("/user")
+    @ActionLog(name = "删除用户", LOG_TYPE_ENUM = LogTypeEnum.USER_DEL)
     public Result editUserById(@RequestParam String id) {
         userService.delUserById(id);
         return new Result(true, ResultEnum.SUCCESS.getValue(), "删除" + ResultEnum.SUCCESS.getMessage());
@@ -104,6 +110,7 @@ public class UserController {
      * @return
      */
     @DeleteMapping("/users/{ids}")
+    @ActionLog(name = "删除用户", LOG_TYPE_ENUM = LogTypeEnum.USER_DEL)
     public Result editUserByIds(@PathVariable("ids") String[] ids) {
         userService.delUserByIds(Arrays.asList(ids));
         return new Result(true, ResultEnum.SUCCESS.getValue(), "批量删除" + ResultEnum.SUCCESS.getMessage());

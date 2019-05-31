@@ -1,15 +1,15 @@
 package com.javaweb.MichaelKai.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.javaweb.MichaelKai.common.utils.IdWorker;
+import com.github.pagehelper.PageInfo;
+import com.javaweb.MichaelKai.common.enums.StatusEnum;
+import com.javaweb.MichaelKai.common.utils.AppUtil;
+import com.javaweb.MichaelKai.mapper.DictMapper;
+import com.javaweb.MichaelKai.pojo.Dict;
+import com.javaweb.MichaelKai.service.DictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.javaweb.MichaelKai.service.DictService;
-import com.javaweb.MichaelKai.mapper.DictMapper;
-import com.javaweb.MichaelKai.pojo.Dict;
-import com.javaweb.MichaelKai.common.enums.StatusEnum;
-import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -28,12 +28,10 @@ public class DictServiceImpl implements  DictService {
 
 	@Autowired
 	private DictMapper dictMapper;
-	@Autowired
-    private IdWorker idWorker;
 
     @Override
     public Dict addDict(Dict dict) {
-        dict.setId(String.valueOf(idWorker.nextId()));
+        dict.setId(AppUtil.randomId());
         dict.setStatus(StatusEnum.Normal.getValue());
         dictMapper.addDict(dict);
         return dict;

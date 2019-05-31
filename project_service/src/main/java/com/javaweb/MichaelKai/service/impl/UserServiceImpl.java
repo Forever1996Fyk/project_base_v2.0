@@ -4,8 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.javaweb.MichaelKai.common.enums.FileTypeEnum;
 import com.javaweb.MichaelKai.common.enums.StatusEnum;
-import com.javaweb.MichaelKai.common.utils.IdWorker;
-import com.javaweb.MichaelKai.common.utils.MapUtil;
+import com.javaweb.MichaelKai.common.utils.AppUtil;
 import com.javaweb.MichaelKai.mapper.UserMapper;
 import com.javaweb.MichaelKai.pojo.Attachment;
 import com.javaweb.MichaelKai.pojo.Role;
@@ -41,13 +40,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
     @Autowired
-    private IdWorker idWorker;
-    @Autowired
     private AttachmentService attachmentService;
 
     @Override
     public User addUser(User user) {
-        user.setId(String.valueOf(idWorker.nextId()));
+        user.setId(AppUtil.randomId());
         user.setStatus(StatusEnum.Normal.getValue());
         userMapper.addUser(user);
         return user;

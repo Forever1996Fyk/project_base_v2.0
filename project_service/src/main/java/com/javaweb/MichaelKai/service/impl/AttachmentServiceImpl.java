@@ -1,32 +1,26 @@
 package com.javaweb.MichaelKai.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.javaweb.MichaelKai.common.constants.Constant;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.exception.ResultException;
-import com.javaweb.MichaelKai.common.properties.FileUploadProperties;
+import com.javaweb.MichaelKai.common.utils.AppUtil;
 import com.javaweb.MichaelKai.common.utils.DateUtil;
-import com.javaweb.MichaelKai.common.utils.IdWorker;
 import com.javaweb.MichaelKai.common.utils.MapUtil;
-import com.javaweb.MichaelKai.common.utils.SpringContextUtil;
 import com.javaweb.MichaelKai.fileUpload.FileUpload;
+import com.javaweb.MichaelKai.mapper.AttachmentMapper;
+import com.javaweb.MichaelKai.pojo.Attachment;
+import com.javaweb.MichaelKai.service.AttachmentService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.javaweb.MichaelKai.service.AttachmentService;
-import com.javaweb.MichaelKai.mapper.AttachmentMapper;
-import com.javaweb.MichaelKai.pojo.Attachment;
-import com.javaweb.MichaelKai.common.enums.StatusEnum;
-import com.github.pagehelper.PageInfo;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -46,14 +40,10 @@ public class AttachmentServiceImpl implements  AttachmentService {
 
 	@Autowired
 	private AttachmentMapper attachmentMapper;
-	@Autowired
-    private IdWorker idWorker;
 
     @Override
     public Attachment addAttachment(Attachment attachment) {
-        attachment.setId(String.valueOf(idWorker.nextId()));
-                                                                                                                                                                                                                                                                attachment.setStatus(StatusEnum.Normal.getValue());
-                                                                                                                                attachmentMapper.addAttachment(attachment);
+        attachment.setId(AppUtil.randomId());
         return attachment;
     }
 
@@ -177,7 +167,7 @@ public class AttachmentServiceImpl implements  AttachmentService {
       */
      private Attachment addAttachment(Attachment attachment, String userId, Integer attachType) {
 
-         attachment.setId(String.valueOf(idWorker.nextId()));
+         attachment.setId(AppUtil.randomId());
          attachment.setAttachType(attachType);
          attachment.setCreateUserId(userId);
          attachment.setUpdateUserId(userId);

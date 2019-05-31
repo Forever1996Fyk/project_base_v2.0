@@ -96,9 +96,9 @@
                     a.remark remark ,
                     a.status status ,
                     a.create_user_id createUserId ,
-                    a.create_time createTime ,
                     a.update_user_id updateUserId ,
-                    a.update_time updateTime
+                    DATE_FORMAT(a.update_time,'%Y-%m-%d %H:%i:%s') updateTime,
+                    DATE_FORMAT(a.create_time,'%Y-%m-%d %H:%i:%s') createTime
                 </sql>
 
         <!-- (单个)查询的选择项, 增删字段时调整 -->

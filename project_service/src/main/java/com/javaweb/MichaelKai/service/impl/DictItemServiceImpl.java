@@ -1,17 +1,17 @@
 package com.javaweb.MichaelKai.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.javaweb.MichaelKai.common.utils.IdWorker;
+import com.github.pagehelper.PageInfo;
+import com.javaweb.MichaelKai.common.enums.StatusEnum;
+import com.javaweb.MichaelKai.common.utils.AppUtil;
+import com.javaweb.MichaelKai.mapper.DictItemMapper;
 import com.javaweb.MichaelKai.mapper.DictMapper;
+import com.javaweb.MichaelKai.pojo.DictItem;
+import com.javaweb.MichaelKai.service.DictItemService;
 import com.javaweb.MichaelKai.thymeleaf.util.DictUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.javaweb.MichaelKai.service.DictItemService;
-import com.javaweb.MichaelKai.mapper.DictItemMapper;
-import com.javaweb.MichaelKai.pojo.DictItem;
-import com.javaweb.MichaelKai.common.enums.StatusEnum;
-import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -32,14 +32,12 @@ public class DictItemServiceImpl implements  DictItemService {
 	private DictItemMapper dictItemMapper;
 	@Autowired
     private DictMapper dictMapper;
-	@Autowired
-    private IdWorker idWorker;
 
     @Override
     public DictItem addDictItem(DictItem dictItem) {
         dictItem.setItemCode(dictItem.getItemCode().trim());
         dictItem.setItemName(dictItem.getItemName().trim());
-        dictItem.setId(String.valueOf(idWorker.nextId()));
+        dictItem.setId(AppUtil.randomId());
         dictItem.setStatus(StatusEnum.Normal.getValue());
         dictItemMapper.addDictItem(dictItem);
 

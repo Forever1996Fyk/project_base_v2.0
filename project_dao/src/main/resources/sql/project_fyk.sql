@@ -3,6 +3,7 @@ DROP TABLE tb_role;
 DROP TABLE tb_role_permission;
 DROP TABLE tb_user;
 DROP TABLE tb_user_role;
+DROP TABLE sys_action_log;
 
 CREATE TABLE `tb_permission` (
   `id` varchar(32) NOT NULL COMMENT '权限标识',
@@ -130,4 +131,21 @@ CREATE TABLE `tb_dict_item` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='数据字典项'
+
+CREATE TABLE `tb_action_log` (
+  `id` varchar(32) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `name` varchar(255) DEFAULT NULL COMMENT '日志名称',
+  `type` varchar(255) DEFAULT NULL COMMENT '日志类型',
+  `ipaddr` varchar(255) DEFAULT NULL COMMENT '操作IP地址',
+  `clazz` varchar(255) DEFAULT NULL COMMENT '产生日志的类',
+  `method` varchar(255) DEFAULT NULL COMMENT '产生日志的方法',
+  `model` varchar(255) DEFAULT NULL COMMENT '产生日志的表',
+  `record_id` bigint(20) DEFAULT NULL COMMENT '产生日志的数据id',
+  `message` text COMMENT '日志消息',
+	`create_user_id` varchar(32) DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_user_id` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户日志';
 

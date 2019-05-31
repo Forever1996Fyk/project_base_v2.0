@@ -1,16 +1,16 @@
 package com.javaweb.MichaelKai.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.javaweb.MichaelKai.common.enums.StatusEnum;
-import com.javaweb.MichaelKai.common.utils.IdWorker;
+import com.javaweb.MichaelKai.common.utils.AppUtil;
+import com.javaweb.MichaelKai.mapper.RoleMapper;
+import com.javaweb.MichaelKai.pojo.Role;
 import com.javaweb.MichaelKai.pojo.RolePermission;
+import com.javaweb.MichaelKai.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.javaweb.MichaelKai.service.RoleService;
-import com.javaweb.MichaelKai.mapper.RoleMapper;
-import com.javaweb.MichaelKai.pojo.Role;
-import com.github.pagehelper.PageInfo;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -29,12 +29,10 @@ public class RoleServiceImpl implements  RoleService {
 
 	@Autowired
 	private RoleMapper roleMapper;
-	@Autowired
-    private IdWorker idWorker;
 
     @Override
     public Role addRole(Role role) {
-        role.setId(String.valueOf(idWorker.nextId()));
+        role.setId(AppUtil.randomId());
         role.setStatus(StatusEnum.Normal.getValue());
         roleMapper.addRole(role);
         return role;

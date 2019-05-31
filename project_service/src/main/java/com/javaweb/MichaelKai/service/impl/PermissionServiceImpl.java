@@ -3,7 +3,7 @@ package com.javaweb.MichaelKai.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.javaweb.MichaelKai.common.enums.StatusEnum;
-import com.javaweb.MichaelKai.common.utils.IdWorker;
+import com.javaweb.MichaelKai.common.utils.AppUtil;
 import com.javaweb.MichaelKai.mapper.PermissionMapper;
 import com.javaweb.MichaelKai.pojo.Permission;
 import com.javaweb.MichaelKai.service.PermissionService;
@@ -29,12 +29,10 @@ public class PermissionServiceImpl implements  PermissionService {
 
 	@Autowired
 	private PermissionMapper permissionMapper;
-	@Autowired
-    private IdWorker idWorker;
 
     @Override
     public Permission addPermission(Permission permission) {
-        permission.setId(String.valueOf(idWorker.nextId()));
+        permission.setId(AppUtil.randomId());
         permission.setStatus(StatusEnum.Normal.getValue());
         permissionMapper.addPermission(permission);
         return permission;

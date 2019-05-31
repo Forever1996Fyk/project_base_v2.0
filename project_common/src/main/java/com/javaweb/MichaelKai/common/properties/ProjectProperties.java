@@ -15,5 +15,5 @@ import org.springframework.stereotype.Component;
 @Data
 public class ProjectProperties {
     //是否开启验证码
-    private boolean captchOpen = true;
+    private boolean captchaOpen = false;
 }

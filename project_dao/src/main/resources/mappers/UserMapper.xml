@@ -132,7 +132,8 @@
     <sql id="user_select_cond">
         a.id id, a.account account, a.user_name userName, a.salt salt, a.password password, a.nick_name nickName, a.user_icon userIcon, a.last_login_time lastLoginTime
         ,a.age age, a.sex sex, a.marry_flag marryFlag, a.education education, a.phone phone, a.email email, a.prov prov, a.city city, a.dist dist, a.address address
-        ,a.idcard idcard, a.remark remark, a.status status, a.create_user_id createUserId, a.create_time createTime, a.update_user_id updateUserId, a.update_time updateTime
+        ,a.idcard idcard, a.remark remark, a.status status, a.create_user_id createUserId,  a.update_user_id updateUserId
+        , DATE_FORMAT(a.update_time,'%Y-%m-%d %H:%i:%s') updateTime ,DATE_FORMAT(a.create_time,'%Y-%m-%d %H:%i:%s') createTime
     </sql>
 
     <!-- (单个)查询的选择项, 增删字段时调整 -->
@@ -240,7 +241,7 @@
             education = #{education},
         </if>
         <if test="email != null and email != '' and email != 'null' and email != 'undefined'">
-            email = #{account},
+            email = #{email},
         </if>
         <if test="address != null and address != '' and address != 'null' and address != 'undefined'">
             address = #{address},
@@ -252,7 +253,7 @@
             remark = #{remark},
         </if>
         <if test="status != null">
-            status = #{status},
+            status = #{status}
         </if>
     </sql>
 

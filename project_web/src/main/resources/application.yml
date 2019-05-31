@@ -2,6 +2,15 @@
 server:
   port: 8092
 
+# 项目配置
+project:
+  captcha-open: false #是否开启验证码
+  shiro:
+    remember-me-timeout: 7 #cookie记住登录信息时间，默认7天（天）
+    global-session-timeout: 1800 #Session会话超时时间，默认30分钟（秒）
+  fileupload:
+    file_path: E:/upload/ #文件上传路径
+
 #数据库配置
 spring:
   datasource:

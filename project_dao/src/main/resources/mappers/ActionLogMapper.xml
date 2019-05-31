@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.javaweb.MichaelKai.mapper.ActionLogMapper">
+        <!-- 新增 -->
+        <insert id="addActionLog">
+            INSERT INTO tb_action_log(<include refid="actionLog_add_key"><property name="alias" value="" /></include>)
+            VALUES (<include refid="actionLog_add_val"><property name="alias" value="" /></include>)
+        </insert>
+
+        <!-- 批量新增 -->
+        <insert id="addActionLogs">
+            INSERT INTO tb_action_log(<include refid="actionLog_add_key"><property name="alias" value="" /></include>)
+            VALUES
+            <foreach collection="list" item="item" index="index" separator=",">
+                (<include refid="actionLog_add_val"><property name="alias" value="item."/></include>)
+            </foreach>
+        </insert>
+
+        <!-- 修改 -->
+        <update id="editActionLogById">
+            UPDATE tb_action_log
+            <set>
+                <include refid="actionLog_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id = #{id}
+        </update>
+
+        <!-- 批量修改 -->
+        <update id="editActionLogByIds">
+            UPDATE tb_action_log
+            <set>
+                <include refid="actionLog_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id IN
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 删除 -->
+        <update id="delActionLogById">
+            update tb_action_log SET status = 0 WHERE id = #{id}
+        </update>
+
+        <!-- 批量删除 -->
+        <update id="delActionLogByIds">
+            UPDATE tb_action_log SET status = 0 WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 真删除 -->
+        <delete id="delActionLogRealById">
+            DELETE FROM tb_action_log WHERE id = #{id}
+        </delete>
+
+        <!-- 真批量删除 -->
+        <delete id="delActionLogRealByIds">
+            DELETE FROM tb_action_log WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </delete>
+
+        <!-- 清空 -->
+        <delete id="delActionLogReals">
+            DELETE FROM tb_action_log
+        </delete>
+
+        <!-- 查询用户管理列表 -->
+        <select id="getActionLogs" parameterType="Map" resultType="Map">
+            SELECT <include refid="actionLog_select_cond" />
+            FROM tb_action_log a LEFT JOIN tb_user b ON b.id = a.create_user_id
+            <where>
+                <include refid="actionLog_where_if" />
+            </where>
+            ORDER BY a.create_time DESC
+        </select>
+
+        <!-- 根据id查询用户 -->
+        <select id="getActionLogById" resultType="Map">
+            SELECT <include refid="actionLog_select_cond_one"/>
+            FROM tb_action_log a
+            WHERE a.id = #{id}
+        </select>
+
+
+        <!-- 查询的选择项, 增删字段时调整 -->
+        <sql id="actionLog_select_cond">
+                    a.id id ,
+                    a.name name ,
+                    a.type type ,
+                    a.ipaddr ipaddr ,
+                    a.clazz clazz ,
+                    a.method method ,
+                    a.model model ,
+                    a.record_id recordId ,
+                    a.message message ,
+                    a.create_user_id createUserId ,
+                    a.update_user_id updateUserId ,
+                    DATE_FORMAT(a.update_time,'%Y-%m-%d %H:%i:%s') updateTime,
+                    DATE_FORMAT(a.create_time,'%Y-%m-%d %H:%i:%s') createTime ,
+                    b.user_name createUserName
+                </sql>
+
+        <!-- (单个)查询的选择项, 增删字段时调整 -->
+        <sql id="actionLog_select_cond_one">
+                            a.id id ,
+                            a.name name ,
+                            a.type type ,
+                            a.ipaddr ipaddr ,
+                            a.clazz clazz ,
+                            a.method method ,
+                            a.model model ,
+                            a.record_id recordId ,
+                            a.message message ,
+                            a.create_user_id createUserId ,
+                            a.create_time createTime ,
+                            a.update_user_id updateUserId ,
+                            a.update_time updateTime
+                    </sql>
+
+        <!-- 查询条件 -->
+        <sql id="actionLog_where_if">
+                                            <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
+                    AND a.id = #{id}
+                </if>
+                                                            <if test="name != null and name != '' and name != 'null' and name != 'undefined'">
+                    AND a.name = #{name}
+                </if>
+                                                            <if test="type != null">
+                    AND a.type = #{type}
+                </if>
+                                                            <if test="ipaddr != null and ipaddr != '' and ipaddr != 'null' and ipaddr != 'undefined'">
+                    AND a.ipaddr = #{ipaddr}
+                </if>
+                                                            <if test="clazz != null and clazz != '' and clazz != 'null' and clazz != 'undefined'">
+                    AND a.clazz = #{clazz}
+                </if>
+                                                            <if test="method != null and method != '' and method != 'null' and method != 'undefined'">
+                    AND a.method = #{method}
+                </if>
+                                                            <if test="model != null and model != '' and model != 'null' and model != 'undefined'">
+                    AND a.model = #{model}
+                </if>
+                                                            <if test="recordId != null and recordId != '' and recordId != 'null' and recordId != 'undefined'">
+                    AND a.record_id = #{recordId}
+                </if>
+                                                            <if test="message != null and message != '' and message != 'null' and message != 'undefined'">
+                    AND a.message = #{message}
+                </if>
+                                                            <if test="createUserId != null and createUserId != '' and createUserId != 'null' and createUserId != 'undefined'">
+                    AND a.create_user_id = #{createUserId}
+                </if>
+                                                            <if test="createTime != null and createTime != '' and createTime != 'null' and createTime != 'undefined'">
+                    AND a.create_time = #{createTime}
+                </if>
+                                                            <if test="updateUserId != null and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined'">
+                    AND a.update_user_id = #{updateUserId}
+                </if>
+                                                            <if test="updateTime != null and updateTime != '' and updateTime != 'null' and updateTime != 'undefined'">
+                    AND a.update_time = #{updateTime}
+                </if>
+                                    </sql>
+
+
+        <!-- (批量)新增键, 增删字段时调整 -->
+        <sql id="actionLog_add_key">
+                            
+                    id ,
+                                            
+                    name ,
+                                            
+                    type ,
+                                            
+                    ipaddr ,
+                                            
+                    clazz ,
+                                            
+                    method ,
+                                            
+                    model ,
+                                            
+                    record_id ,
+                                            
+                    message,
+                    create_user_id,
+                    create_time,
+                    update_user_id,
+                    update_time
+                                                                                                                                                    </sql>
+
+        <!-- (批量)新增值, 增删字段时调整 -->
+        <sql id="actionLog_add_val">
+                                                #{id} ,
+                                                                #{name} ,
+                                                                #{type} ,
+                                                                #{ipaddr} ,
+                                                                #{clazz} ,
+                                                                #{method} ,
+                                                                #{model} ,
+                                                                #{recordId} ,
+                                                                #{message},
+                                                                #{createUserId},
+                                                                #{createTime},
+                                                                #{updateUserId},
+                                                                #{updateTime}
+                                                                                                                                                    </sql>
+
+        <!-- (批量修改的条件,增减字段时调整) -->
+        <sql id="actionLog_set_if">
+                                                                                                                                <if test="name != null and name != '' and name != 'null' and name != 'undefined'">
+                                name = #{name},
+                            </if>
+                                                                                                                                                                    <if test="type != null">
+                            type = #{type},
+                        </if>
+                                                                                                                                                                <if test="ipaddr != null and ipaddr != '' and ipaddr != 'null' and ipaddr != 'undefined'">
+                                ipaddr = #{ipaddr},
+                            </if>
+                                                                                                                                                                <if test="clazz != null and clazz != '' and clazz != 'null' and clazz != 'undefined'">
+                                clazz = #{clazz},
+                            </if>
+                                                                                                                                                                <if test="method != null and method != '' and method != 'null' and method != 'undefined'">
+                                method = #{method},
+                            </if>
+                                                                                                                                                                <if test="model != null and model != '' and model != 'null' and model != 'undefined'">
+                                model = #{model},
+                            </if>
+                                                                                                                                                                <if test="recordId != null and recordId != '' and recordId != 'null' and recordId != 'undefined'">
+                                record_id = #{recordId},
+                            </if>
+                                                                                                                                                                <if test="message != null and message != '' and message != 'null' and message != 'undefined'">
+                                message = #{message}
+                            </if>
+                                                                                                                                                                                                                                                                                                                                                </sql>
+</mapper>

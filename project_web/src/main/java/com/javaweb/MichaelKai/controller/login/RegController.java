@@ -1,6 +1,8 @@
 package com.javaweb.MichaelKai.controller.login;
 
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
+import com.javaweb.MichaelKai.common.exception.ResultException;
+import com.javaweb.MichaelKai.common.utils.CaptchaUtil;
 import com.javaweb.MichaelKai.common.utils.MD5Util;
 import com.javaweb.MichaelKai.common.utils.MapUtil;
 import com.javaweb.MichaelKai.common.utils.SpringContextUtil;
@@ -62,7 +64,11 @@ public class RegController {
     @PostMapping("/forget")
     public Result forget(@RequestBody Map<String, Object> form, Model model) {
         //验证图形验证码 todo
-
+        if (form.get("captchaCode") != null) {
+            if (!CaptchaUtil.checkCaptcha(form.get("captchaCode").toString())) {
+                throw new ResultException(ResultEnum.USER_CAPTCHA_ERROR.getValue(), ResultEnum.USER_CAPTCHA_ERROR.getMessage());
+            }
+        }
         //验证短信验证码 todo
 
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage());

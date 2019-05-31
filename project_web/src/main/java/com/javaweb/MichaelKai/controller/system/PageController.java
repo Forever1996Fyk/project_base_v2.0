@@ -325,4 +325,13 @@ public class PageController {
         model.addAttribute("dictItem", dictItemById);
         return "system/basicDict/addDictItem";
     }
+
+    /**
+     * 用户操作日志列表
+     * @return
+     */
+    @GetMapping("/actionLog/actionLogList")
+    public String actionLogList() {
+        return "system/actionLog/actionLog";
+    }
 }

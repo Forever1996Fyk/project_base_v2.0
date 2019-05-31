@@ -91,6 +91,9 @@
         <!-- 查询的选择项, 增删字段时调整 -->
         <sql id="${classname}_select_cond">
         #foreach($column in $columns)
+            #if($column.columnName == 'create_time' && $column.columnName == 'update_time')
+                DATE_FORMAT(a.$column.columnName,'%Y-%m-%d %H:%i:%s') $column.attrname ,
+            #end
             a.$column.columnName $column.attrname ,
         #end
         </sql>
