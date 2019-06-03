@@ -11,6 +11,7 @@ import com.javaweb.MichaelKai.mapper.ActionLogMapper;
 import com.javaweb.MichaelKai.pojo.ActionLog;
 import com.github.pagehelper.PageInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -62,10 +63,10 @@ public class ActionLogServiceImpl implements  ActionLogService {
     }
 
     @Override
-    public PageInfo<Map<String, Object>> getActionLogs(int start, int pageSize, Map<String, Object> map) {
-        PageHelper.offsetPage(start, pageSize);
+    public PageInfo<Map<String, Object>> getActionLogs(int pageNum, int pageSize, Map<String, Object> map) {
+        PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> list = this.getActionLogs(map);
-        PageInfo<Map<String, Object>> page = new PageInfo<Map<String, Object>>(list);
+        PageInfo<Map<String, Object>> page = new PageInfo<>(list);
         return page;
     }
 
@@ -83,5 +84,22 @@ public class ActionLogServiceImpl implements  ActionLogService {
      @Override
      public void delActionLogReals() {
          actionLogMapper.delActionLogReals();
+     }
+
+     @Override
+     public List<Map<String, Object>> getLogGroupByType(String type) {
+         List<Map<String, Object>> list = new ArrayList<>();
+        switch (type){
+            case "date":
+                list = actionLogMapper.getLogGroupByDate();
+                break;
+            case "month":
+                list = actionLogMapper.getLogGroupByMonth();
+                break;
+            case "year":
+                list = actionLogMapper.getLogGroupByYear();
+                break;
+        }
+         return list;
      }
  }

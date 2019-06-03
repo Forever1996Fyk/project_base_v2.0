@@ -89,10 +89,10 @@ public class ${className}Controller {
      * @return
      */
     @GetMapping("/get${className}s")
-    public Result getUsers(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+    public Result getUsers(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
                            @RequestParam(value = "limit", required = false, defaultValue = "0") int limit,
                            @RequestParam Map<String, Object> map) {
-        PageInfo<Map<String, Object>> pageList = ${classname}Service.get${className}s(start, limit, map);
+        PageInfo<Map<String, Object>> pageList = ${classname}Service.get${className}s(page, limit, map);
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
     }
 

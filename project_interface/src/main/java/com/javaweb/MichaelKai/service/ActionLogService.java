@@ -80,4 +80,11 @@ public interface ActionLogService {
      * 清空数据
      */
     void delActionLogReals();
+
+  /**
+   * 根据类型分组获取每月,每日,每年的日志总数
+   * @param type
+   * @return
+   */
+     List<Map<String,Object>> getLogGroupByType(String type);
  }

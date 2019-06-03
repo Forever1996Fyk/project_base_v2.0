@@ -76,8 +76,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageInfo<Map<String, Object>> getUsers(int start, int pageSize, Map<String, Object> map) {
-        PageHelper.offsetPage(start, pageSize);
+    public PageInfo<Map<String, Object>> getUsers(int pageNum, int pageSize, Map<String, Object> map) {
+        PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> list = this.getUsers(map);
         PageInfo<Map<String, Object>> page = new PageInfo<Map<String, Object>>(list);
         return page;

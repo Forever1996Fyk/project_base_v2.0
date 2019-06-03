@@ -83,16 +83,16 @@ public class ActionLogController {
 
     /**
      * 获取所有
-     * @param start 开始记录
+     * @param page 开始记录
      * @param limit 分页大小
      * @param map 参数
      * @return
      */
     @GetMapping("/getActionLogs")
-    public Result getUsers(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+    public Result getUsers(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
                            @RequestParam(value = "limit", required = false, defaultValue = "0") int limit,
                            @RequestParam Map<String, Object> map) {
-        PageInfo<Map<String, Object>> pageList = actionLogService.getActionLogs(start, limit, map);
+        PageInfo<Map<String, Object>> pageList = actionLogService.getActionLogs(page, limit, map);
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
     }
 
@@ -106,5 +106,15 @@ public class ActionLogController {
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage());
     }
 
+    /**
+     * 根据类型分组获取每月,每日,每年的日志总数
+     * @param type
+     * @return
+     */
+    @GetMapping("/getLogGroupByType")
+    public Result getLogGroupByType(@RequestParam String type) {
+        List<Map<String, Object>> list = actionLogService.getLogGroupByType(type);
+        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), list);
+    }
 
 }

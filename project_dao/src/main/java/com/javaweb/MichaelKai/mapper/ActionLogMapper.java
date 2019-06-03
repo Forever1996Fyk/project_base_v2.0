@@ -95,4 +95,11 @@ public interface ActionLogMapper {
      */
     List<Map<String, Object>> getActionLogs(Map<String, Object> map);
 
+    /**
+     * 根据类型分组获取每月,每日,每年的日志总数
+     * @return
+     */
+    List<Map<String,Object>> getLogGroupByYear();
+    List<Map<String,Object>> getLogGroupByDate();
+    List<Map<String,Object>> getLogGroupByMonth();
 }

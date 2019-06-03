@@ -334,4 +334,13 @@ public class PageController {
     public String actionLogList() {
         return "system/actionLog/actionLog";
     }
+
+    /**
+     * 主页控制台
+     * @return
+     */
+    @GetMapping("/main/console")
+    public String consoleMain() {
+        return "system/main/console";
+    }
 }

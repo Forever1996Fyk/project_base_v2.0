@@ -83,8 +83,8 @@ public class DictItemServiceImpl implements  DictItemService {
     }
 
     @Override
-    public PageInfo<Map<String, Object>> getDictItems(int start, int pageSize, Map<String, Object> map) {
-        PageHelper.offsetPage(start, pageSize);
+    public PageInfo<Map<String, Object>> getDictItems(int pageNum, int pageSize, Map<String, Object> map) {
+        PageHelper.startPage(pageNum, pageSize);
         List<Map<String, Object>> list = this.getDictItems(map);
         PageInfo<Map<String, Object>> page = new PageInfo<Map<String, Object>>(list);
         return page;

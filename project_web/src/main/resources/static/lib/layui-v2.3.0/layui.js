@@ -37,6 +37,7 @@
         mobile: "modules/mobile",
         formSelects: "modules/formSelects-v4",
         croppers: "modules/croppers",
+        iconPicker: "modules/iconPicker",
         "layui.all": "../layui.all"
     };
     n.prototype.cache = o, n.prototype.define = function (e, t) {

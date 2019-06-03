@@ -86,6 +86,23 @@
             WHERE a.id = #{id}
         </select>
 
+        <!-- 根据类型分组获取每月,每日,每年的日志总数 -->
+        <select id="getLogGroupByYear" resultType="Map">
+            SELECT YEAR (a.create_time) createTime, count(*) count
+            FROM tb_action_log a
+            GROUP BY YEAR (a.create_time)
+        </select>
+        <select id="getLogGroupByDate" resultType="Map">
+            SELECT DATE_FORMAT(a.create_time,'%m-%d') createTime, count(*) count
+            FROM tb_action_log a
+            GROUP BY DATE(a.create_time)
+        </select>
+        <select id="getLogGroupByMonth" resultType="Map">
+            SELECT MONTH (a.create_time) createTime, count(*) count
+            FROM tb_action_log a
+            GROUP BY MONTH(a.create_time)
+        </select>
+
 
         <!-- 查询的选择项, 增删字段时调整 -->
         <sql id="actionLog_select_cond">

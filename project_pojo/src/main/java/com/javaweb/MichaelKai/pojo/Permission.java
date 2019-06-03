@@ -23,5 +23,6 @@ public class Permission implements Serializable{
 	private Integer status;//状态:0  已禁用 1 正在使用
 	private String url;//链接
 	private String perm;//权限标识
+	private String icon;//图标
 	private Map<String, Object> children = new HashMap<>();//下级权限实体
 }

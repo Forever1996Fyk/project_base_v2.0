@@ -102,6 +102,7 @@
                     DATE_FORMAT(a.update_time,'%Y-%m-%d %H:%i:%s') updateTime ,
                     DATE_FORMAT(a.create_time,'%Y-%m-%d %H:%i:%s') createTime ,
                     a.url url ,
+                    a.icon icon,
                     a.perm perm
                 </sql>
 
@@ -119,6 +120,7 @@
                             a.update_user_id updateUserId ,
                             a.update_time updateTime ,
                             a.url url ,
+                            a.icon icon,
                             a.perm perm
                     </sql>
 
@@ -176,6 +178,7 @@
             remark ,
             status ,
             url ,
+            icon,
             perm
         </sql>
 
@@ -189,34 +192,38 @@
             #{remark} ,
             #{status} ,
             #{url} ,
+            #{icon},
             #{perm}
         </sql>
 
         <!-- (批量修改的条件,增减字段时调整) -->
         <sql id="permission_set_if">
-                                                                                                    <if test="name != null and name != '' and name != 'null' and name != 'undefined'">
-                            name = #{name},
-                        </if>
-                                                                                                            <if test="pid != null and pid != '' and pid != 'null' and pid != 'undefined'">
-                            pid = #{pid},
-                        </if>
-                                                                                                                <if test="sort != null">
-                        sort = #{sort},
-                    </if>
-                                                                                                                <if test="level != null">
-                        level = #{level},
-                    </if>
-                                                                                                            <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
-                            remark = #{remark},
-                        </if>
-                                                                                                                <if test="status != null">
-                        status = #{status},
-                    </if>
-                                                                                                            <if test="url != null and url != '' and url != 'null' and url != 'undefined'">
-                            url = #{url},
-                        </if>
-                                                                                                            <if test="perm != null and perm != '' and perm != 'null' and perm != 'undefined'">
-                            perm = #{perm}
-                        </if>
-                                                        </sql>
+            <if test="name != null and name != '' and name != 'null' and name != 'undefined'">
+                name = #{name},
+            </if>
+            <if test="pid != null and pid != '' and pid != 'null' and pid != 'undefined'">
+                pid = #{pid},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="level != null">
+                level = #{level},
+            </if>
+            <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
+                remark = #{remark},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="url != null and url != '' and url != 'null' and url != 'undefined'">
+                url = #{url},
+            </if>
+            <if test="perm != null and perm != '' and perm != 'null' and perm != 'undefined'">
+                perm = #{perm},
+            </if>
+            <if test="icon != null and icon != '' and icon != 'null' and icon != 'undefined'">
+                icon = #{icon}
+            </if>
+        </sql>
 </mapper>

@@ -4,7 +4,6 @@
 layui.use(['table', 'layer', 'form', 'formSelects'], function() {
     var layer = layui.layer;
     var table = layui.table;
-    var formSelects = layui.formSelects;
 
     var tableObject = table.render({
         id:"id"

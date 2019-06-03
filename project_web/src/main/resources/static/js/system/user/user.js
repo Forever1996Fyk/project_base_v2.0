@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2019/5/21.
  */
-layui.use(['table', 'layer', 'form', 'formSelects'], function() {
+layui.use(['table', 'layer', 'form'], function() {
     var layer = layui.layer;
     var table = layui.table;
 
