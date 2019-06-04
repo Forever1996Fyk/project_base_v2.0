@@ -17,6 +17,7 @@
         <module>project_pojo</module>
         <module>project_generate</module>
         <module>project_activiti</module>
+        <module>project_im</module>
     </modules>
 
     <name>project_base</name>

@@ -1,12 +1,14 @@
 /**
  * Created by Administrator on 2019/6/3.
  */
-layui.use(['layer', 'carousel'], function() {
+layui.use(['layer', 'carousel', 'element'], function() {
     var $ = layui.jquery
         , carousel = layui.carousel
+        , element = layui.element
+        , layer = layui.layer
     , echart = echarts.init(document.getElementById('dataView'))
     , echartMap = echarts.init(document.getElementById('mapEch'))
-    , option = {
+    , option = {//数据概览
         title: {text: '用户登陆日志', x: 'center', textStyle: {fontSize: 14}},
         tooltip: {trigger: "axis"},
         toolbox: {
@@ -59,12 +61,12 @@ layui.use(['layer', 'carousel'], function() {
         }]
 
     }
-    , mapOption = {
-        title: {text: "全国的 layui 用户分布", subtext: "不完全统计"},
+    , mapOption = {//地图分布
+        title: {text: "全国的 MichaelKai Project 用户分布", subtext: "不完全统计"},
         tooltip: {trigger: "item"},
         dataRange: {orient: "horizontal", min: 0, max: 6e4, text: ["高", "低"], splitNumber: 0},
         series: [{
-            name: "全国的 layui 用户分布",
+            name: "全国的 MichaelKai Project 用户分布",
             type: "map",
             mapType: "china",
             selectedMode: "multiple",
@@ -106,8 +108,10 @@ layui.use(['layer', 'carousel'], function() {
 
     $(function () {
         getData("date");
+        getMonitor();
     });
 
+    //根据类型获取图表数据
     var getData = function (type) {
         $.ajax({
             url: ctxPath + "/api/getLogGroupByType?type=" + type,
@@ -132,12 +136,51 @@ layui.use(['layer', 'carousel'], function() {
 
                     }
                     echart.setOption(option);
+                    echartMap.setOption(mapOption);
                 }
             }
         })
     };
 
-    echartMap.setOption(mapOption);
+    var getMonitor = function () {
+        $.ajax({
+            url: ctxPath + '/api/system/getMonitor',
+            type: 'get',
+            beforeSend: function() {
+                $('.realTimeMonitor').loading();
+                $('.systemMessage').loading();
+            },
+            success: function (res) {
+                if (res.code === 200) {
+                    var data = res.data;
+                    console.log(data);
 
+                    $('.osName').html(data.osName);
+                    $('.totalThread').html(data.totalThread);
+                    $('.usedMemory').html(data.usedMemory + 'kb');
+                    $('.totalMemorySize').html(data.totalMemorySize + 'kb');
+                    $('.freePhysicalMemorySize').html(data.freePhysicalMemorySize + 'kb');
+
+                    if (data.cpuRatio) {
+                        element.progress('cpuRatio', data.cpuRatio + '%');
+                        if (data.cpuRatio > 70) {
+                            $('.cpuRatio').attr('class', 'layui-bg-red');
+                        }
+                    }
+
+                    if (data.freeMemory && data.maxMemory) {
+                        var ramRatio = ((data.maxMemory - data.freeMemory)/data.maxMemory * 100).toFixed(2);
+                        element.progress('ramRatio', ramRatio + '%');
+                        if (ramRatio > 70) {
+                            $('.ramRatio').addClass('layui-bg-red');
+                        }
+                    }
+
+                    $('.realTimeMonitor').loading('hide');
+                    $('.systemMessage').loading('hide');
+                }
+            }
+        })
+    }
 
 });

@@ -207,7 +207,7 @@
         <div class="layui-col-md4">
             <div class="layui-card">
                 <div class="layui-card-header">用户全国分布</div>
-                <div class="layui-card-body" id="mapEch" style="width: 1000px;height:400px;">
+                <div class="layui-card-body" id="mapEch" style="width: 500px;height:500px;">
                     <div class="layui-row layui-col-space15">
                         <div class="layui-col-sm8">
 
@@ -223,7 +223,7 @@
             </div>
 
             <div class="layui-card">
-                <div class="layui-card-header">效果报告</div>
+                <!--<div class="layui-card-header">效果报告</div>
                 <div class="layui-card-body layadmin-takerates">
                     <div class="layui-progress" lay-showPercent="yes">
                         <h3>转化率（日同比 28% <span class="layui-edge layui-edge-top" lay-tips="增长" lay-offset="-15"></span>）</h3>
@@ -233,48 +233,53 @@
                         <h3>签到率（日同比 11% <span class="layui-edge layui-edge-bottom" lay-tips="下降" lay-offset="-15"></span>）</h3>
                         <div class="layui-progress-bar" lay-percent="32%"></div>
                     </div>
-                </div>
+                </div>-->
             </div>
 
-            <div class="layui-card">
+            <div class="layui-card realTimeMonitor">
                 <div class="layui-card-header">实时监控</div>
                 <div class="layui-card-body layadmin-takerates">
-                    <div class="layui-progress" lay-showPercent="yes">
+                    <div class="layui-progress" lay-filter="cpuRatio" lay-showPercent="yes">
                         <h3>CPU使用率</h3>
-                        <div class="layui-progress-bar" lay-percent="58%"></div>
+                        <div class="layui-progress-bar cpuRatio" lay-percent="0%"></div>
                     </div>
-                    <div class="layui-progress" lay-showPercent="yes">
+                    <div class="layui-progress" lay-filter="ramRatio" lay-showPercent="yes">
                         <h3>内存占用率</h3>
-                        <div class="layui-progress-bar layui-bg-red" lay-percent="90%"></div>
+                        <div class="layui-progress-bar ramRatio" lay-percent="0%"></div>
                     </div>
                 </div>
             </div>
 
             <div class="layui-card">
-                <div class="layui-card-header">版本信息</div>
+                <div class="layui-card-header">系统信息</div>
                 <div class="layui-card-body layui-text">
-                    <table class="layui-table">
+                    <table class="layui-table systemMessage">
                         <colgroup>
-                            <col width="100">
+                            <col>
                             <col>
                         </colgroup>
                         <tbody>
                         <tr>
-                            <td>当前版本</td>
-                            <td>
-                                v2.0.0
-                                <a href="http://fly.layui.com/docs/3/" target="_blank" style="padding-left: 15px;">更新日志</a>
+                            <td>系统版本</td>
+                            <td class="osName">
                             </td>
                         </tr>
                         <tr>
-                            <td>基于框架</td>
-                            <td>
-                                SpringBoot2.0 + Shiro + Mybatis + Layui
+                            <td>线程总数</td>
+                            <td class="totalThread">
                             </td>
                         </tr>
                         <tr>
-                            <td>主要特色</td>
-                            <td>零门槛 / 响应式 / 清爽 / 极简</td>
+                            <td>已用内存</td>
+                            <td class="usedMemory"></td>
+                        </tr>
+                        <tr>
+                            <td>总内存</td>
+                            <td class="totalMemorySize"></td>
+                        </tr>
+                        <tr>
+                            <td>可用物理内存</td>
+                            <td class="freePhysicalMemorySize"></td>
                         </tr>
                         <tr>
                             <td>获取渠道</td>
@@ -310,6 +315,8 @@
 
 <script th:replace="/common/template :: script"></script>
 <script type="text/javascript" th:src="@{/lib/extend/echarts/echarts.min.js}"></script>
+<script type="text/javascript" th:src="@{/lib/extend/echarts/China.js}"></script>
+<script type="text/javascript" th:src="@{/lib/extend/loading/loading.js}"></script>
 <script type="text/javascript" th:src="@{/js/system/main/console.js}"></script>
 </body>
 </html>
