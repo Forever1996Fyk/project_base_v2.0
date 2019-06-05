@@ -4,7 +4,10 @@ import com.javaweb.MichaelKai.common.properties.ShiroProperties;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.SessionListener;
 import org.apache.shiro.session.mgt.DefaultSessionManager;
+import org.apache.shiro.session.mgt.eis.MemorySessionDAO;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
@@ -15,9 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @program: project_base
@@ -149,9 +150,25 @@ public class ShiroConfig {
         sessionManager.setSessionValidationInterval(shiroProperties.getSessionValidationInterval() * 1000);
         sessionManager.setDeleteInvalidSessions(true);
         sessionManager.validateSessions();
+
+        Collection<SessionListener> listeners = new ArrayList<>();
+        listeners.add(new ShiroSessionListener());
+        sessionManager.setSessionListeners(listeners);
+        sessionManager.setSessionDAO(sessionDAO());
+
         //去掉登录页面地址栏的jssessionid
         sessionManager.setSessionIdUrlRewritingEnabled(false);
         return sessionManager;
+    }
+
+    /**
+     * 缓存dao
+     * @return
+     */
+    @Bean
+    public SessionDAO sessionDAO() {
+        MemorySessionDAO sessionDAO = new MemorySessionDAO();
+        return sessionDAO;
     }
 
     /**

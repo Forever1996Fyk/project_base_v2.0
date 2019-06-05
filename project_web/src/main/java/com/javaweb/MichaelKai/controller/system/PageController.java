@@ -340,7 +340,9 @@ public class PageController {
      * @return
      */
     @GetMapping("/main/console")
-    public String consoleMain() {
+    public String consoleMain(Model model) {
+        User user = ShiroKit.getUser();
+        model.addAttribute("user", user);
         return "system/main/console";
     }
 }

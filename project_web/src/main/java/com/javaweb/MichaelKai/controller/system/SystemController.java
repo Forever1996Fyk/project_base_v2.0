@@ -4,6 +4,7 @@ import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.vo.Result;
 import com.javaweb.MichaelKai.entity.MonitorInfoEntity;
 import com.javaweb.MichaelKai.service.system.MonitorService;
+import com.javaweb.MichaelKai.service.system.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class SystemController {
     @Autowired
     private MonitorService monitorService;
+    @Autowired
+    private SessionService sessionService;
 
     /**
      * 获取当前系统信息
@@ -30,5 +33,14 @@ public class SystemController {
     public Result getMonitor() throws Exception {
         MonitorInfoEntity monitorInfo = monitorService.getMonitorInfo();
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), monitorInfo);
+    }
+
+    /**
+     * 获取在线人员
+     * @return
+     */
+    @GetMapping("/getOnlineUsers")
+    public Result getOnlineUsers() {
+        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), sessionService.list());
     }
 }

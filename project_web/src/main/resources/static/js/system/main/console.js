@@ -1,11 +1,12 @@
 /**
  * Created by Administrator on 2019/6/3.
  */
-layui.use(['layer', 'carousel', 'element'], function() {
+layui.use(['layer', 'carousel', 'element', 'table'], function() {
     var $ = layui.jquery
         , carousel = layui.carousel
         , element = layui.element
         , layer = layui.layer
+        , table = layui.table
     , echart = echarts.init(document.getElementById('dataView'))
     , echartMap = echarts.init(document.getElementById('mapEch'))
     , option = {//数据概览
@@ -109,6 +110,7 @@ layui.use(['layer', 'carousel', 'element'], function() {
     $(function () {
         getData("date");
         getMonitor();
+        getOnlineUserList();
     });
 
     //根据类型获取图表数据
@@ -142,6 +144,7 @@ layui.use(['layer', 'carousel', 'element'], function() {
         })
     };
 
+    //获取系统信息
     var getMonitor = function () {
         $.ajax({
             url: ctxPath + '/api/system/getMonitor',
@@ -181,6 +184,45 @@ layui.use(['layer', 'carousel', 'element'], function() {
                 }
             }
         })
-    }
+    };
+
+    //获取在线登录用户
+    var getOnlineUserList = function () {
+        var tableObject = table.render({
+            id:"id"
+            ,elem: '#onlineUserListTable'
+            , url: ctxPath + '/api/system/getOnlineUsers'//数据接口
+            , cols: [[ //表头,field要与实体类字段相同
+                {type: 'checkbox'}
+                , {field: 'nickName', title: '用户昵称', align: 'center'}
+                , {field: 'sessionStartTime', title: '最后登录时间', align: 'center', templet: function (data) {
+                    return '<i class="layui-icon layui-icon-log">' + data.sessionStartTime + '</i>';
+                }}
+                , {field: 'lastAccessTime', title: '最后访问时间', align: 'center', templet: function (data) {
+                    return '<i class="layui-icon layui-icon-log">' + data.lastAccessTime + '</i>';
+                }}
+                , {field: 'status', title: '状态', align: 'center', templet: function (data) {
+                    var result;
+                    if (data.status === 1) {
+                        result = "在线";
+                    } else {
+                        result = "离线";
+                    }
+                    return result;
+                }}
+                , {field: 'host', title: '主机', align: 'center'}
+            ]]
+        });
+    };
+
+    //定时任务每30分钟执行一次
+    setInterval(function () {
+        getMonitor();
+    }, 1000 * 60 * 30);
+
+    //定时任务每10分钟执行一次
+    setInterval(function () {
+        getOnlineUserList();
+    }, 1000 * 60 * 10);
 
 });

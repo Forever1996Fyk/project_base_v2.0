@@ -33,7 +33,7 @@ public class ActionLogAop {
      * 拦截所有使用@ActionLog注解的接口
      */
     @Pointcut("@annotation(com.javaweb.MichaelKai.annotation.ActionLog)")
-    private void actionLog(){};
+    private void actionLog(){}
 
     @Around("actionLog()")
     public Object recordLog(ProceedingJoinPoint joinPoint) throws Throwable {
