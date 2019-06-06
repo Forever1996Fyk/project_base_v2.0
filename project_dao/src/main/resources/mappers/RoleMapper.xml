@@ -115,7 +115,8 @@
                     DATE_FORMAT(a.update_time,'%Y-%m-%d %H:%i:%s') updateTime ,
                     DATE_FORMAT(a.create_time,'%Y-%m-%d %H:%i:%s') createTime ,
                     a.url url ,
-                    a.perm perm
+                    a.perm perm,
+                    a.icon icon
             FROM tb_permission a LEFT JOIN tb_role_permission b on b.permission_id = a.id
             WHERE b.role_id = #{roleId} AND a.status = 1
         </select>

@@ -1,7 +1,16 @@
-layui.use(['element', 'layer', 'form'], function () {
+layui.config({
+    base: ctxPath + '/lib/dist/'
+}).extend({
+    //消息提示框插件
+   notice: 'notice'
+});
+
+
+layui.use(['element', 'layer', 'form', 'notice'], function () {
     var layer = layui.layer
         , webScoket
         , commWebScoket
+        , notice = layui.notice
         , userId = $("#userId").val();
     if ("WebSocket" in window ) {
         webScoket = new WebSocket("ws://localhost:8093/webSocketServer/" + userId);
@@ -38,7 +47,11 @@ layui.use(['element', 'layer', 'form'], function () {
         //连接关闭的回调事件
         webScoket.onclose = function () {
             console.log("连接已关闭");
-            layerFun("连接已关闭");
+            notice.error("连接已关闭");
+            notice.warning("连接已关闭");
+            notice.info("连接已关闭");
+            notice.success("连接已关闭");
+            //layerFun("连接已关闭");
         }
     }
 

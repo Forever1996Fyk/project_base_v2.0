@@ -150,6 +150,8 @@ layui.use(['layer', 'carousel', 'element', 'table'], function() {
             url: ctxPath + '/api/system/getMonitor',
             type: 'get',
             beforeSend: function() {
+
+                //加载动画显示
                 $('.realTimeMonitor').loading();
                 $('.systemMessage').loading();
             },
@@ -179,6 +181,7 @@ layui.use(['layer', 'carousel', 'element', 'table'], function() {
                         }
                     }
 
+                    //加载动画隐藏
                     $('.realTimeMonitor').loading('hide');
                     $('.systemMessage').loading('hide');
                 }
