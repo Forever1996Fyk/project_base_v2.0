@@ -149,3 +149,34 @@ CREATE TABLE `tb_action_log` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户日志';
 
+CREATE TABLE `tb_notice` (
+  `id` varchar(32) NOT NULL COMMENT '通告标识',
+  `title` varchar(200) DEFAULT NULL COMMENT '通告标题',
+	`content` text DEFAULT NULL COMMENT '通告内容',
+	`publish_time` datetime DEFAULT NULL COMMENT '发布时间',
+	`cancel` int(4) DEFAULT '1' COMMENT '是否撤销:0  已撤销 1 正在使用',
+	`cancel_time` datetime DEFAULT NULL COMMENT '撤销时间',
+	`priority` int(4) DEFAULT '1' COMMENT '优先级',
+  `remark` varchar(200) DEFAULT NULL COMMENT '备注',
+  `status` int(4) DEFAULT '1' COMMENT '状态:0  已禁用 1 正在使用 2 已删除',
+  `create_user_id` varchar(32) DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_user_id` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='通知通告表';
+
+CREATE TABLE `tb_notice_user` (
+  `id` varchar(32) NOT NULL COMMENT '唯一标识',
+  `notice_id` varchar(32) DEFAULT NULL COMMENT '通告标识',
+	`user_id` varchar(32) DEFAULT NULL COMMENT '用户标识',
+	`readed` int(4) DEFAULT NULL COMMENT '状态:0  未读 1 已读',
+	`readed_time` datetime DEFAULT NULL COMMENT '阅读时间',
+  `remark` varchar(200) DEFAULT NULL COMMENT '备注',
+  `create_user_id` varchar(32) DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_user_id` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='通知通告用户表';
+

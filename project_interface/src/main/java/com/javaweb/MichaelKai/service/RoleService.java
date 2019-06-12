@@ -2,8 +2,7 @@ package com.javaweb.MichaelKai.service;
 
 import com.github.pagehelper.PageInfo;
 import com.javaweb.MichaelKai.pojo.Role;
-import com.javaweb.MichaelKai.pojo.RolePermission;
-import com.javaweb.MichaelKai.pojo.User;
+import com.javaweb.MichaelKai.vo.RoleVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -87,7 +86,7 @@ public interface RoleService {
 
   /**
    * 保存角色权限
-   * @param rolePermission
+   * @param roleVo
    */
-  RolePermission saveRoleAuth(RolePermission rolePermission);
+  RoleVo saveRoleAuth(RoleVo roleVo);
  }

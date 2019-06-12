@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:base="https://github.com/Forever1996Fyk/project_base_v2.0">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+    <link rel="stylesheet" th:href="@{/css/admin.css}" type="text/css">
+</head>
+<body>
+<div class="layui-form timo-compile">
+    <form th:action="@{/api/notice}">
+        <input type="hidden" name="id" th:if="${notice}" th:value="${notice.id}"/>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">通告标题</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" type="text" name="title"  placeholder="请输入通告标题" th:value="${notice?.title}">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">优先级</label>
+                    <div class="layui-input-block">
+                        <select name="priority" base:dict="NOTICE_PRIORITY" base-selected="${notice?.priority}" base-empty="" lay-verify="priority"></select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">备注</label>
+                    <div class="layui-input-inline">
+                        <input placeholder="请输入内容" class="layui-input" name="remark" th:value  ="${notice?.remark}">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">通告内容</label>
+                    <div class="layui-input-block">
+                        <textarea id="layeditor" name="content" th:utext="${notice?.content}"></textarea>
+                    </div>
+                </div>
+            </div>
+        <div class="layui-form-item layui-layout-admin">
+            <div class="layui-input-block">
+                <div class="layui-footer" style="left: 0;">
+                    <button class="layui-btn ajax-submit"><i class="fa fa-check-circle"></i> 保存</button>
+                    <button class="layui-btn btn-secondary close-popup"><i class="fa fa-times-circle"></i> 关闭</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script th:replace="/common/template :: script"></script>
+</body>
+</html>

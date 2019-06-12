@@ -3,7 +3,6 @@ package com.javaweb.MichaelKai.mapper;
 import java.util.List;
 import java.util.Map;
 import com.javaweb.MichaelKai.pojo.Role;
-import com.javaweb.MichaelKai.pojo.RolePermission;
 import org.apache.ibatis.annotations.Param;
 
 

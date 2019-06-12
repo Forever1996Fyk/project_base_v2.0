@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:base="https://github.com/Forever1996Fyk/project_base_v2.0">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+    <link rel="stylesheet" th:href="@{/css/admin.css}" type="text/css">
+</head>
+<body>
+<div class="layui-form timo-compile">
+    <div th:utext="${notice?.content}"></div>
+</div>
+<script th:replace="/common/template :: script"></script>
+</body>
+</html>

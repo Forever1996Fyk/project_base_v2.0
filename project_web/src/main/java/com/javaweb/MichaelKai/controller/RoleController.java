@@ -1,15 +1,15 @@
 package com.javaweb.MichaelKai.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
+import com.javaweb.MichaelKai.common.vo.PageResult;
 import com.javaweb.MichaelKai.common.vo.Result;
 import com.javaweb.MichaelKai.pojo.Role;
-import com.javaweb.MichaelKai.pojo.RolePermission;
 import com.javaweb.MichaelKai.service.PermissionService;
 import com.javaweb.MichaelKai.service.RoleService;
+import com.javaweb.MichaelKai.vo.RoleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.github.pagehelper.PageInfo;
-import com.javaweb.MichaelKai.common.vo.PageResult;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -134,8 +134,8 @@ public class RoleController {
      * @return
      */
     @PostMapping("/role/saveAuth")
-    public Result saveRoleAuth(@RequestBody RolePermission rolePermission) {
-        return new Result(true, ResultEnum.SUCCESS.getValue(), "保存" + ResultEnum.SUCCESS.getMessage(), roleService.saveRoleAuth(rolePermission));
+    public Result saveRoleAuth(@RequestBody RoleVo roleVo) {
+        return new Result(true, ResultEnum.SUCCESS.getValue(), "保存" + ResultEnum.SUCCESS.getMessage(), roleService.saveRoleAuth(roleVo));
     }
 
 

@@ -1,12 +1,15 @@
 package com.javaweb.MichaelKai.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.javaweb.MichaelKai.common.enums.FileTypeEnum;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.vo.PageResult;
 import com.javaweb.MichaelKai.common.vo.Result;
 import com.javaweb.MichaelKai.fileUpload.FileUpload;
 import com.javaweb.MichaelKai.pojo.Attachment;
+import com.javaweb.MichaelKai.pojo.User;
 import com.javaweb.MichaelKai.service.AttachmentService;
+import com.javaweb.MichaelKai.shiro.ShiroKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,14 +36,16 @@ public class AttachmentController {
     private AttachmentService attachmentService;
 
     /**
-     * 添加
-     * @param attachment
+     * 上传附件
+     * @param request
      * @return
      */
     @PostMapping("/attachment")
     @ResponseBody
-    public Result addAttachment(@RequestBody Attachment attachment) {
-        return new Result(true, ResultEnum.SUCCESS.getValue(), "新增" + ResultEnum.SUCCESS.getMessage(), attachmentService.addAttachment(attachment));
+    public Result addAttachment(HttpServletRequest request) throws Exception {
+        User user = ShiroKit.getUser();
+        Attachment attachment = attachmentService.addAttachment(request, user.getId(), FileTypeEnum.PIC.getAttachType());
+        return new Result(true, ResultEnum.SUCCESS.getValue(), "新增" + ResultEnum.SUCCESS.getMessage(), attachment);
     }
 
     /**

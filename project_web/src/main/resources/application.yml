@@ -9,7 +9,13 @@ project:
     remember-me-timeout: 7 #cookie记住登录信息时间，默认7天（天）
     global-session-timeout: 1800 #Session会话超时时间，默认30分钟（秒）
   fileupload:
-    file_path: E:/upload/ #文件上传路径
+    file-path: E:/upload/ #文件上传路径
+
+#netty 服务配置
+netty:
+  server:
+    port: 9090
+    host-name: localhost
 
 #数据库配置
 spring:

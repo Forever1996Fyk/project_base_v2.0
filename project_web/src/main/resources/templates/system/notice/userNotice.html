@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+    <link rel="stylesheet" th:href="@{/lib/zTree_v3/css/zTreeStyle/zTreeStyle.css}" type="text/css">
+    <style>
+        .ztree{
+            margin-left: 12px;
+            margin-bottom: 70px;
+        }
+        .timo-compile .timo-finally{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding-bottom: 14px;
+            margin-bottom: 0;
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form timo-compile">
+    <ul id="noticeUserTree" class="ztree" th:attr="data-url=@{/api/notice/noticeUserList(id=${id})}"></ul>
+    <input type="hidden" id="userId" th:value="${userId}">
+    <div class="layui-form-item timo-finally">
+        <button id="submit" class="layui-btn" th:attr="data-url=@{/api/notice/saveNoticeUser}, data-id=${id}"><i class="fa fa-check-circle"></i> 保存</button>
+        <button class="layui-btn btn-secondary close-popup"><i class="fa fa-times-circle"></i> 关闭</button>
+    </div>
+</div>
+<script th:replace="/common/template :: script"></script>
+<script type="text/javascript" th:src="@{/js/plugins/jquery-3.3.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree_v3/js/jquery.ztree.core.min.js}"></script>
+<script type="text/javascript" th:src="@{/lib/zTree_v3/js/jquery.ztree.excheck.min.js}"></script>
+<SCRIPT type="text/javascript">
+    layui.use(['element', 'layer', 'form'], function () {
+        var setting = {
+            check: {
+                enable: true,
+                chkboxType: { "Y" : "ps", "N" : "ps" }
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            }
+        };
+        $.get($("#noticeUserTree").data("url"), function(result){
+            console.log(result);
+            var zNodes =[];
+
+            result.data.forEach(function (item) {
+                var menu = {
+                    id: item.id,
+                    pId: item.pid,
+                    name: item.name
+                };
+                zNodes.push(menu);
+            });
+            $.fn.zTree.init($("#noticeUserTree"), setting, zNodes);
+        });
+
+        $("#submit").click(function () {
+            /*$.ajax({
+                url: ctxPath + '/api/system/push/' + userId,
+                type: 'get',
+                success: function (res) {
+                    var jsonObject = {userId: userId, message: '消息发送成功'};
+                    socket.emit('chatEvent', jsonObject);
+                }
+                
+            })*/
+             var zTreeObj = $.fn.zTree.getZTreeObj("noticeUserTree");
+             var noticeUserList = zTreeObj.getCheckedNodes(true);
+             var userIds = [];
+             var obj = {noticeId: '', userIds: ''};
+             obj.noticeId = $(this).data("id");
+             noticeUserList.forEach(function(item){
+                 if(item.id > 0 && item.pId > 0){
+                     //obj.permissionId = item.id
+                     /*if (obj.permissionId !== '') {
+                     obj[v.name] = obj[v.name] + "," + v.value;
+                     } else {
+                     obj[v.name] = v.value;
+                     }*/
+                    userIds.push(item.id);
+                 }
+             });
+             userIds.join(",");
+             obj.userIds = userIds;
+             console.log(obj);
+             $.ajax({
+                 url: $(this).data("url"),
+                 type: 'post',
+                 data: JSON.stringify(obj),
+                 contentType: 'application/json',
+                 success:function (res) {
+                     $.fn.Messager(res);
+                 }
+             });
+        });
+    });
+</SCRIPT>
+</body>
+</html>

@@ -6,8 +6,8 @@ import com.javaweb.MichaelKai.common.enums.StatusEnum;
 import com.javaweb.MichaelKai.common.utils.AppUtil;
 import com.javaweb.MichaelKai.mapper.RoleMapper;
 import com.javaweb.MichaelKai.pojo.Role;
-import com.javaweb.MichaelKai.pojo.RolePermission;
 import com.javaweb.MichaelKai.service.RoleService;
+import com.javaweb.MichaelKai.vo.RoleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,17 +82,17 @@ public class RoleServiceImpl implements  RoleService {
      }
 
      @Override
-     public RolePermission saveRoleAuth(RolePermission rolePermission) {
+     public RoleVo saveRoleAuth(RoleVo roleVo) {
          //先删除该角色的权限
-         roleMapper.delPermissonsByRoleId(rolePermission.getRoleId());
+         roleMapper.delPermissonsByRoleId(roleVo.getRoleId());
 
          //再新增权限
-         Set<String> permissionIds = rolePermission.getPermissionIds();
+         Set<String> permissionIds = roleVo.getPermissionIds();
          if (!CollectionUtils.isEmpty(permissionIds)) {
              List<Map<String, Object>> list = new ArrayList<>();
              for (String permissionId : permissionIds) {
                  Map<String, Object> map = new HashMap<>();
-                 map.put("roleId", rolePermission.getRoleId());
+                 map.put("roleId", roleVo.getRoleId());
                  map.put("permissionId", permissionId);
 
                  list.add(map);
@@ -100,6 +100,6 @@ public class RoleServiceImpl implements  RoleService {
              roleMapper.addRolePermission(list);
          }
 
-         return rolePermission;
+         return roleVo;
      }
  }

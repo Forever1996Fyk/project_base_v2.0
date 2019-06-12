@@ -1,4 +1,4 @@
-package com.javaweb.MichaelKai.pojo;
+package com.javaweb.MichaelKai.vo;
 
 import lombok.Data;
 
@@ -10,7 +10,7 @@ import java.io.Serializable;
  *
  */
 @Data
-public class UserRole implements Serializable{
+public class UserRoleVo implements Serializable{
 
 	private Integer id;//
 	private String userId;//用户标识

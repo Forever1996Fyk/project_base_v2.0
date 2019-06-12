@@ -3,7 +3,7 @@ package com.javaweb.MichaelKai.service;
 import com.github.pagehelper.PageInfo;
 import com.javaweb.MichaelKai.pojo.Role;
 import com.javaweb.MichaelKai.pojo.User;
-import com.javaweb.MichaelKai.pojo.UserRole;
+import com.javaweb.MichaelKai.vo.UserRoleVo;
 import org.apache.ibatis.annotations.Param;
 
 import javax.servlet.http.HttpServletRequest;
@@ -92,7 +92,7 @@ public interface UserService {
      * 角色分配
      * @param userRole
      */
-    void roleAssign(UserRole userRole);
+    void roleAssign(UserRoleVo userRole);
 
     /**
      * 验证用户信息是否已经存在
@@ -102,8 +102,15 @@ public interface UserService {
     Map<String, Object> checkUser(User user);
 
     /**
-     *
+     * 上传用户头像
      * @param request
      */
     User uploadUserIcon(HttpServletRequest request, String userId);
+
+    /**
+     * 根据roleId获取用户
+     * @param id
+     * @return
+     */
+    List<Map<String,Object>> getUserByRoleId(String id);
 }

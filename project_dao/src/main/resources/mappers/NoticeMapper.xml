@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.javaweb.MichaelKai.mapper.NoticeMapper">
+        <!-- 新增 -->
+        <insert id="addNotice">
+            INSERT INTO tb_notice(<include refid="notice_add_key"><property name="alias" value="" /></include>)
+            VALUES (<include refid="notice_add_val"><property name="alias" value="" /></include>)
+        </insert>
+
+        <!-- 批量新增 -->
+        <insert id="addNotices">
+            INSERT INTO tb_notice(<include refid="notice_add_key"><property name="alias" value="" /></include>)
+            VALUES
+            <foreach collection="list" item="item" index="index" separator=",">
+                (<include refid="notice_add_val"><property name="alias" value="item."/></include>)
+            </foreach>
+        </insert>
+
+        <!-- 修改 -->
+        <update id="editNoticeById">
+            UPDATE tb_notice
+            <set>
+                <include refid="notice_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id = #{id}
+        </update>
+
+        <!-- 批量修改 -->
+        <update id="editNoticeByIds">
+            UPDATE tb_notice
+            <set>
+                <include refid="notice_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id IN
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 删除 -->
+        <update id="delNoticeById">
+            update tb_notice SET status = 0 WHERE id = #{id}
+        </update>
+
+        <!-- 批量删除 -->
+        <update id="delNoticeByIds">
+            UPDATE tb_notice SET status = 0 WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 真删除 -->
+        <delete id="delNoticeRealById">
+            DELETE FROM tb_notice WHERE id = #{id}
+        </delete>
+
+        <!-- 真批量删除 -->
+        <delete id="delNoticeRealByIds">
+            DELETE FROM tb_notice WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </delete>
+
+        <!-- 清空 -->
+        <delete id="delNoticeReals">
+            DELETE FROM tb_notice
+        </delete>
+
+        <!-- 查询用户管理列表 -->
+        <select id="getNotices" parameterType="Map" resultType="Map">
+            SELECT <include refid="notice_select_cond" />
+            FROM tb_notice a
+            <where>
+                <include refid="notice_where_if" />
+                AND a.status in (1, 2)
+            </where>
+            ORDER BY a.status ASC, a.create_time DESC
+        </select>
+
+        <!-- 根据id查询用户 -->
+        <select id="getNoticeById" resultType="Map">
+            SELECT <include refid="notice_select_cond_one"/>
+            FROM tb_notice a
+            WHERE a.status in (1, 2) and a.id = #{id}
+        </select>
+
+        <!-- 撤销通知通告(只能撤销五分钟前) -->
+        <update id="cancelNoticesByIds">
+            UPDATE tb_notice SET cancel = 0, cancel_time = now() WHERE 5 > timestampdiff(minute, create_time, NOW()) AND id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 删除已发送的通知通告(只能删除五分钟前) -->
+        <delete id="delNoticeUserByNoticeIds">
+            DELETE FROM tb_notice_user
+            WHERE notice_id IN (
+                SELECT a.id
+                FROM tb_notice a
+                WHERE a.id IN
+                <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                  #{item}
+                </foreach>
+                AND 5 > timestampdiff(minute, a.create_time, NOW())
+            )
+
+        </delete>
+
+        <!-- 发送保存通知通告 -->
+        <insert id="saveNoticeUser">
+            INSERT INTO tb_notice_user (notice_id, user_id, readed)
+            VALUES
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.noticeId}, #{item.userId}, #{item.readed})
+            </foreach>
+        </insert>
+
+        <!-- 获取我的通告 -->
+        <select id="getMyNotices" resultType="map">
+            SELECT a.id noticeId, b.id id, a.title title, a.content content, a.priority priority, b.readed readed, DATE_FORMAT(b.readed_time,'%Y-%m-%d %H:%i:%s') readedTime
+                   ,b.create_user_id createUserId, c.nick_name createUserName, DATE_FORMAT(b.create_time,'%Y-%m-%d %H:%i:%s') receiveTime
+            FROM tb_notice a LEFT JOIN tb_notice_user b ON b.notice_id = a.id
+            LEFT JOIN tb_user c ON c.id = b.create_user_id
+            <where>
+                <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
+                    AND a.id = #{id}
+                </if>
+                <if test="userId != null and userId != '' and userId != 'null' and userId != 'undefined'">
+                    AND b.user_id = #{userId}
+                </if>
+                <if test="title != null and title != '' and title != 'null' and title != 'undefined'">
+                    AND a.title like concat('%',#{title},'%')
+                </if>
+                <if test="content != null and content != '' and content != 'null' and content != 'undefined'">
+                    AND a.content like concat('%',#{content},'%')
+                </if>
+                <if test="priority != null and priority != '' ">
+                    AND a.priority = #{priority}
+                </if>
+                <if test="readed != null and readed != '' ">
+                    AND b.readed = #{readed}
+                </if>
+            </where>
+            ORDER BY b.create_time DESC
+        </select>
+
+        <!-- 更新通告用户信息 -->
+        <update id="editNoticeUserById">
+            UPDATE tb_notice_user
+            <set>
+                <if test="noticeId != null and noticeId != '' and noticeId != 'null' and noticeId != 'undefined'">
+                    notice_id = #{noticeId},
+                </if>
+                <if test="userId != null and userId != '' and userId != 'null' and userId != 'undefined'">
+                    user_id = #{userId},
+                </if>
+                <if test="readed != null">
+                    readed = #{readed},
+                </if>
+                <if test="readedTime != null and readedTime != '' and readedTime != 'null' and readedTime != 'undefined'">
+                    readed_time = #{readedTime},
+                </if>
+                <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
+                    remark = #{remark},
+                </if>
+            </set>
+
+            <where>
+                <if test="id != null and id != ''">
+                    AND id = #{id}
+                </if>
+                <if test="userId != null and userId != '' and userId != 'null' and userId != 'undefined'">
+                    AND user_id = #{userId}
+                </if>
+            </where>
+        </update>
+
+        <!-- 查询的选择项, 增删字段时调整 -->
+        <sql id="notice_select_cond">
+                                a.id id ,
+                                a.title title ,
+                                a.content content ,
+                                DATE_FORMAT(a.publish_time,'%Y-%m-%d %H:%i:%s') publishTime,
+                                a.cancel cancel ,
+                                DATE_FORMAT(a.cancel_time,'%Y-%m-%d %H:%i:%s') cancelTime,
+                                a.priority priority ,
+                                a.remark remark ,
+                                a.status status ,
+                                a.create_user_id createUserId ,
+                                DATE_FORMAT(a.create_time,'%Y-%m-%d %H:%i:%s') createTime,
+                                a.update_user_id updateUserId ,
+                                DATE_FORMAT(a.update_time,'%Y-%m-%d %H:%i:%s') updateTime
+                </sql>
+
+        <!-- (单个)查询的选择项, 增删字段时调整 -->
+        <sql id="notice_select_cond_one">
+                            a.id id ,
+                            a.title title ,
+                            a.content content ,
+                            DATE_FORMAT(a.publish_time,'%Y-%m-%d %H:%i:%s') publishTime,
+                            a.cancel cancel ,
+                            DATE_FORMAT(a.cancel_time,'%Y-%m-%d %H:%i:%s') cancelTime,
+                            a.priority priority ,
+                            a.remark remark ,
+                            a.status status ,
+                            a.create_user_id createUserId ,
+                            DATE_FORMAT(a.create_time,'%Y-%m-%d %H:%i:%s') createTime,
+                            a.update_user_id updateUserId ,
+                            DATE_FORMAT(a.update_time,'%Y-%m-%d %H:%i:%s') updateTime
+                    </sql>
+
+        <!-- 查询条件 -->
+        <sql id="notice_where_if">
+                                            <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
+                    AND a.id = #{id}
+                </if>
+                                                            <if test="title != null and title != '' and title != 'null' and title != 'undefined'">
+                    AND a.title like concat('%',#{title},'%')
+                </if>
+                                                            <if test="content != null and content != '' and content != 'null' and content != 'undefined'">
+                    AND a.content like concat('%',#{content},'%')
+                </if>
+                                                            <if test="publishTime != null and publishTime != '' and publishTime != 'null' and publishTime != 'undefined'">
+                    AND a.publish_time = #{publishTime}
+                </if>
+                                                            <if test="cancel != null and cancel != '' ">
+                    AND a.cancel = #{cancel}
+                </if>
+                                                            <if test="cancelTime != null and cancelTime != '' and cancelTime != 'null' and cancelTime != 'undefined'">
+                    AND a.cancel_time = #{cancelTime}
+                </if>
+                                                            <if test="priority != null and priority != '' ">
+                    AND a.priority = #{priority}
+                </if>
+                                                            <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
+                    AND a.remark = #{remark}
+                </if>
+                                                            <if test="status != null and status != '' ">
+                    AND a.status = #{status}
+                </if>
+                                                            <if test="createUserId != null and createUserId != '' and createUserId != 'null' and createUserId != 'undefined'">
+                    AND a.create_user_id = #{createUserId}
+                </if>
+                                                            <if test="createTime != null and createTime != '' and createTime != 'null' and createTime != 'undefined'">
+                    AND a.create_time = #{createTime}
+                </if>
+                                                            <if test="updateUserId != null and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined'">
+                    AND a.update_user_id = #{updateUserId}
+                </if>
+                                                            <if test="updateTime != null and updateTime != '' and updateTime != 'null' and updateTime != 'undefined'">
+                    AND a.update_time = #{updateTime}
+                </if>
+                                    </sql>
+
+
+        <!-- (批量)新增键, 增删字段时调整 -->
+        <sql id="notice_add_key">
+                            
+                    id ,
+                                            
+                    title ,
+                                            
+                    content ,
+                                            
+                    publish_time ,
+                                            
+                    cancel ,
+                                            
+                    cancel_time ,
+                                            
+                    priority ,
+                                            
+                    remark ,
+
+                    status
+                                                                                                                                                  </sql>
+
+        <!-- (批量)新增值, 增删字段时调整 -->
+        <sql id="notice_add_val">
+                                                #{id} ,
+                                                                #{title} ,
+                                                                #{content} ,
+                                                                #{publishTime} ,
+                                                                #{cancel} ,
+                                                                #{cancelTime} ,
+                                                                #{priority} ,
+                                                                #{remark} ,
+                                                                #{status}
+                                                                                                                                                    </sql>
+
+        <!-- (批量修改的条件,增减字段时调整) -->
+        <sql id="notice_set_if">
+                                                                                                                                <if test="title != null and title != '' and title != 'null' and title != 'undefined'">
+                                title = #{title},
+                            </if>
+                                                                                                                                                                <if test="content != null and content != '' and content != 'null' and content != 'undefined'">
+                                content = #{content},
+                            </if>
+                                                                                                                                                                <if test="publishTime != null and publishTime != '' and publishTime != 'null' and publishTime != 'undefined'">
+                                publish_time = #{publishTime},
+                            </if>
+                                                                                                                                                                    <if test="cancel != null">
+                            cancel = #{cancel},
+                        </if>
+                                                                                                                                                                <if test="cancelTime != null and cancelTime != '' and cancelTime != 'null' and cancelTime != 'undefined'">
+                                cancel_time = #{cancelTime},
+                            </if>
+                                                                                                                                                                    <if test="priority != null">
+                            priority = #{priority},
+                        </if>
+                                                                                                                                                                <if test="remark != null and remark != '' and remark != 'null' and remark != 'undefined'">
+                                remark = #{remark},
+                            </if>
+                                                                                                                                                                    <if test="status != null">
+                            status = #{status}
+                        </if>
+                                                                                                                                                                                                                                                                                                                                                </sql>
+</mapper>

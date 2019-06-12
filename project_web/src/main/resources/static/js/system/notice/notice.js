@@ -1,5 +1,5 @@
 /**
- * Created by YuKai Fan on ${datetime}.
+ * Created by YuKai Fan on 2019-06-10 09:56:24.
  */
 layui.use(['table', 'layer', 'form', 'formSelects'], function() {
     var layer = layui.layer;
@@ -7,9 +7,9 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
 
     var tableObject = table.render({
         id:"id"
-        ,elem: '#${classname}ListTable'
+        ,elem: '#noticeListTable'
         , height: 500
-        , url: ctxPath + '/api/get${className}s'//数据接口
+        , url: '/api/getNotices'//数据接口
         , page: true
         , limits: [10,20,30,40,50]
         , limit: 10
@@ -23,22 +23,23 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
         }
         , cols: [[ //表头,field要与实体类字段相同
             {type: 'checkbox'}
-            #foreach($column in $columns)
-                #if($column.attrname == 'status')
-                    , {field: 'status', title: '状态', align: 'center', templet: function (data) {
-                        var result;
-                        if (data.status === 1) {
-                            result = '正常';
-                        } else {
-                            result = '禁用';
-                        }
-                        return result;
-                    }}
-                #elseif($column.attrname != 'id' && $column.attrname != 'createUserId' && $column.attrname != 'updateUserId' && $column.attrname != 'createTime' && $column.attrname != 'updateTime')
-                    , {field: '$column.attrname', title: '$column.comments', align: 'center'}
-                #end
-            #end
-            , {title: '操作', toolbar: '#btn', align: 'center'}
+        , {field: 'title', title: '通告标题', align: 'center'}
+        , {field: 'content', title: '通告内容', align: 'center'}
+        , {field: 'publishTime', title: '发布时间', align: 'center'}
+        , {field: 'cancelName', title: '是否撤销', align: 'center'}
+        , {field: 'cancelTime', title: '撤销时间', align: 'center'}
+        , {field: 'priorityName', title: '优先级', align: 'center'}
+        , {field: 'remark', title: '备注', align: 'center'}
+        , {field: 'status', title: '状态', align: 'center', templet: function (data) {
+                var result;
+                if (data.status === 1) {
+                    result = '正常';
+                } else {
+                    result = '禁用';
+                }
+                return result;
+            }}
+        , {title: '操作', toolbar: '#btn', align: 'center'}
         ]]
     });
     /*
@@ -60,9 +61,9 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
             layer.open({
                 type: 2
                 ,title: '编辑'
-                ,content: ctxPath + '/system/${classname}/edit?id=' + data.id
+                ,content: '/system/notice/edit?id=' + data.id
                 ,maxmin: true
-                ,area: ['500px', '450px']
+                ,area: ['1068px', '650px']
             })
         },
 
@@ -70,7 +71,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
         delete:function (data) {
             layer.confirm ('确定删除吗?', function (index) {
                 $.ajax({
-                    url: ctxPath + '/api/${classname}?id=' + data.id,
+                    url: '/api/notice?id=' + data.id,
                     type: 'delete',
                     success:function(res){
                         if (res.code === 200) {
@@ -90,11 +91,14 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
         search:function () {
             tableObject.reload({
                 where:{
-                    #*userName: $('#frmSearch [name=userName]').val(),
-                    nickName: $('#frmSearch [name=nickName]').val()*#
+                    status: $('#frmSearch [name=status]').val(),
+                    priority: $('#frmSearch [name=priority]').val(),
+                    cancel: $('#frmSearch [name=cancel]').val(),
+                    title: $('#frmSearch [name=title]').val(),
+                    content: $('#frmSearch [name=content]').val()
                 }
             })
-        },
+        }
 
     };
     $('.layui-btn').on('click', function(){

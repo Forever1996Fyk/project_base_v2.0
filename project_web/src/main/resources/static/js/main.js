@@ -1,10 +1,41 @@
-layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
+layui.use(['element', 'form', 'layer', 'upload', 'table', 'layedit'], function () {
     var $ = layui.jquery;
     var element = layui.element; //加载element模块
     var form = layui.form; //加载form模块
     var layer = layui.layer; //加载layer模块
     var upload = layui.upload;  //加载upload模块
     var table = layui.table;//加载表格模块
+    var layedit = layui.layedit;//加载富文本模块
+    var layeditOption = {
+        uploadImage: {
+          url: ctxPath + '/api/attachment',
+            accept: 'image',
+            acceptMime: 'image/*',
+            exts: 'jpg|png|gif|bmp|jpeg',
+            size: '10240'
+        },
+        uploadVideo: {
+            url: '',
+            accpet: 'video',
+            accpetMime: 'video/*',
+            exts: 'mp4|flv|avi|rm|rmvb',
+            size: '20480'
+        },
+        tool: ['html', 'code', 'strong', 'italic', 'underline', 'del', 'addhr', '|', 'fontFomatt', 'colorpicker', 'face'
+            , '|', 'left', 'center', 'right', '|', 'link', 'unlink', 'image_alt', 'video', 'anchors'
+            , '|', 'fullScreen'],
+        devmode: true,
+        codeConfig: {
+            hide: true, // 是否显示编码语言选择框
+            default: 'javascript' //hide为true时的默认语言格式
+        }
+    };//富文本通用配置
+    layedit.set(layeditOption);
+
+    /**
+     * 创建富文本编辑器(只要在需要富文本的地方id=layeditor即可)
+     */
+    var editor = layedit.build('layeditor');
 
     /* 侧边栏开关 */
     $(".side-toggle").on("click", function (e) {
@@ -156,6 +187,9 @@ layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
         var url = form.attr("action");
         var data = serializeObject(form.serializeArray());
         var type = data.id?'PUT':'POST';
+        if (editor != undefined) {
+            data.content = layedit.getContent(editor);
+        }
         $.ajax({
            url: url,
             type: type,
@@ -201,19 +235,21 @@ layui.use(['element', 'form', 'layer', 'upload', 'table'], function () {
         var checkStatus = table.checkStatus('id')//注意这个id不是html中table元素上的id，而是table:render中定义的id
             ,ids = [];
         if (checkStatus.data.length === 0) {
-            layer.msg('请选择要删除的数据行');
+            layer.msg('请选择要数据行');
         } else {
-            for (var i = 0; i < checkStatus.data.length; i++) {
-                ids.push(checkStatus.data[i].id);
-            }
-            $.ajax({
-               url: e.target.href + ids,
-                type: 'DELETE',
-                contentType: 'Application/JSON; charset=utf-8',
-                success:function (res) {
-                    $.fn.Messager(res);
+            layer.confirm ('确定操作吗?', function (index) {
+                for (var i = 0; i < checkStatus.data.length; i++) {
+                    ids.push(checkStatus.data[i].id);
                 }
-            });
+                $.ajax({
+                    url: e.target.href + ids,
+                    type: 'DELETE',
+                    contentType: 'Application/JSON; charset=utf-8',
+                    success:function (res) {
+                        $.fn.Messager(res);
+                    }
+                });
+            })
         }
 
     });

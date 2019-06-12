@@ -95,6 +95,7 @@
         <select id="getLogGroupByDate" resultType="Map">
             SELECT DATE_FORMAT(a.create_time,'%m-%d') createTime, count(*) count
             FROM tb_action_log a
+            WHERE a.create_time > DATE_SUB(NOW(), INTERVAL 15 DAY)
             GROUP BY DATE(a.create_time)
         </select>
         <select id="getLogGroupByMonth" resultType="Map">

@@ -1,6 +1,11 @@
 package com.javaweb.MichaelKai.controller.system;
 
+import com.javaweb.MichaelKai.common.constants.Constant;
+import com.javaweb.MichaelKai.common.utils.DateUtil;
 import com.javaweb.MichaelKai.common.utils.HttpServletUtil;
+import com.javaweb.MichaelKai.common.utils.SpringContextUtil;
+import com.javaweb.MichaelKai.pojo.Notice;
+import com.javaweb.MichaelKai.pojo.NoticeUser;
 import com.javaweb.MichaelKai.pojo.User;
 import com.javaweb.MichaelKai.service.*;
 import com.javaweb.MichaelKai.shiro.ShiroKit;
@@ -12,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +43,8 @@ public class PageController {
     private DictService dictService;
     @Autowired
     private DictItemService dictItemService;
+    @Autowired
+    private NoticeService noticeService;
 
     /**
      * 跳转到注册页面
@@ -344,5 +352,77 @@ public class PageController {
         User user = ShiroKit.getUser();
         model.addAttribute("user", user);
         return "system/main/console";
+    }
+
+    /**
+     * 通知通告管理
+     * @return
+     */
+    @GetMapping("/notice/noticeList")
+    public String noticeList() {
+        return "system/notice/notice";
+    }
+
+    /**
+     * 添加新的通告
+     * @return
+     */
+    @GetMapping("/notice/add")
+    public String addNotice() {
+        return "system/notice/addNotice";
+    }
+
+    /**
+     * 修改通告
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping("/notice/edit")
+    public String editNotice(String id, Model model) {
+        Map<String, Object> noticeById = noticeService.getNoticeById(id);
+        model.addAttribute("notice", noticeById);
+        return "system/notice/addNotice";
+    }
+
+    /**
+     * 选择通知对象
+     * @return
+     */
+    @GetMapping("/notice/userNotice/{ids}")
+    public String userNotice(@PathVariable("ids") String[] ids, Model model) {
+        if (ids.length == 1) {
+            model.addAttribute("id", ids[0]);
+            model.addAttribute("userId", ShiroKit.getUser().getId());
+        }
+        return "system/notice/userNotice";
+    }
+
+    /**
+     * 我的通告
+     * @return
+     */
+    @GetMapping("/notice/myNotice")
+    public String myNotice() {
+        return "system/notice/myNotice";
+    }
+
+    /**
+     * 查看通告内容
+     * @return
+     */
+    @GetMapping("/notice/contentView")
+    public String contentView(Integer id, String noticeId, Model model) {
+        Map<String, Object> noticeById = noticeService.getNoticeById(noticeId);
+        model.addAttribute("notice", noticeById);
+
+        //更新通告为已读
+        NoticeUser noticeUser = new NoticeUser();
+        noticeUser.setId(id);
+        noticeUser.setReaded(1);
+        noticeUser.setReadedTime(DateUtil.dateToString(new Date(), Constant.DATE_FORMAT_COMMON));
+        noticeService.editNoticeUserById(noticeUser);
+
+        return "system/notice/contentView";
     }
 }

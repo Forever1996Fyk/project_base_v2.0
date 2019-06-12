@@ -9,10 +9,10 @@ import com.javaweb.MichaelKai.mapper.UserMapper;
 import com.javaweb.MichaelKai.pojo.Attachment;
 import com.javaweb.MichaelKai.pojo.Role;
 import com.javaweb.MichaelKai.pojo.User;
-import com.javaweb.MichaelKai.pojo.UserRole;
 import com.javaweb.MichaelKai.service.AttachmentService;
 import com.javaweb.MichaelKai.service.UserService;
 import com.javaweb.MichaelKai.thymeleaf.util.DictUtil;
+import com.javaweb.MichaelKai.vo.UserRoleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void roleAssign(UserRole userRole) {
+    public void roleAssign(UserRoleVo userRole) {
         //先删除表中的角色
         userMapper.delUserRole(userRole.getUserId());
 
@@ -121,9 +121,9 @@ public class UserServiceImpl implements UserService {
             if (userRole.getRoleId() != null) {
                 String[] roleIds = userRole.getRoleId().split(",");
                 if (roleIds.length > 0) {
-                    List<UserRole> list = new ArrayList<>();
+                    List<UserRoleVo> list = new ArrayList<>();
                     for (String roleId : roleIds) {
-                        UserRole uR = new UserRole();
+                        UserRoleVo uR = new UserRoleVo();
                         uR.setUserId(userRole.getUserId());
                         uR.setRoleId(roleId);
 
@@ -185,6 +185,11 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public List<Map<String, Object>> getUserByRoleId(String id) {
+        return userMapper.getUserByRoleId(id);
     }
 
 

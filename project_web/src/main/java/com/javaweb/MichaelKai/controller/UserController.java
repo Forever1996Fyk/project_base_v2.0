@@ -11,10 +11,9 @@ import com.javaweb.MichaelKai.common.utils.PinYinUtil;
 import com.javaweb.MichaelKai.common.vo.PageResult;
 import com.javaweb.MichaelKai.common.vo.Result;
 import com.javaweb.MichaelKai.pojo.User;
-import com.javaweb.MichaelKai.pojo.UserRole;
 import com.javaweb.MichaelKai.service.UserService;
 import com.javaweb.MichaelKai.shiro.ShiroKit;
-import jdk.nashorn.internal.ir.IfNode;
+import com.javaweb.MichaelKai.vo.UserRoleVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -148,7 +147,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/user/roleAssign")
-    public Result roleAssign(@RequestBody UserRole userRole) {
+    public Result roleAssign(@RequestBody UserRoleVo userRole) {
         userService.roleAssign(userRole);
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage());
     }

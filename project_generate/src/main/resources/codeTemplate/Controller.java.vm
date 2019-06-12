@@ -54,7 +54,7 @@ public class ${className}Controller {
      * @return
      */
     @DeleteMapping("/${classname}")
-    public Result edit${className}ById(@RequestParam String id) {
+    public Result del${className}ById(@RequestParam String id) {
         ${classname}Service.del${className}ById(id);
         return new Result(true, ResultEnum.SUCCESS.getValue(), "删除" + ResultEnum.SUCCESS.getMessage());
     }
@@ -65,7 +65,7 @@ public class ${className}Controller {
      * @return
      */
     @DeleteMapping("/${classname}s/{ids}")
-    public Result edit${className}ByIds(@PathVariable("ids") String[] ids) {
+    public Result del${className}ByIds(@PathVariable("ids") String[] ids) {
         ${classname}Service.del${className}ByIds(Arrays.asList(ids));
         return new Result(true, ResultEnum.SUCCESS.getValue(), "批量删除" + ResultEnum.SUCCESS.getMessage());
     }

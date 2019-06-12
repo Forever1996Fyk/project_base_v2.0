@@ -10,6 +10,9 @@ ALTER TABLE tb_attachment add attach_path  VARCHAR(300) DEFAULT NULL COMMENT '�
 ALTER TABLE tb_attachment CHANGE owner_id attach_md5  varchar(300) DEFAULT NULL COMMENT '文件md5';
 ALTER TABLE tb_attachment CHANGE owner_entity attach_sha1 varchar(300) DEFAULT NULL COMMENT '文件SHA1值';
 
+#修改id为自增
+alter table tb_notice_user modify id int auto_increment;
+
 #修改表字段长度
 ALTER TABLE tb_attachment modify  attach_name varchar(300) DEFAULT NULL COMMENT '文件名';
 

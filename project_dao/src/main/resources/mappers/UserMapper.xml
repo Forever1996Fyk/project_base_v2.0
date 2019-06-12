@@ -127,6 +127,13 @@
         DELETE FROM tb_user_role WHERE user_id = #{userId}
     </delete>
 
+    <!-- 根据roleId获取用户 -->
+    <select id="getUserByRoleId" resultType="Map">
+        SELECT a.id id, a.user_name userName, a.nick_name nickName, a.phone phone, a.email email
+        FROM tb_user a LEFT JOIN tb_user_role b ON b.user_id = a.id
+        WHERE b.role_id = #{roleId}
+    </select>
+
 
     <!-- 查询的选择项, 增删字段时调整 -->
     <sql id="user_select_cond">

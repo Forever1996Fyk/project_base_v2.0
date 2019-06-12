@@ -1,4 +1,4 @@
-package com.javaweb.MichaelKai.pojo;
+package com.javaweb.MichaelKai.vo;
 
 import lombok.Data;
 
@@ -11,7 +11,7 @@ import java.util.Set;
  *
  */
 @Data
-public class RolePermission implements Serializable{
+public class RoleVo implements Serializable{
 
 	private Integer id;//
 	private String roleId;//角色标识

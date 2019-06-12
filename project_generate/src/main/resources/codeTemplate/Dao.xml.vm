@@ -90,18 +90,25 @@
 
         <!-- 查询的选择项, 增删字段时调整 -->
         <sql id="${classname}_select_cond">
-        #foreach($column in $columns)
-            #if($column.columnName == 'create_time' && $column.columnName == 'update_time')
-                DATE_FORMAT(a.$column.columnName,'%Y-%m-%d %H:%i:%s') $column.attrname ,
+            a.id id
+            #foreach($column in $columns)
+                #if($column.columnName == 'create_time' && $column.columnName == 'update_time')
+                    , DATE_FORMAT(a.$column.columnName,'%Y-%m-%d %H:%i:%s') $column.attrname
+                #end
+
+                #if($column.columnName != 'id')
+                    , a.$column.columnName $column.attrname
+                #end
             #end
-            a.$column.columnName $column.attrname ,
-        #end
         </sql>
 
         <!-- (单个)查询的选择项, 增删字段时调整 -->
         <sql id="${classname}_select_cond_one">
+            a.id id
             #foreach($column in $columns)
-                a.$column.columnName $column.attrname ,
+                #if($column.columnName != 'id')
+                    , a.$column.columnName $column.attrname
+                #end
             #end
         </sql>
 
@@ -123,21 +130,25 @@
 
         <!-- (批量)新增键, 增删字段时调整 -->
         <sql id="${classname}_add_key">
+            id
             #foreach($column in $columns)
                 #if($column.columnName != 'create_user_id' && $column.columnName != 'update_user_id'
-                    && $column.columnName != 'create_time' && $column.columnName != 'update_time')
+                    && $column.columnName != 'create_time' && $column.columnName != 'update_time'
+                    && $column.attrname != 'id')
 
-                    $column.columnName ,
+                    , $column.columnName
                 #end
             #end
         </sql>
 
         <!-- (批量)新增值, 增删字段时调整 -->
         <sql id="${classname}_add_val">
+            #{id}
             #foreach($column in $columns)
                 #if($column.attrname != 'createUserId' && $column.attrname != 'updateUserId'
-                                    && $column.attrname != 'createTime' && $column.attrname != 'updateTime')
-                    #{$column.attrname} ,
+                                    && $column.attrname != 'createTime' && $column.attrname != 'updateTime'
+                                    && $column.attrname != 'id')
+                    , #{$column.attrname}
                 #end
             #end
         </sql>
@@ -153,9 +164,9 @@
                                 $column.columnName = #{$column.attrname},
                             </if>
                         #else
-                                <if test="$column.attrname != null">
-                            $column.columnName = #{$column.attrname},
-                        </if>
+                            <if test="$column.attrname != null">
+                                $column.columnName = #{$column.attrname},
+                            </if>
                         #end
                     #end
                 #end

@@ -4,8 +4,60 @@ layui.config({
     //消息提示框插件
    notice: 'notice'
 });
+var curUserId = $("#curUserId").val(),
+    socket = io('http://localhost:9090?userId=' + curUserId);
 
+layui.use(['element', 'layer', 'form', 'notice', 'element'], function () {
+    var layer = layui.layer
+        , notice = layui.notice
+        , element = layui.element
+        , tabFlag = false;
 
+    notice.options = {
+        iconClass: 'toast-info',//因为是通知所以图标一致, 颜色不同
+        onclick: function () {
+            var url = ctxPath + '/system/notice/myNotice';
+            var iframeUrl = url.replace('//','/');
+            if (!tabFlag) {
+                element.tabAdd('iframe-tabs', {
+                    title: "我的通告"
+                    , content: '<iframe src="' + iframeUrl + '" frameborder="0" class="layui-layout-iframe"></iframe>'
+                    , id: ctxPath + '/system/notice/myNotice'
+                });
+                element.tabChange('iframe-tabs', url);
+                tabFlag = true;
+            } else {
+                element.tabChange('iframe-tabs', url);
+            }
+        }
+    };
+
+    socket.on('connect', function () {
+        notice.success("客户端已连接");
+    });
+
+    socket.on('chatEvent', function (data) {
+        switch (data.priority) {//info 无-4表示优先级越高
+            case 0:
+                notice.success(data.message);
+                break;
+            case 1:
+                notice.info(data.message);
+                break;
+            case 2:
+                notice.warning(data.message);
+                break;
+            case 3:
+                notice.error(data.message);
+                break;
+        }
+    });
+
+    socket.on('disconnect', function () {
+        notice.warning("连接已关闭");
+    });
+});
+/*
 layui.use(['element', 'layer', 'form', 'notice'], function () {
     var layer = layui.layer
         , webScoket
@@ -69,4 +121,4 @@ layui.use(['element', 'layer', 'form', 'notice'], function () {
         })
     }
 
-});
+});*/
