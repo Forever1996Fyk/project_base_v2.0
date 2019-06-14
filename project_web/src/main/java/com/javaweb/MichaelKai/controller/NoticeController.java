@@ -4,6 +4,7 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.javaweb.MichaelKai.common.constants.Constant;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.utils.DateUtil;
+import com.javaweb.MichaelKai.common.utils.RedisUtil;
 import com.javaweb.MichaelKai.common.vo.Result;
 import com.javaweb.MichaelKai.pojo.Notice;
 import com.javaweb.MichaelKai.pojo.NoticeUser;
@@ -40,6 +41,8 @@ public class NoticeController {
     private UserService userService;
     @Autowired
     private ClientCache clientCache;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 添加
@@ -196,6 +199,8 @@ public class NoticeController {
                     //向客户端推送消息
                     socketIOClient.sendEvent("chatEvent", data);
                 });
+            } else {
+                redisUtil.set(Constant.REDIS_NOTICE_OFFLINE + userId, userId);
             }
         }
         return new Result(true, ResultEnum.SUCCESS.getValue(), "发送" + ResultEnum.SUCCESS.getMessage(), vo);

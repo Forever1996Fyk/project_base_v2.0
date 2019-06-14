@@ -4,15 +4,6 @@
   <link rel="stylesheet" th:href="@{/css/admin.css}" type="text/css">
 </head>
 <body>
-
-
-  <ul class="layui-nav" lay-filter="">
-    <li class="layui-nav-item"><a href="http://www.layui.com/admin/">layuiAdmin</a></li>
-    <li class="layui-nav-item layui-this"><a href="">LayIM</a></li>
-    <li class="layui-nav-item"><a href="http://layim.layui.com/" target="_blank">授权</a></li>
-  </ul>
-
-
   <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
       <div class="layui-col-md12">
@@ -52,12 +43,19 @@
     </div>
   </div>
 
-  <script th:replace="/common/template :: script"></script>
-  <script>
+  <script th:src="@{/lib/layui-v2.3.0/layui.js}" charset="utf-8"></script>
+  <script th:src="@{/js/plugins/socket/socket.io.js}" charset="utf-8"></script>
+  <script  type="text/javascript" th:inline="javascript">
+      var _ctxPath = /*[[@{/}]]*/ null;
+      var ctxPath = _ctxPath.toString().substring(0, _ctxPath.toString().length-1);
+      var baseAdmin = ctxPath + "/baseAdmin";
+  </script>
+  <script type="text/javascript" th:src="@{/js/system/layim/im.js}"></script>
+  <!--<script>
   layui.config({
-    base: '../../../layuiadmin/' //静态资源所在路径
+      base: ctxPath + '/lib/dist/layim/' //静态资源所在路径
   }).extend({
-    index: 'lib/index' //主入口模块
+      index: 'index' //主入口模块
   }).use(['index', 'layim'], function(){
     var $ = layui.$
     ,admin = layui.admin
@@ -84,12 +82,12 @@
     layim.config({
       //初始化接口
       init: {
-        url: layui.setter.base + 'json/layim/getList.json'
+        url: ctxPath + '/lib/dist/layim/json/getList.js'
         ,data: {}
       }
       //查看群员接口
       ,members: {
-        url: layui.setter.base + 'json/layim/getMembers.json'
+        url: ctxPath + '/lib/dist/layim/json/getMembers.js'
         ,data: {}
       }
       
@@ -146,7 +144,7 @@
         ,formType: 2
         ,shade: 0
       }, function(text, index){
-        layer.close(index);
+        layer.close(imIndex);
         insert('[pre class=layui-code]' + text + '[/pre]'); //将内容插入到编辑器
       });
     });
@@ -279,7 +277,7 @@
               icon: 1
               ,shade: 0.5
             }, function(){
-              layer.close(index);
+              layer.close(imIndex);
             });
             
             //通知对方
@@ -313,7 +311,7 @@
               icon: 1
               ,shade: 0.5
             }, function(){
-              layer.close(index);
+              layer.close(imIndex);
             });
             
             //通知对方
@@ -356,7 +354,7 @@
               ,sign: user.sign //好友签名
             });
             
-            layer.close(index);
+            layer.close(imIndex);
           }
         });
       }
@@ -442,7 +440,7 @@
           ,shadeClose: true
           ,shade: 0.8
           ,end: function(){
-            layer.close(index + 2);
+            layer.close(imIndex + 2);
           }
         });
         layer.photos({
@@ -465,4 +463,4 @@
     });
     
   });
-  </script>
+  </script>-->

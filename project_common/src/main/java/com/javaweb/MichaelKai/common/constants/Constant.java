@@ -21,4 +21,7 @@ public class Constant {
 
     //通知通告发布时间格式
     public static final String DATE_FORMAT_NOTICE_PUBLIC = "yyyy-MM-dd HH:mm:ss";
+
+    //通知通告redis缓存离线信息
+    public static final String REDIS_NOTICE_OFFLINE = "REDIS_NOTICE_OFFLINE:";
 }

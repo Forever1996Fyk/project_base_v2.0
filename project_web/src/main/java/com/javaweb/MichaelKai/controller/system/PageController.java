@@ -425,4 +425,9 @@ public class PageController {
 
         return "system/notice/contentView";
     }
+
+    @GetMapping("/layIm/index")
+    public String ImIndex() {
+        return "system/im/index";
+    }
 }

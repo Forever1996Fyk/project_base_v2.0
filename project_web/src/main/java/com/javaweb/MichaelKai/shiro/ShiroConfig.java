@@ -75,6 +75,7 @@ public class ShiroConfig {
         filterMap.put("/api/reg", "anon");
         filterMap.put("/api/forget", "anon");
         filterMap.put("/api/resetPassword", "anon");
+        filterMap.put("/api/activiti", "anon");
 
         filterMap.put("/system/toReg", "anon");
         filterMap.put("/system/toForget", "anon");
