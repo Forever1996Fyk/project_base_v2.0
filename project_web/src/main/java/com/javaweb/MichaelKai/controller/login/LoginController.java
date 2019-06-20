@@ -11,6 +11,22 @@ import com.javaweb.MichaelKai.common.utils.DateUtil;
 import com.javaweb.MichaelKai.common.utils.HttpServletUtil;
 import com.javaweb.MichaelKai.common.utils.SpringContextUtil;
 import com.javaweb.MichaelKai.common.vo.Result;
+import com.javaweb.MichaelKai.elfinder.ElFinderConstants;
+import com.javaweb.MichaelKai.elfinder.command.CommandFactory;
+import com.javaweb.MichaelKai.elfinder.configuration.ElFinderConfig;
+import com.javaweb.MichaelKai.elfinder.configuration.ElfinderConfiguration;
+import com.javaweb.MichaelKai.elfinder.core.Volume;
+import com.javaweb.MichaelKai.elfinder.core.VolumeSecurity;
+import com.javaweb.MichaelKai.elfinder.core.impl.DefaultVolumeSecurity;
+import com.javaweb.MichaelKai.elfinder.core.impl.SecurityConstraint;
+import com.javaweb.MichaelKai.elfinder.param.Node;
+import com.javaweb.MichaelKai.elfinder.service.ElfinderStorage;
+import com.javaweb.MichaelKai.elfinder.service.ElfinderStorageFactory;
+import com.javaweb.MichaelKai.elfinder.service.VolumeSources;
+import com.javaweb.MichaelKai.elfinder.service.impl.DefaultElfinderStorage;
+import com.javaweb.MichaelKai.elfinder.service.impl.DefaultElfinderStorageFactory;
+import com.javaweb.MichaelKai.elfinder.service.impl.DefaultThumbnailWidth;
+import com.javaweb.MichaelKai.elfinder.support.locale.LocaleUtils;
 import com.javaweb.MichaelKai.pojo.User;
 import com.javaweb.MichaelKai.service.UserService;
 import com.javaweb.MichaelKai.shiro.ShiroKit;
@@ -22,6 +38,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -34,7 +51,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
+import java.util.*;
 
 /**
  * @program: project_base
@@ -90,6 +107,8 @@ public class LoginController {
             User loginUser = ShiroKit.getUser();
             loginUser.setLastLoginTime(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
             userService.editUserById(loginUser);
+
+            //创建云盘上传文件
 
             return new Result(true, ResultEnum.SUCCESS.getValue(), "登录" + ResultEnum.SUCCESS.getMessage(), "/index");
         } catch (LockedAccountException e) {

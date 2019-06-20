@@ -430,4 +430,13 @@ public class PageController {
     public String ImIndex() {
         return "system/im/index";
     }
+
+    /**
+     * 个人网盘
+     * @return
+     */
+    @GetMapping("/cloudDisk/disk")
+    public String cloudDisk() {
+        return "system/cloudDisk/disk";
+    }
 }
