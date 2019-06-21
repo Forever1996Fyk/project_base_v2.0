@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- elFinder CSS (REQUIRED) -->
+    <link rel="stylesheet" type="text/css" th:href="@{/js/plugins/elfinder/css/theme.css}">
+    <script th:src="@{/js/plugins/elfinder/js/jquery-1.11.1.js}"></script>
+    <!-- elFinder JS (REQUIRED) -->
+    <script th:src="@{/js/plugins/elfinder/js/elfinder.full.js}"></script>
+    <!-- elFinder translation (OPTIONAL) -->
+    <script th:src="@{/js/plugins/elfinder/js/i18n/elfinder.zh_CN.js}" charset="utf-8"></script>
+    <script th:src="@{/js/plugins/elfinder/js/extras/quicklook.googledocs.js}"></script>
+    <script th:src="@{/js/plugins/elfinder/ace/ace.js}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="@{/js/plugins/elfinder/ace/ext-modelist.js}" type="text/javascript" charset="utf-8"></script>
+    <script th:src="@{/js/plugins/elfinder/ace/ext-settings_menu.js}"></script>
+    <script th:src="@{/js/plugins/elfinder/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
+</head>
+<body>
+<div id="elfinder"></div>
+<script  type="text/javascript" th:inline="javascript">
+    var _ctxPath = /*[[@{/}]]*/ null;
+    var ctxPath = _ctxPath.toString().substring(0, _ctxPath.toString().length-1);
+    var baseAdmin = ctxPath + "/baseAdmin";
+</script>
+<script type="text/javascript" th:src="@{/js/system/cloudDisk/cloudDisk.js}" charset="utf-8"></script>
+</body>
+</html>

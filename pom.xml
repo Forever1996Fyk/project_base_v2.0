@@ -18,6 +18,7 @@
         <module>project_generate</module>
         <module>project_activiti</module>
         <module>project_im</module>
+        <module>project_cloudDisk</module>
     </modules>
 
     <name>project_base</name>

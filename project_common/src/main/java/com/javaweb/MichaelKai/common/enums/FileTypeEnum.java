@@ -11,7 +11,8 @@ import lombok.Getter;
 @Getter
 public enum FileTypeEnum {
     PIC(0, "图片"),
-    FILE(1, "文件");
+    FILE(1, "文件"),
+    CLOUD_DISK(2, "云盘");
 
     private Integer attachType;
 

@@ -124,7 +124,7 @@ public class AttachmentServiceImpl implements  AttachmentService {
                         attachment = (Attachment) MapUtil.mapToObject(Attachment.class, attachments.get(0));
                         return attachment;
                     }
-                    attachment = FileUpload.getAttachment(entry.getValue(), attachType == 0 ? "picture" : "other");
+                    attachment = FileUpload.getAttachment(entry.getValue(), FileUpload.attachTypeName(attachType));
                     FileUpload.transferTo(entry.getValue(), attachment);
                     attachment = this.addAttachment(attachment, userId, attachType);
                 }

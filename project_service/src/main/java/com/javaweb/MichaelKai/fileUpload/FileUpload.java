@@ -132,19 +132,42 @@ public class FileUpload {
      */
     public static boolean isContentType(MultipartFile multipartFile, Integer attachType) {
         //如果是图片类型，判断格式
-        if (attachType == FileTypeEnum.PIC.getAttachType()) {
-            String[] types = {
-                    "image/gif",
-                    "image/jpg",
-                    "image/jpeg",
-                    "image/png"
-            };
+        switch (attachType) {
+            case 0:
+                String[] types = {
+                        "image/gif",
+                        "image/jpg",
+                        "image/jpeg",
+                        "image/png"
+                };
 
-            List<String> typeList = Arrays.asList(types);
-            return typeList.contains(multipartFile.getContentType());
+                List<String> typeList = Arrays.asList(types);
+                return typeList.contains(multipartFile.getContentType());
+            case 1:
+                return true;
+            case 2:
+                return true;
         }
 
-        return true;
+        return false;
+    }
+
+    /**
+     * 根据类型获取类型名称
+     * @param attachType
+     * @return
+     */
+    public static String attachTypeName(Integer attachType) {
+        switch (attachType) {
+            case 0:
+                return "picture";
+            case 1:
+                return "file";
+            case 2:
+                return "cloudDisk";
+        }
+
+        return "other";
     }
 
     /**

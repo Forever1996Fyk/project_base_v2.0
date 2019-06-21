@@ -1,6 +1,12 @@
 #配置端口号
 server:
   port: 8092
+  undertow:
+    io-threads: 16
+    worker-threads: 256
+    buffer-size: 1024
+    direct-buffers: true
+
 
 # 项目配置
 project:
@@ -21,7 +27,7 @@ netty:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.1.110:3306/project_fyk?characterEncoding=utf-8
+    url: jdbc:mysql://localhost:3306/project_fyk?characterEncoding=utf-8
     username: root
     password: root
   thymeleaf:
@@ -44,7 +50,10 @@ spring:
         max-idle: 10 #连接池最大空闲连接
         min-idle: 0 #连接池最小空闲连接
     timeout: 1000 #超时时间(ms)
-
+  http:
+    multipart:
+      max-file-size: 50Mb
+      max-request-size: 50Mb
 
 #模板引擎
 #mybatis配置
@@ -52,3 +61,20 @@ mybatis:
   #mapper.xml所在位置
   mapper-locations: classpath:mappers/*.xml
   config-location: classpath:conf/mybatis-config.xml
+
+#云盘配置
+file-manager:
+  command: com.javaweb.MichaelKai.elfinder.command
+  thumbnail:
+    width: 80
+  volumes[0]:
+    Node:
+    source: fileSystem
+    alias: file
+    path: E:/upload/cloudDisk
+    defaultNode: true
+    locale:
+    constraint:
+      locked: false
+      readable: true
+      writable: true
