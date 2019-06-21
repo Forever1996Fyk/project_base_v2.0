@@ -436,7 +436,20 @@ public class PageController {
      * @return
      */
     @GetMapping("/cloudDisk/disk")
-    public String cloudDisk() {
+    public String cloudDisk(Model model) {
+        model.addAttribute("diskFlag", "disk");
         return "system/cloudDisk/disk";
     }
+
+    /**
+     * 公共网盘
+     * @return
+     */
+    @GetMapping("/cloudDisk/commonDisk")
+    public String commonDisk(Model model) {
+        model.addAttribute("diskFlag", "commonDisk");
+        return "system/cloudDisk/disk";
+    }
+
+
 }

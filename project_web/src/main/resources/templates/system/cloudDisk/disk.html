@@ -15,6 +15,7 @@
     <script th:src="@{/js/plugins/elfinder/jquery-ui-1.12.1.custom/jquery-ui.js}"></script>
 </head>
 <body>
+<input type="hidden" id="diskFlag" th:value="${diskFlag}">
 <div id="elfinder"></div>
 <script  type="text/javascript" th:inline="javascript">
     var _ctxPath = /*[[@{/}]]*/ null;

@@ -5,7 +5,7 @@
 window.onload = function() {
     elFinder.prototype.loadCss(ctxPath + '/js/plugins/elfinder/jquery-ui-1.12.1.custom/jquery-ui.css');
     $('#elfinder').elfinder({
-        url : ctxPath + '/api/elfinder/connector',
+        url : ctxPath + '/api/elfinder/connector/' + $("#diskFlag").val(),
         lang: 'zh_CN',
         height : window.innerHeight-20,
         commandsOptions: {

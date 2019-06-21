@@ -14,6 +14,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.AbstractMultipartHttpServletRequest;
@@ -67,8 +68,8 @@ public class CloudDiskController {
      * @param request
      * @param response
      */
-    @RequestMapping("/elfinder/connector")
-    public void connector(HttpServletRequest request, final HttpServletResponse response) throws IOException {
+    @RequestMapping("/elfinder/connector/{diskFlag}")
+    public void connector(@PathVariable("diskFlag") String diskFlag, HttpServletRequest request, final HttpServletResponse response) throws IOException {
         try {
             response.setCharacterEncoding("UTF-8");
             request = processMutipartContent(request);
@@ -79,7 +80,7 @@ public class CloudDiskController {
         String cmd = request.getParameter(ElFinderConstants.ELFINDER_PARAMETER_COMMAND);
         ElfinderCommand elfinderCommand = elfinderCommandFactory.get(cmd);
 
-        ElfinderStorageFactory elfinderStorageFactory = getElfinderStorageFactory();
+        ElfinderStorageFactory elfinderStorageFactory = getElfinderStorageFactory(diskFlag);
         try {
 
             final HttpServletRequest protectRequest = request;
@@ -218,13 +219,13 @@ public class CloudDiskController {
         };
     }
 
-    private ElfinderStorageFactory getElfinderStorageFactory() {
+    private ElfinderStorageFactory getElfinderStorageFactory(String diskFlag) {
         DefaultElfinderStorageFactory elfinderStorageFactory = new DefaultElfinderStorageFactory();
-        elfinderStorageFactory.setElfinderStorage(getElfinderStorage());
+        elfinderStorageFactory.setElfinderStorage(getElfinderStorage(diskFlag));
         return elfinderStorageFactory;
     }
 
-    private ElfinderStorage getElfinderStorage() {
+    private ElfinderStorage getElfinderStorage(String diskFlag) {
         DefaultElfinderStorage defaultElfinderStorage = new DefaultElfinderStorage();
 
         // creates thumbnail
@@ -243,12 +244,17 @@ public class CloudDiskController {
         for (Node elfinderConfigurationVolume : elfinderConfigurationVolumes) {
 
             final String alias = elfinderConfigurationVolume.getAlias();
-            final String path = elfinderConfigurationVolume.getPath() + ShiroKit.getUser().getId();//每个用户的云盘文件夹不同，以userId为标识
             final String source = elfinderConfigurationVolume.getSource();
             final String locale = elfinderConfigurationVolume.getLocale();
             final boolean isLocked = elfinderConfigurationVolume.getConstraint().isLocked();
             final boolean isReadable = elfinderConfigurationVolume.getConstraint().isReadable();
             final boolean isWritable = elfinderConfigurationVolume.getConstraint().isWritable();
+            final String path;
+            if ("disk".equals(diskFlag)) {
+                path = elfinderConfigurationVolume.getPath() + ShiroKit.getUser().getId();//每个用户的云盘文件夹不同，以userId为标识
+            } else {
+                path = elfinderConfigurationVolume.getPath();//公共网盘
+            }
 
             // creates new volume
             Volume volume = VolumeSources.of(source).newInstance(alias, path);
