@@ -8,6 +8,7 @@ import com.javaweb.MichaelKai.common.exception.ResultException;
 import com.javaweb.MichaelKai.common.utils.AppUtil;
 import com.javaweb.MichaelKai.common.utils.DateUtil;
 import com.javaweb.MichaelKai.common.utils.MapUtil;
+import com.javaweb.MichaelKai.common.utils.SpringContextUtil;
 import com.javaweb.MichaelKai.fileUpload.FileUpload;
 import com.javaweb.MichaelKai.mapper.AttachmentMapper;
 import com.javaweb.MichaelKai.pojo.Attachment;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -176,5 +178,28 @@ public class AttachmentServiceImpl implements  AttachmentService {
 
          attachmentMapper.addAttachment(attachment);
          return attachment;
+     }
+
+
+     /**
+      * 显示图片
+      * @param response
+      * @param attId
+      * @param defaultImg
+      */
+     public void showPic(HttpServletResponse response, String attId, String defaultImg) {
+         AttachmentService attachmentService = SpringContextUtil.getBean(AttachmentService.class);
+         byte[] image = null;
+         if ("null".equals(attId) || "undefined".equals(attId)) {
+             image = FileUpload.getDefaultImg(defaultImg);
+         } else {
+             Attachment attachment = attachmentService.getAttachmentById(attId);
+             if (attachment == null || attachment.getAttachment() == null) {
+                 image = FileUpload.getDefaultImg(defaultImg);
+             } else {
+                 image = attachment.getAttachment();
+             }
+         }
+         FileUpload.outputStream(response, image);
      }
  }

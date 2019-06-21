@@ -121,7 +121,7 @@ public class AttachmentController {
     @GetMapping("/attachments/{attId}/{type}/image")
     @ResponseBody
     public void getAttachment(HttpServletRequest request, HttpServletResponse response, @PathVariable("attId") String attId, @PathVariable("type")String type){
-        FileUpload.showPic(response, attId, type);
+        attachmentService.showPic(response, attId, type);
     }
 
 

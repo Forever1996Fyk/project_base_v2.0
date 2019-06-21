@@ -1,12 +1,10 @@
 package com.javaweb.MichaelKai.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.javaweb.MichaelKai.common.constants.AdminConstant;
 import com.javaweb.MichaelKai.common.constants.Constant;
 import com.javaweb.MichaelKai.common.utils.AppUtil;
 import com.javaweb.MichaelKai.common.utils.DateUtil;
 import com.javaweb.MichaelKai.pojo.NoticeUser;
-import com.javaweb.MichaelKai.thymeleaf.util.DictUtil;
 import com.javaweb.MichaelKai.vo.NoticeVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,35 +76,12 @@ public class NoticeServiceImpl implements  NoticeService {
 
     @Override
     public List<Map<String, Object>> getMyNotices(Map<String, Object> map) {
-        List<Map<String, Object>> myNotices = noticeMapper.getMyNotices(map);
-        for (Map<String, Object> myNotice : myNotices) {
-            if (myNotice.get("priority") != null) {
-                myNotice.put("priorityName", DictUtil.keyValue("NOTICE_PRIORITY", myNotice.get("priority").toString()));
-            }
-            if (myNotice.get("readed") != null) {
-                myNotice.put("readedName", DictUtil.keyValue("JUDGE_TYPE", myNotice.get("readed").toString()));
-            }
-
-        }
-        return myNotices;
+        return noticeMapper.getMyNotices(map);
     }
 
     @Override
     public List<Map<String, Object>> getNotices(Map<String, Object> map) {
-        List<Map<String, Object>> notices = noticeMapper.getNotices(map);
-        for (Map<String, Object> notice : notices) {
-            if (notice.get("cancel") != null) {
-                notice.put("cancelName", DictUtil.keyValue("JUDGE_TYPE", notice.get("cancel").toString()));
-            }
-            if (notice.get("priority") != null) {
-                notice.put("priorityName", DictUtil.keyValue("NOTICE_PRIORITY", notice.get("priority").toString()));
-            }
-            if (notice.get("status") != null) {
-                notice.put("statusName", DictUtil.keyValue("STATUS_TYPE", notice.get("status").toString()));
-            }
-
-        }
-        return notices;
+        return noticeMapper.getNotices(map);
     }
 
     @Override

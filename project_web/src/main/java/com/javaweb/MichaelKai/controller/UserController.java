@@ -13,6 +13,7 @@ import com.javaweb.MichaelKai.common.vo.Result;
 import com.javaweb.MichaelKai.pojo.User;
 import com.javaweb.MichaelKai.service.UserService;
 import com.javaweb.MichaelKai.shiro.ShiroKit;
+import com.javaweb.MichaelKai.thymeleaf.util.DictUtil;
 import com.javaweb.MichaelKai.vo.UserRoleVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,6 +139,18 @@ public class UserController {
                            @RequestParam(value = "limit", required = false, defaultValue = "30") int limit,
                            @RequestParam Map<String, Object> map) {
         PageInfo<Map<String, Object>> pageList = userService.getUsers(page, limit, map);
+        for (Map<String, Object> user : pageList.getList()) {
+            if (user.get("education") != null) {
+                user.put("educationName", DictUtil.keyValue("EDUCATION_TYPE", user.get("education").toString()));
+            }
+            if (user.get("marryFlag") != null) {
+                user.put("marryFlagName", DictUtil.keyValue("MARRAY_TYPE", user.get("marryFlag").toString()));
+            }
+            if (user.get("status") != null) {
+                user.put("statusName", DictUtil.keyValue("STATUS_TYPE", user.get("status").toString()));
+            }
+
+        }
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
     }
 

@@ -7,7 +7,6 @@ import com.javaweb.MichaelKai.common.utils.AppUtil;
 import com.javaweb.MichaelKai.mapper.PermissionMapper;
 import com.javaweb.MichaelKai.pojo.Permission;
 import com.javaweb.MichaelKai.service.PermissionService;
-import com.javaweb.MichaelKai.thymeleaf.util.DictUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,18 +72,6 @@ public class PermissionServiceImpl implements  PermissionService {
 
     @Override
     public List<Map<String, Object>> getPermissions(Map<String, Object> map) {
-        List<Map<String, Object>> permissions = permissionMapper.getPermissions(map);
-        if (map != null && !"1".equals(map.get("flag"))) {
-            for (Map<String, Object> permission : permissions) {
-                if (permission.get("level") != null) {
-                    permission.put("menuTypeName", DictUtil.keyValue("MENU_TYPE", permission.get("level").toString()));
-                }
-
-                if (permission.get("status") != null) {
-                    permission.put("statusName", DictUtil.keyValue("STATUS_TYPE", permission.get("status").toString()));
-                }
-            }
-        }
         return permissionMapper.getPermissions(map);
     }
 }

@@ -2,7 +2,6 @@ package com.javaweb.MichaelKai.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.javaweb.MichaelKai.common.utils.AppUtil;
-import com.javaweb.MichaelKai.thymeleaf.util.DictUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,13 +71,7 @@ public class ActionLogServiceImpl implements  ActionLogService {
 
     @Override
     public List<Map<String, Object>> getActionLogs(Map<String, Object> map) {
-        List<Map<String, Object>> actionLogs = actionLogMapper.getActionLogs(map);
-        for (Map<String, Object> actionLog : actionLogs) {
-            if (actionLog.get("type") != null) {
-                actionLog.put("typeName", DictUtil.keyValue("LOG_TYPE", actionLog.get("type").toString()));
-            }
-        }
-        return actionLogs;
+        return actionLogMapper.getActionLogs(map);
     }
 
      @Override

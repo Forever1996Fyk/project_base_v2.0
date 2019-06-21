@@ -11,14 +11,11 @@
     <modules>
         <module>project_web</module>
         <module>project_service</module>
-        <module>project_interface</module>
         <module>project_dao</module>
         <module>project_common</module>
         <module>project_pojo</module>
-        <module>project_generate</module>
         <module>project_activiti</module>
-        <module>project_im</module>
-        <module>project_cloudDisk</module>
+        <module>project_tools</module>
     </modules>
 
     <name>project_base</name>

@@ -4,6 +4,7 @@ import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.vo.Result;
 import com.javaweb.MichaelKai.pojo.Permission;
 import com.javaweb.MichaelKai.service.PermissionService;
+import com.javaweb.MichaelKai.thymeleaf.util.DictUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.github.pagehelper.PageInfo;
@@ -78,6 +79,17 @@ public class PermissionController {
     @GetMapping("/getPermissions/noPage")
     public Result getPermissions(@RequestParam Map<String, Object> map) {
         List<Map<String, Object>> list = permissionService.getPermissions(map);
+        if (map != null && !"1".equals(map.get("flag"))) {
+            for (Map<String, Object> permission : list) {
+                if (permission.get("level") != null) {
+                    permission.put("menuTypeName", DictUtil.keyValue("MENU_TYPE", permission.get("level").toString()));
+                }
+
+                if (permission.get("status") != null) {
+                    permission.put("statusName", DictUtil.keyValue("STATUS_TYPE", permission.get("status").toString()));
+                }
+            }
+        }
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), list);
     }
 

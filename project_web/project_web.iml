@@ -19,16 +19,11 @@
     <orderEntry type="module" module-name="project_common" />
     <orderEntry type="module" module-name="project_pojo" />
     <orderEntry type="module" module-name="project_service" />
-    <orderEntry type="module" module-name="project_interface" />
     <orderEntry type="module" module-name="project_dao" />
-    <orderEntry type="module" module-name="project_generate" />
+    <orderEntry type="module" module-name="fileUpload" />
+    <orderEntry type="module" module-name="IM" />
     <orderEntry type="library" name="Maven: org.apache.velocity:velocity:1.7" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
-    <orderEntry type="library" name="Maven: com.javaweb.MichaelKai.component:thymeleaf:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="module" module-name="project_im" />
-    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-websocket:2.0.1.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-messaging:5.0.5.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-websocket:5.0.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: com.corundumstudio.socketio:netty-socketio:1.7.11" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.23.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.23.Final" level="project" />
@@ -43,7 +38,6 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.5" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.5" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />
-    <orderEntry type="module" module-name="project_cloudDisk" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.7" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tika:tika-core:1.20" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.11" level="project" />
@@ -52,6 +46,9 @@
     <orderEntry type="library" name="Maven: joda-time:joda-time:2.9.9" level="project" />
     <orderEntry type="library" name="Maven: com.mortennobel:java-image-scaling:0.8.6" level="project" />
     <orderEntry type="library" name="Maven: com.jhlabs:filters:2.0.235" level="project" />
+    <orderEntry type="module" module-name="generate" />
+    <orderEntry type="module" module-name="elfinder" />
+    <orderEntry type="module" module-name="thymeleaf" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-web:2.0.1.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:2.0.1.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.0.1.RELEASE" level="project" />

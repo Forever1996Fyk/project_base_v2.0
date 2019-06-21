@@ -4,6 +4,8 @@ import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.vo.Result;
 import com.javaweb.MichaelKai.pojo.DictItem;
 import com.javaweb.MichaelKai.service.DictItemService;
+import com.javaweb.MichaelKai.service.DictService;
+import com.javaweb.MichaelKai.thymeleaf.util.DictUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.github.pagehelper.PageInfo;
@@ -26,6 +28,8 @@ import java.util.Map;
 public class DictItemController {
     @Autowired
     private DictItemService dictItemService;
+    @Autowired
+    private DictService dictService;
 
     /**
      * 添加
@@ -34,7 +38,9 @@ public class DictItemController {
      */
     @PostMapping("/dictItem")
     public Result addDictItem(@RequestBody DictItem dictItem) {
-        return new Result(true, ResultEnum.SUCCESS.getValue(), "新增" + ResultEnum.SUCCESS.getMessage(), dictItemService.addDictItem(dictItem));
+        dictItemService.addDictItem(dictItem);
+        clearCache(dictItem.getDicId());
+        return new Result(true, ResultEnum.SUCCESS.getValue(), "新增" + ResultEnum.SUCCESS.getMessage());
     }
 
     /**
@@ -45,6 +51,9 @@ public class DictItemController {
     @PutMapping("/dictItem")
     public Result editDictItemById(@RequestBody DictItem dictItem) {
         dictItemService.editDictItemById(dictItem);
+
+        Map<String, Object> dictItemById = dictItemService.getDictItemById(dictItem.getId());
+        clearCache(dictItemById.get("dicId").toString());
         return new Result(true, ResultEnum.SUCCESS.getValue(), "修改" + ResultEnum.SUCCESS.getMessage(), dictItem);
     }
 
@@ -56,6 +65,9 @@ public class DictItemController {
     @DeleteMapping("/dictItem")
     public Result editDictItemById(@RequestParam String id) {
         dictItemService.delDictItemById(id);
+
+        Map<String, Object> dictItemById = dictItemService.getDictItemById(id);
+        clearCache(dictItemById.get("dicId").toString());
         return new Result(true, ResultEnum.SUCCESS.getValue(), "删除" + ResultEnum.SUCCESS.getMessage());
     }
 
@@ -67,6 +79,12 @@ public class DictItemController {
     @DeleteMapping("/dictItems/{ids}")
     public Result editDictItemByIds(@PathVariable("ids") String[] ids) {
         dictItemService.delDictItemByIds(Arrays.asList(ids));
+        if(ids.length > 0) {
+            for (String id : ids) {
+                Map<String, Object> dictItemById = dictItemService.getDictItemById(id);
+                clearCache(dictItemById.get("dicId").toString());
+            }
+        }
         return new Result(true, ResultEnum.SUCCESS.getValue(), "批量删除" + ResultEnum.SUCCESS.getMessage());
     }
 
@@ -94,6 +112,18 @@ public class DictItemController {
                            @RequestParam Map<String, Object> map) {
         PageInfo<Map<String, Object>> pageList = dictItemService.getDictItems(start, limit, map);
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
+    }
+
+    /**
+     * 清除数据字典缓存
+     * @param dictId
+     */
+    private void clearCache(String dictId) {
+        Map<String, Object> dict = dictService.getDictById(dictId);
+        if (!"".equals(dict.get("dicCode")) && dict.get("dicCode") != null) {
+            //清除数据字典缓存
+            DictUtil.clearCache(dict.get("dicCode").toString());
+        }
     }
 
 

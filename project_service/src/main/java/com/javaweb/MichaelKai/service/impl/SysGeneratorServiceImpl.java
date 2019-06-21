@@ -2,7 +2,7 @@ package com.javaweb.MichaelKai.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.javaweb.MichaelKai.code.createCode.GenUtils;
+import com.javaweb.MichaelKai.generate.createCode.GenUtils;
 import com.javaweb.MichaelKai.mapper.SysGeneratorMapper;
 import com.javaweb.MichaelKai.service.SysGeneratorService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;

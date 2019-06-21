@@ -4,6 +4,7 @@ import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.vo.Result;
 import com.javaweb.MichaelKai.pojo.ActionLog;
 import com.javaweb.MichaelKai.service.ActionLogService;
+import com.javaweb.MichaelKai.thymeleaf.util.DictUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.github.pagehelper.PageInfo;
@@ -93,6 +94,11 @@ public class ActionLogController {
                            @RequestParam(value = "limit", required = false, defaultValue = "0") int limit,
                            @RequestParam Map<String, Object> map) {
         PageInfo<Map<String, Object>> pageList = actionLogService.getActionLogs(page, limit, map);
+        for (Map<String, Object> actionLog : pageList.getList()) {
+            if (actionLog.get("type") != null) {
+                actionLog.put("typeName", DictUtil.keyValue("LOG_TYPE", actionLog.get("type").toString()));
+            }
+        }
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
     }
 

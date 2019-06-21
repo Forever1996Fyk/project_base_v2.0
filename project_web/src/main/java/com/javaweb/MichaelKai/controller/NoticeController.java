@@ -13,8 +13,9 @@ import com.javaweb.MichaelKai.service.NoticeService;
 import com.javaweb.MichaelKai.service.RoleService;
 import com.javaweb.MichaelKai.service.UserService;
 import com.javaweb.MichaelKai.shiro.ShiroKit;
+import com.javaweb.MichaelKai.thymeleaf.util.DictUtil;
 import com.javaweb.MichaelKai.vo.NoticeVo;
-import com.javaweb.michaelKai.nettySocketIO.ClientCache;
+import com.javaweb.MichaelKai.IM.nettySocketIO.ClientCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.github.pagehelper.PageInfo;
@@ -113,6 +114,18 @@ public class NoticeController {
         User user = ShiroKit.getUser();
         map.put("curUserId", user.getId());
         PageInfo<Map<String, Object>> pageList = noticeService.getNotices(page, limit, map);
+        for (Map<String, Object> notice : pageList.getList()) {
+            if (notice.get("cancel") != null) {
+                notice.put("cancelName", DictUtil.keyValue("JUDGE_TYPE", notice.get("cancel").toString()));
+            }
+            if (notice.get("priority") != null) {
+                notice.put("priorityName", DictUtil.keyValue("NOTICE_PRIORITY", notice.get("priority").toString()));
+            }
+            if (notice.get("status") != null) {
+                notice.put("statusName", DictUtil.keyValue("STATUS_TYPE", notice.get("status").toString()));
+            }
+
+        }
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
     }
 
@@ -130,6 +143,15 @@ public class NoticeController {
         User user = ShiroKit.getUser();
         map.put("userId", user.getId());
         PageInfo<Map<String, Object>> pageList = noticeService.getMyNotices(page, limit, map);
+        for (Map<String, Object> myNotice : pageList.getList()) {
+            if (myNotice.get("priority") != null) {
+                myNotice.put("priorityName", DictUtil.keyValue("NOTICE_PRIORITY", myNotice.get("priority").toString()));
+            }
+            if (myNotice.get("readed") != null) {
+                myNotice.put("readedName", DictUtil.keyValue("JUDGE_TYPE", myNotice.get("readed").toString()));
+            }
+
+        }
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
     }
 
