@@ -33,7 +33,7 @@ public class MapUtil {
     }
 
     /**
-     * 将尸体转为map
+     * 将实体转为map
      * @param obj
      * @return
      */

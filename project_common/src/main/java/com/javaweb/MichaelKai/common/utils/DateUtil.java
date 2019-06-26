@@ -88,4 +88,23 @@ public class DateUtil {
         return strDate;
     }
 
+    /**
+     * 计算两个日期相差多少天
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public static int differDays(String startDate, String endDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        long to = 0, from = 0;
+        try {
+            to = sdf.parse(endDate).getTime();
+            from = sdf.parse(startDate).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        int num = (int) ((to - from) / (1000 * 60 *60 *24));
+        return num;
+    }
+
 }

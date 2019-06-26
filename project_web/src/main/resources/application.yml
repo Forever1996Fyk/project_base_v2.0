@@ -17,6 +17,13 @@ project:
   fileupload:
     file-path: E:/upload/ #文件上传路径
 
+project:
+  jwt:
+    expired: 20
+    pattern-anno: true
+    pattern-path: false
+    secret: bZ8Z4cmZLBZwoTYBdJ6TfRreCz2aa31h
+
 #netty 服务配置
 netty:
   server:

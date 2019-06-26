@@ -1,7 +1,5 @@
 package com.javaweb.MichaelKai.common.utils;
 
-import com.javaweb.MichaelKai.common.enums.ResultEnum;
-import com.javaweb.MichaelKai.common.exception.ResultException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.springframework.util.StringUtils;

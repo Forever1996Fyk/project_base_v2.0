@@ -12,6 +12,7 @@ import lombok.Data;
 @Data
 public class ResultException extends RuntimeException {
     private Integer code;
+    private Object data;
 
     /**
      * 继承exception,加入错误状态值
@@ -30,5 +31,17 @@ public class ResultException extends RuntimeException {
     public ResultException(Integer code, String message) {
         super(message);
         this.code = code;
+    }
+
+    /**
+     * 自定义错误信息带返回数据
+     * @param message
+     * @param code
+     * @param data
+     */
+    public ResultException(Integer code, String message, Object data) {
+        super(message);
+        this.code = code;
+        this.data = data;
     }
 }

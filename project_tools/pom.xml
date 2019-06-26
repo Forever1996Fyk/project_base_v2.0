@@ -17,6 +17,7 @@
         <module>generate</module>
         <module>IM</module>
         <module>thymeleaf</module>
+        <module>jwt</module>
     </modules>
 
     <dependencies>

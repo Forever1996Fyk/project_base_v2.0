@@ -24,4 +24,10 @@ public class Constant {
 
     //通知通告redis缓存离线信息
     public static final String REDIS_NOTICE_OFFLINE = "REDIS_NOTICE_OFFLINE:";
+
+    //token过期时间
+    public static final String JWT_TOKEN = "JWT_TOKEN:";
+
+    //token黑名单(但是黑名单中的token无法认证)
+    public static final String JWT_TOKEN_BLACKLIST = "JWT_TOKEN_BLACKLIST:";
 }

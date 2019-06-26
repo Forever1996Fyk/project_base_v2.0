@@ -28,7 +28,7 @@ public class ExceptionHandle {
     public Result exception(Exception e) {
         if (e instanceof ResultException) {
             ResultException resultException = (ResultException) e;
-            return new Result(false, resultException.getCode(), resultException.getMessage());
+            return new Result(false, resultException.getCode(), resultException.getMessage(), resultException.getData());
         }
 
         e.printStackTrace();
