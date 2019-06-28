@@ -4,6 +4,7 @@ DROP TABLE tb_role_permission;
 DROP TABLE tb_user;
 DROP TABLE tb_user_role;
 DROP TABLE sys_action_log;
+DROP TABLE IF EXISTS `schedule_job`;
 
 CREATE TABLE `tb_permission` (
   `id` varchar(32) NOT NULL COMMENT '权限标识',
@@ -179,4 +180,28 @@ CREATE TABLE `tb_notice_user` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='通知通告用户表';
+
+CREATE TABLE `schedule_job` (
+  `id` varchar(32) NOT NULL COMMENT '唯一标识',
+  `job_id` varchar(255) DEFAULT NULL COMMENT '任务id',
+  `job_name` varchar(255) DEFAULT NULL COMMENT '任务名称',
+  `job_status` varchar(255) DEFAULT NULL COMMENT '任务状态',
+  `job_group` varchar(255) DEFAULT NULL COMMENT '任务组',
+  `cron_Expression` varchar(255) DEFAULT NULL COMMENT 'cron表达式',
+  `description` varchar(255) DEFAULT NULL COMMENT '描述',
+  `bean_name` varchar(255) DEFAULT NULL COMMENT 'bean名称',
+  `method_name` varchar(255) DEFAULT NULL COMMENT '方法名',
+  `create_user_id` varchar(32) DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_user_id` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of schedule_job
+-- ----------------------------
+INSERT INTO `schedule_job` VALUES ('8', '8', 'sweetzcc', 'PAUSED', 'sweetzcc', '0/30 * * * * ?', 'are you ready ?', 'helloCronJob', 'execute');
+INSERT INTO `schedule_job` VALUES ('9', '9', 'hello', 'PAUSED', 'hello', '0/55 * * * * ?', 'test', 'testCronJob', 'execute');
+INSERT INTO `schedule_job` VALUES ('10', '10', 'test', 'NORMAL', 'test', '0/30 * * * * ?', 'hello', 'testCronJob', 'execute');
 

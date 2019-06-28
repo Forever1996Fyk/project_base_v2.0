@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:base="https://github.com/Forever1996Fyk/project_base_v2.0">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+    <link rel="stylesheet" th:href="@{/css/admin.css}" type="text/css">
+</head>
+<body>
+<div class="layui-form timo-compile">
+    <form th:action="@{/api/${classname}}">
+        <input type="hidden" name="id" th:if="${${classname}}" th:value="${${classname}.id}"/>
+        #foreach($column in $columns)
+            #if($column.attrname != 'id' && $column.attrname != 'status' && $column.attrname != 'createUserId' && $column.attrname != 'updateUserId'
+            && $column.attrname != 'createTime' && $column.attrname != 'updateTime')
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">$column.comments</label>
+                    <div class="layui-input-inline">
+                        #if($column.attrname == 'remark')
+                            <textarea placeholder="请输入内容" class="layui-textarea" name="remark">[[${${classname}?.remark}]]</textarea>
+                        #else
+                            <input class="layui-input" type="text" name="$column.attrname"  placeholder="请输入$column.comments" th:value="${${classname}?.$column.attrname}">
+                        #end
+                    </div>
+                </div>
+            #end
+        #end
+        <div class="layui-form-item layui-layout-admin">
+            <div class="layui-input-block">
+                <div class="layui-footer" style="left: 0;">
+                    <button class="layui-btn ajax-submit"><i class="fa fa-check-circle"></i> 保存</button>
+                    <button class="layui-btn btn-secondary close-popup"><i class="fa fa-times-circle"></i> 关闭</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script th:replace="/common/template :: script"></script>
+<script type="text/javascript" th:src="@{/js/system/${classname}/${classname}.js}"></script>
+</body>
+</html>

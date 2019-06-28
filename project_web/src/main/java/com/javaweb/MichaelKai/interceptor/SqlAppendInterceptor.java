@@ -83,7 +83,12 @@ public class SqlAppendInterceptor implements Interceptor {
      */
     private void changeBoundSql(BoundSql boundSql, SqlCommandType sqlType) {
         User user = ShiroKit.getUser();
-        String userId = user.getId();
+        String userId;
+        if (user ==null) {
+            userId = "-1";
+        } else {
+            userId = user.getId();
+        }
         userId = StringUtils.isEmpty(userId) ? "-1" : userId;
         String time = DateUtil.dateToString(new Date(), Constant.DATE_FORMAT_CREATE_UPDATE);
 

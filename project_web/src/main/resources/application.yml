@@ -34,9 +34,16 @@ netty:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.1.110:3306/project_fyk?characterEncoding=utf-8
+    url: jdbc:mysql://localhost:3306/project_fyk?characterEncoding=utf-8
     username: root
     password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      max-active: 20
+      initial-size: 5
+      min-idle: 5
+      max-wait: 6000
+
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -61,6 +68,27 @@ spring:
     multipart:
       max-file-size: 50Mb
       max-request-size: 50Mb
+  quartz:
+    job-store-type: jdbc
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: clusteredScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_
+            isClustered: true
+            clusterCheckinInterval: 10000
+            useProperties: false
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+
 
 #模板引擎
 #mybatis配置

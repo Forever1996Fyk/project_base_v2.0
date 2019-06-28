@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.javaweb.MichaelKai.mapper.ScheduleJobMapper">
+        <!-- 新增 -->
+        <insert id="addScheduleJob">
+            INSERT INTO schedule_job(<include refid="scheduleJob_add_key"><property name="alias" value="" /></include>)
+            VALUES (<include refid="scheduleJob_add_val"><property name="alias" value="" /></include>)
+        </insert>
+
+        <!-- 批量新增 -->
+        <insert id="addScheduleJobs">
+            INSERT INTO schedule_job(<include refid="scheduleJob_add_key"><property name="alias" value="" /></include>)
+            VALUES
+            <foreach collection="list" item="item" index="index" separator=",">
+                (<include refid="scheduleJob_add_val"><property name="alias" value="item."/></include>)
+            </foreach>
+        </insert>
+
+        <!-- 修改 -->
+        <update id="editScheduleJobById">
+            UPDATE schedule_job
+            <set>
+                <include refid="scheduleJob_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id = #{id}
+        </update>
+
+        <!-- 批量修改 -->
+        <update id="editScheduleJobByIds">
+            UPDATE schedule_job
+            <set>
+                <include refid="scheduleJob_set_if"><property name="alias" value="" /></include>
+            </set>
+            WHERE id IN
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 删除 -->
+        <update id="delScheduleJobById">
+            update schedule_job SET job_status = 'DELETE' WHERE id = #{id}
+        </update>
+
+        <!-- 批量删除 -->
+        <update id="delScheduleJobByIds">
+            UPDATE schedule_job SET job_status = 'DELETE' WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </update>
+
+        <!-- 真删除 -->
+        <delete id="delScheduleJobRealById">
+            DELETE FROM schedule_job WHERE id = #{id}
+        </delete>
+
+        <!-- 真批量删除 -->
+        <delete id="delScheduleJobRealByIds">
+            DELETE FROM schedule_job WHERE id IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </delete>
+
+        <!-- 清空 -->
+        <delete id="delScheduleJobReals">
+            DELETE FROM schedule_job
+        </delete>
+
+        <!-- 查询管理列表 -->
+        <select id="getScheduleJobs" parameterType="Map" resultType="Map">
+            SELECT <include refid="scheduleJob_select_cond" />
+            FROM schedule_job a
+            <where>
+                <include refid="scheduleJob_where_if" />
+            </where>
+            ORDER BY a.create_time DESC
+        </select>
+
+        <!-- 根据id查询 -->
+        <select id="getScheduleJobById" resultType="Map">
+            SELECT <include refid="scheduleJob_select_cond_one"/>
+            FROM schedule_job a
+            WHERE a.id = #{id}
+        </select>
+
+
+        <!-- 查询的选择项, 增删字段时调整 -->
+        <sql id="scheduleJob_select_cond">
+              a.id id
+            , a.job_id jobId
+            , a.job_name jobName
+            , a.job_status jobStatus
+            , a.job_Group jobGroup
+            , a.cron_Expression cronExpression
+            , a.description description
+            , a.bean_name beanName
+            , a.method_name methodName
+            , DATE_FORMAT(a.update_time,'%Y-%m-%d %H:%i:%s') updateTime
+            , DATE_FORMAT(a.create_time,'%Y-%m-%d %H:%i:%s') createTime
+            , a.create_user_id createUserId
+            , a.update_user_id updateUserId
+        </sql>
+
+        <!-- (单个)查询的选择项, 增删字段时调整 -->
+        <sql id="scheduleJob_select_cond_one">
+              a.id id
+            , a.job_id jobId
+            , a.job_name jobName
+            , a.job_status jobStatus
+            , a.job_Group jobGroup
+            , a.cron_Expression cronExpression
+            , a.description description
+            , a.bean_name beanName
+            , a.method_name methodName
+            , a.create_user_id createUserId
+            , a.create_time createTime
+            , a.update_user_id updateUserId
+            , a.update_time updateTime
+        </sql>
+
+        <!-- 查询条件 -->
+        <sql id="scheduleJob_where_if">
+                                            <if test="id != null">
+                    AND a.id = #{id}
+                </if>
+                                                            <if test="jobId != null and jobId != '' and jobId != 'null' and jobId != 'undefined'">
+                    AND a.job_id = #{jobId}
+                </if>
+                                                            <if test="jobName != null and jobName != '' and jobName != 'null' and jobName != 'undefined'">
+                    AND a.job_name = #{jobName}
+                </if>
+                                                            <if test="jobStatus != null and jobStatus != '' and jobStatus != 'null' and jobStatus != 'undefined'">
+                    AND a.job_status = #{jobStatus}
+                </if>
+                                                            <if test="jobGroup != null and jobGroup != '' and jobGroup != 'null' and jobGroup != 'undefined'">
+                    AND a.job_Group = #{jobGroup}
+                </if>
+                                                            <if test="cronExpression != null and cronExpression != '' and cronExpression != 'null' and cronExpression != 'undefined'">
+                    AND a.cron_Expression = #{cronExpression}
+                </if>
+                                                            <if test="description != null and description != '' and description != 'null' and description != 'undefined'">
+                    AND a.description = #{description}
+                </if>
+                                                            <if test="beanName != null and beanName != '' and beanName != 'null' and beanName != 'undefined'">
+                    AND a.bean_name = #{beanName}
+                </if>
+                                                            <if test="methodName != null and methodName != '' and methodName != 'null' and methodName != 'undefined'">
+                    AND a.method_name = #{methodName}
+                </if>
+                                    </sql>
+
+
+        <!-- (批量)新增键, 增删字段时调整 -->
+        <sql id="scheduleJob_add_key">
+              id
+            , job_id
+            , job_name
+            , job_status
+            , job_Group
+            , cron_Expression
+            , description
+            , bean_name
+            , method_name
+            , create_user_id
+            , create_time
+            , update_user_id
+            , update_time
+        </sql>
+
+        <!-- (批量)新增值, 增删字段时调整 -->
+        <sql id="scheduleJob_add_val">
+              #{id}
+            , #{jobId}
+            , #{jobName}
+            , #{jobStatus}
+            , #{jobGroup}
+            , #{cronExpression}
+            , #{description}
+            , #{beanName}
+            , #{methodName}
+            , #{createUserId}
+            , #{createTime}
+            , #{updateUserId}
+            , #{updateTime}
+        </sql>
+
+        <!-- (批量修改的条件,增减字段时调整) -->
+        <sql id="scheduleJob_set_if">
+                                                                                                                                <if test="jobId != null and jobId != '' and jobId != 'null' and jobId != 'undefined'">
+                                job_id = #{jobId},
+                            </if>
+                                                                                                                                                                <if test="jobName != null and jobName != '' and jobName != 'null' and jobName != 'undefined'">
+                                job_name = #{jobName},
+                            </if>
+                                                                                                                                                                <if test="jobStatus != null and jobStatus != '' and jobStatus != 'null' and jobStatus != 'undefined'">
+                                job_status = #{jobStatus},
+                            </if>
+                                                                                                                                                                <if test="jobGroup != null and jobGroup != '' and jobGroup != 'null' and jobGroup != 'undefined'">
+                                job_Group = #{jobGroup},
+                            </if>
+                                                                                                                                                                <if test="cronExpression != null and cronExpression != '' and cronExpression != 'null' and cronExpression != 'undefined'">
+                                cron_Expression = #{cronExpression},
+                            </if>
+                                                                                                                                                                <if test="description != null and description != '' and description != 'null' and description != 'undefined'">
+                                description = #{description},
+                            </if>
+                                                                                                                                                                <if test="beanName != null and beanName != '' and beanName != 'null' and beanName != 'undefined'">
+                                bean_name = #{beanName},
+                            </if>
+                                                                                                                                                                <if test="methodName != null and methodName != '' and methodName != 'null' and methodName != 'undefined'">
+                                method_name = #{methodName}
+                            </if>
+                                                                                </sql>
+</mapper>

@@ -1,0 +1,81 @@
+package ${package}.impl;
+
+import com.github.pagehelper.PageHelper;
+import ${package}.common.utils.AppUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ${package}.service.${className}Service;
+import ${package}.mapper.${className}Mapper;
+import ${package}.pojo.${className};
+import ${package}.common.enums.StatusEnum;
+import com.github.pagehelper.PageInfo;
+
+import java.util.List;
+import java.util.Map;
+
+
+ /**
+  * @program: project_base
+  * @description: ${comments}
+  * @author: YuKai Fan
+  * @create: ${datetime}
+  **/
+@Service
+@Transactional
+@SuppressWarnings("SpringJavaAutowiringInspection")
+public class ${className}ServiceImpl implements  ${className}Service {
+
+	@Autowired
+	private ${className}Mapper ${classname}Mapper;
+
+    @Override
+    public ${className} add${className}(${className} ${classname}) {
+        ${classname}.setId(AppUtil.randomId());
+        #foreach($column in $columns)
+            #if($column.attrname == "status")
+                ${classname}.setStatus(StatusEnum.Normal.getValue());
+            #end
+        #end
+        ${classname}Mapper.add${className}(${classname});
+        return ${classname};
+    }
+
+    @Override
+    public Map<String, Object> get${className}ById(String id) {
+        return ${classname}Mapper.get${className}ById(id);
+    }
+
+    @Override
+    public void edit${className}ById(${className} ${classname}) {
+        ${classname}Mapper.edit${className}ById(${classname});
+    }
+
+    @Override
+    public void edit${className}ByIds(${className} ${classname}, List<String> ids) {
+
+    }
+
+    @Override
+    public void del${className}ById(String id) {
+        ${classname}Mapper.del${className}ById(id);
+    }
+
+    @Override
+    public void del${className}ByIds(List<String> ids) {
+        ${classname}Mapper.del${className}ByIds(ids);
+    }
+
+    @Override
+    public PageInfo<Map<String, Object>> get${className}s(int pageNum, int pageSize, Map<String, Object> map) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> list = this.get${className}s(map);
+        PageInfo<Map<String, Object>> page = new PageInfo<>(list);
+        return page;
+    }
+
+    @Override
+    public List<Map<String, Object>> get${className}s(Map<String, Object> map) {
+        return ${classname}Mapper.get${className}s(map);
+    }
+}

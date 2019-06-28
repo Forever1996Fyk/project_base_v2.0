@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:base="https://github.com/Forever1996Fyk/project_base_v2.0">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+    <link rel="stylesheet" th:href="@{/css/admin.css}" type="text/css">
+</head>
+<body>
+<div class="layui-form timo-compile">
+    <form th:action="@{/api/quartz/addOrEditJob}">
+        <input type="hidden" name="id" th:if="${scheduleJob}" th:value="${scheduleJob.id}"/>
+                                                <div class="layui-form-item">
+                    <label class="layui-form-label required">任务名称</label>
+                    <div class="layui-input-inline">
+                                                    <input class="layui-input" type="text" name="jobName" lay-verify="required"  placeholder="请输入" th:value="${scheduleJob?.jobName}">
+                                            </div>
+                </div>
+                                                <div class="layui-form-item">
+                    <label class="layui-form-label required">任务组名</label>
+                    <div class="layui-input-inline">
+                                                    <input class="layui-input" type="text" name="jobGroup" lay-verify="required"  placeholder="请输入" th:value="${scheduleJob?.jobGroup}">
+                                            </div>
+                </div>
+                                                <div class="layui-form-item">
+                    <label class="layui-form-label required">cron表达式</label>
+                    <div class="layui-input-inline">
+                                                    <input class="layui-input" type="text" name="cronExpression" lay-verify="required"  placeholder="请输入" th:value="${scheduleJob?.cronExpression}">
+                                            </div>
+                </div>
+                                                <div class="layui-form-item">
+                    <label class="layui-form-label required">描述</label>
+                    <div class="layui-input-inline">
+                                                    <input class="layui-input" type="text" name="description"  placeholder="请输入" th:value="${scheduleJob?.description}">
+                                            </div>
+                </div>
+                                                <div class="layui-form-item">
+                    <label class="layui-form-label required">bean名称</label>
+                    <div class="layui-input-inline">
+                                                    <input class="layui-input" type="text" name="beanName" lay-verify="required"  placeholder="请输入" th:value="${scheduleJob?.beanName}">
+                                            </div>
+                </div>
+                                                <div class="layui-form-item">
+                    <label class="layui-form-label required">方法名</label>
+                    <div class="layui-input-inline">
+                                                    <input class="layui-input" type="text" name="methodName"  placeholder="请输入" th:value="${scheduleJob?.methodName}">
+                                            </div>
+                </div>
+                            <div class="layui-form-item layui-layout-admin">
+            <div class="layui-input-block">
+                <div class="layui-footer" style="left: 0;">
+                    <button class="layui-btn ajax-submit"><i class="fa fa-check-circle"></i> 保存</button>
+                    <button class="layui-btn btn-secondary close-popup"><i class="fa fa-times-circle"></i> 关闭</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script th:replace="/common/template :: script"></script>
+<script type="text/javascript" th:src="@{/js/system/quartz/scheduleJob.js}"></script>
+</body>
+</html>

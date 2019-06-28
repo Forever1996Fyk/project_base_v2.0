@@ -18,6 +18,7 @@
         <module>IM</module>
         <module>thymeleaf</module>
         <module>jwt</module>
+        <module>quartz</module>
     </modules>
 
     <dependencies>

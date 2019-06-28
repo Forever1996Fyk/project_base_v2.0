@@ -1,5 +1,6 @@
 package com.javaweb.MichaelKai.common.utils;
 
+import com.javaweb.MichaelKai.common.constants.Constant;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.xml.datatype.DatatypeFactory;
@@ -86,6 +87,24 @@ public class DateUtil {
             log.error("Date类型 转 String类型出错："+e);
         }
         return strDate;
+    }
+
+    /**
+     * 将long类型转化为Date
+     * @param time
+     * @return
+     */
+    public static Date longToDate(long time) {
+        return new Date(time * 1000);
+    }
+
+    /**
+     * 将long类型转为String
+     * @param time
+     * @return
+     */
+    public static String longToString(long time) {
+        return dateToString(longToDate(time), Constant.DATE_FORMAT_COMMON);
     }
 
     /**

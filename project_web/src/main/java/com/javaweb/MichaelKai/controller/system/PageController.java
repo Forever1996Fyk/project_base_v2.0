@@ -7,6 +7,7 @@ import com.javaweb.MichaelKai.common.utils.SpringContextUtil;
 import com.javaweb.MichaelKai.pojo.Notice;
 import com.javaweb.MichaelKai.pojo.NoticeUser;
 import com.javaweb.MichaelKai.pojo.User;
+import com.javaweb.MichaelKai.quartz.service.ScheduleJobService;
 import com.javaweb.MichaelKai.service.*;
 import com.javaweb.MichaelKai.shiro.ShiroKit;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -45,6 +46,8 @@ public class PageController {
     private DictItemService dictItemService;
     @Autowired
     private NoticeService noticeService;
+    @Autowired
+    private ScheduleJobService scheduleJobService;
 
     /**
      * 跳转到注册页面
@@ -449,6 +452,35 @@ public class PageController {
     public String commonDisk(Model model) {
         model.addAttribute("diskFlag", "commonDisk");
         return "system/cloudDisk/disk";
+    }
+
+    /**
+     * quartz任务管理
+     * @return
+     */
+    @GetMapping("/quartz/scheduleJob")
+    public String scheduleJob() {
+        return "system/quartz/scheduleJob";
+    }
+
+    /**
+     * 新建任务
+     * @return
+     */
+    @GetMapping("/quartz/scheduleJob/add")
+    public String addScheduleJob() {
+        return "system/quartz/addScheduleJob";
+    }
+
+    /**
+     * 新建任务
+     * @return
+     */
+    @GetMapping("/quartz/scheduleJob/edit")
+    public String editScheduleJob(Model model, String id) {
+        Map<String, Object> scheduleJob = scheduleJobService.getScheduleJobById(id);
+        model.addAttribute("scheduleJob", scheduleJob);
+        return "system/quartz/addScheduleJob";
     }
 
 
