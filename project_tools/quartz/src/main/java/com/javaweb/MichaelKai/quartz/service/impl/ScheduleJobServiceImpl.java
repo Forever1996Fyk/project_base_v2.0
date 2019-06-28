@@ -1,5 +1,6 @@
 package com.javaweb.MichaelKai.quartz.service.impl;
 
+import com.javaweb.MichaelKai.common.constants.Constant;
 import com.javaweb.MichaelKai.common.utils.AppUtil;
 import com.javaweb.MichaelKai.common.utils.CronUtil;
 import com.javaweb.MichaelKai.common.utils.DateUtil;
@@ -47,11 +48,11 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
                 for (Trigger trigger : triggers) {
                     ScheduleJob scheduleJob = getScheduleJob(scheduler, key, trigger);
                     //从cron中获取上次执行时间
-                    String lastTriggerTime = DateUtil.longToString(CronUtil.getLastTriggerTime(scheduleJob.getCronExpression(), scheduleJob.getJobName(), scheduleJob.getJobGroup()));
+                    String lastTriggerTime = DateUtil.longToString(CronUtil.getLastTriggerTime(scheduleJob.getCronExpression(), scheduleJob.getJobName(), scheduleJob.getJobGroup()), Constant.DATE_FORMAT_COMMON);
                     scheduleJob.setLastTriggerTime(lastTriggerTime);
 
                     //从cron中获取下次执行时间
-                    String nextTriggerTime = DateUtil.longToString(CronUtil.getNextTriggerTime(scheduleJob.getCronExpression(), scheduleJob.getJobName(), scheduleJob.getJobGroup()));
+                    String nextTriggerTime = DateUtil.longToString(CronUtil.getNextTriggerTime(scheduleJob.getCronExpression(), scheduleJob.getJobName(), scheduleJob.getJobGroup()), Constant.DATE_FORMAT_COMMON);
                     scheduleJob.setNextTriggerTime(nextTriggerTime);
                     jobList.add(scheduleJob);
                 }

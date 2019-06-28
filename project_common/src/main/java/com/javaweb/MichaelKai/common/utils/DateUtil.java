@@ -90,21 +90,14 @@ public class DateUtil {
     }
 
     /**
-     * 将long类型转化为Date
+     * 将long类型日期转化为String
      * @param time
      * @return
      */
-    public static Date longToDate(long time) {
-        return new Date(time * 1000);
-    }
-
-    /**
-     * 将long类型转为String
-     * @param time
-     * @return
-     */
-    public static String longToString(long time) {
-        return dateToString(longToDate(time), Constant.DATE_FORMAT_COMMON);
+    public static String longToString(long time, String format) {
+        SimpleDateFormat sdf= new SimpleDateFormat(format);
+        String format1 = sdf.format(new Date(time));
+        return sdf.format(new Date(time));
     }
 
     /**
