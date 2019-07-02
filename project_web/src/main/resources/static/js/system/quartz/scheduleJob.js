@@ -27,7 +27,15 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
             //, {field: 'jobId', title: '任务Id', align: 'center'}
             , {field: 'jobName', title: '任务名称', align: 'center'}
             , {field: 'jobGroup', title: '任务组名', align: 'center'}
-            , {field: 'jobStatus', title: '任务状态', align: 'center'}
+            , {field: 'jobStatus', title: '任务状态', align: 'center', templet: function (data) {
+                var result = "";
+                if (data.jobStatus === 'NORMAL') {
+                    result = "正常";
+                } else {
+                    result = "停止";
+                }
+                return result;
+            }}
             , {field: 'cronExpression', title: 'cron表达式', align: 'center'}
             , {field: 'description', title: '描述', align: 'center'}
             , {field: 'beanName', title: '执行bean', align: 'center'}
@@ -140,6 +148,46 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
                 }
             })
         },
+
+        //暂停所有任务
+        pauseAll: function () {
+            layer.confirm ('确定重启吗?', function (index) {
+                $.ajax({
+                    url: ctxPath + '/api/quartz/pauseAllJob',
+                    type: 'post',
+                    success: function (res) {
+                        if (res.code === 200) {
+                            //刷新表格
+                            tableObject.reload({
+                                page: '{curr:1}'
+                            });
+                        } else {
+                            layer.msg(res.message);
+                        }
+                    }
+                })
+            });
+        },
+
+        //暂停所有任务
+        resumeAll: function () {
+            layer.confirm ('确定重启吗?', function (index) {
+                $.ajax({
+                    url: ctxPath + '/api/quartz/resumeAllJob',
+                    type: 'post',
+                    success: function (res) {
+                        if (res.code === 200) {
+                            //刷新表格
+                            tableObject.reload({
+                                page: '{curr:1}'
+                            });
+                        } else {
+                            layer.msg(res.message);
+                        }
+                    }
+                })
+            });
+        }
 
     };
     $('.layui-btn').on('click', function(){

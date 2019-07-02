@@ -143,4 +143,39 @@ public class ScheduleJobController {
         }
     }
 
+    /**
+     * 重启所有任务
+     * @return
+     */
+    @PostMapping("/resumeAllJob")
+    public Result resumeAllJob() {
+        log.info("[JobController] the url path:------------/resumeAllJob----------------");
+        try {
+            scheduleJobService.resumeAllJob();
+            return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage());
+        } catch (SchedulerException e) {
+
+            log.error("[JobController] resumeJob is failure in method:resumeAllJob");
+            return new Result(true, ResultEnum.ERROR.getValue(), ResultEnum.ERROR.getMessage());
+        }
+    }
+
+
+    /**
+     * 停止所有任务
+     * @return
+     */
+    @PostMapping("/pauseAllJob")
+    public Result pauseAllJob() {
+        log.info("[JobController] the url path:------------/pauseAllJob----------------");
+        try {
+            scheduleJobService.pauseAllJob();
+            return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage());
+        } catch (SchedulerException e) {
+
+            log.error("[JobController] pauseJob is failure in method:pauseAllJob");
+            return new Result(true, ResultEnum.ERROR.getValue(), ResultEnum.ERROR.getMessage());
+        }
+    }
+
 }

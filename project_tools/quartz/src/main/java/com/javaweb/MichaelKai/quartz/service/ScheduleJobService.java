@@ -75,4 +75,14 @@ public interface ScheduleJobService {
      * @return
      */
     List<Map<String, Object>> getScheduleJobs(Map<String, Object> map);
+
+    /**
+     * 重启所有任务
+     */
+    void resumeAllJob() throws SchedulerException;
+
+    /**
+     * 暂停所有任务
+     */
+    void pauseAllJob() throws SchedulerException;
 }

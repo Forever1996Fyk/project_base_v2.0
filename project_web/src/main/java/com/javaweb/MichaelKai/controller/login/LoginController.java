@@ -85,7 +85,7 @@ public class LoginController {
             throw new ResultException(ResultEnum.USER_NAME_PWD_NULL);
         }
 
-        //判断验证码 todo
+        //判断验证码
         ProjectProperties properties = SpringContextUtil.getBean(ProjectProperties.class);
         if (properties.isCaptchaOpen()) {
             if (!CaptchaUtil.checkCaptcha(user.getCaptchaCode())) {

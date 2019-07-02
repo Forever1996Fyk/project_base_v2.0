@@ -196,7 +196,22 @@ CREATE TABLE `schedule_job` (
   `update_user_id` varchar(32) DEFAULT NULL COMMENT '更新人',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='定时任务表';
+
+CREATE TABLE `tb_hot_post` (
+  `id` varchar(32) NOT NULL COMMENT '热帖标识',
+  `title` varchar(200) DEFAULT NULL COMMENT '热帖标题',
+  `content` varchar(32) DEFAULT NULL COMMENT '热帖内容',
+	`type` int(4) DEFAULT NULL COMMENT '热帖类型',
+  `sort` int(4) DEFAULT NULL COMMENT '排名',
+  `remark` varchar(200) DEFAULT NULL COMMENT '备注',
+  `status` int(4) DEFAULT '1' COMMENT '状态:0  已禁用 1 正在使用',
+  `create_user_id` varchar(32) DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_user_id` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='热帖表';
 
 -- ----------------------------
 -- Records of schedule_job

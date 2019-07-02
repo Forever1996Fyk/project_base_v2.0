@@ -1,6 +1,8 @@
 package com.javaweb.MichaelKai.quartz.service.impl;
 
 import com.javaweb.MichaelKai.common.constants.Constant;
+import com.javaweb.MichaelKai.common.enums.QuartzEnum;
+import com.javaweb.MichaelKai.common.exception.ResultException;
 import com.javaweb.MichaelKai.common.utils.AppUtil;
 import com.javaweb.MichaelKai.common.utils.CronUtil;
 import com.javaweb.MichaelKai.common.utils.DateUtil;
@@ -16,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @program: project_base
@@ -151,18 +150,13 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
     private void addScheduleJob(ScheduleJob scheduleJob) throws Exception {
         checkNotNull(scheduleJob);
         if (StringUtils.isBlank(scheduleJob.getCronExpression())) {
-            throw new Exception("[ScheduleJobServiceImpl] CronExpression不能为空");
+            throw new ResultException(QuartzEnum.CRON_NOT_NULL.getCode(), QuartzEnum.CRON_NOT_NULL.getMessage());
+        } else if (!CronExpression.isValidExpression(scheduleJob.getCronExpression())) {
+            throw new ResultException(QuartzEnum.CRON_VALID_ERROR.getCode(), QuartzEnum.CRON_VALID_ERROR.getMessage());
         }
 
         //保存到数据库
         try {
-            String id = AppUtil.randomId();
-            scheduleJob.setJobStatus("NORMAL");
-            scheduleJob.setId(id);
-            scheduleJob.setJobId(id);
-            scheduleJobMapper.addScheduleJob(scheduleJob);
-            log.info("[ScheduleJobServiceImpl] the scheduleJob is:{}", scheduleJob);
-
             //创建jobName, jobGroup的jobDetail实例
             JobDetail jobDetail = JobBuilder.newJob(QuartzJobFactory.class).withIdentity(scheduleJob.getJobName(), scheduleJob.getJobGroup())
                     .build();
@@ -171,9 +165,16 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
             CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(scheduleJob.getCronExpression());
             //创建cron触发器
             CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(scheduleJob.getJobName(), scheduleJob.getJobGroup())
-                    .withSchedule(cronScheduleBuilder).build();
+                    .withSchedule(cronScheduleBuilder.withMisfireHandlingInstructionDoNothing()).build();
 
             scheduler.scheduleJob(jobDetail, cronTrigger);
+
+            String id = AppUtil.randomId();
+            scheduleJob.setJobStatus("NORMAL");
+            scheduleJob.setId(id);
+            scheduleJob.setJobId(id);
+            scheduleJobMapper.addScheduleJob(scheduleJob);
+            log.info("[ScheduleJobServiceImpl] the scheduleJob is:{}", scheduleJob);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -227,7 +228,6 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
             scheduleJobMapper.delScheduleJobRealById(scheduleJobs.get(0).get("id").toString());
             scheduler.deleteJob(jobKey);
         }
-
     }
 
     @Override
@@ -257,5 +257,28 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
     @Override
     public List<Map<String, Object>> getScheduleJobs(Map<String, Object> map) {
         return scheduleJobMapper.getScheduleJobs(map);
+    }
+
+    @Override
+    public void resumeAllJob() throws SchedulerException {
+        scheduler.resumeAll();
+    }
+
+    @Override
+    public void pauseAllJob() throws SchedulerException {
+        scheduler.pauseAll();
+       /* //获取所有运行中的任务
+        List<ScheduleJob> runningJobs = getAllRunningJobs();
+        if (runningJobs == null || runningJobs.size() <= 0) {
+            return false;
+        }
+
+        for (ScheduleJob runningJob : runningJobs) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("jobName", runningJob.getJobName());
+            map.put("jobGroup", runningJob.getJobGroup());
+            pauseJob(map);
+        }
+        return true;*/
     }
 }

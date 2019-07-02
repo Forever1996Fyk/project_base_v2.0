@@ -88,6 +88,12 @@ spring:
             threadCount: 10
             threadPriority: 5
             threadsInheritContextClassLoaderOfInitializingThread: true
+  elasticsearch:
+    jest:
+      uris:
+      - http://192.168.1.110:9200
+      read-timeout: 5000
+
 
 
 #模板引擎

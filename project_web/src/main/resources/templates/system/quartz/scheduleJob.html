@@ -32,12 +32,10 @@
                 <div class="btn-group-right">
                     <button class="layui-btn open-popup" data-title="新建任务" th:attr="data-url=@{/system/quartz/scheduleJob/add}"  data-size="auto">
                         <i class="fa fa-plus"></i> 新建任务</button>
-                    <button class="layui-btn layui-btn-warm" data-title="暂停全部任务" th:attr="data-url=@{/system/scheduleJob/add}"  data-size="auto">
+                    <button class="layui-btn layui-btn-warm" data-title="暂停全部任务" data-type="pauseAll">
                         暂停全部任务</button>
-                    <button class="layui-btn layui-btn-normal" data-title="启动全部任务" th:attr="data-url=@{/system/scheduleJob/add}"  data-size="auto">
-                         启动全部任务</button>
-                    <button class="layui-btn layui-btn-danger" data-title="重置全部任务" th:attr="data-url=@{/system/scheduleJob/add}"  data-size="auto">
-                         重置全部任务</button>
+                    <button class="layui-btn layui-btn-normal" data-title="重启全部任务" data-type="resumeAll" >
+                         重启全部任务</button>
                     <!--<div class="btn-group">
                         <button class="layui-btn">操作<span class="caret"></span></button>
                         <dl class="layui-nav-child layui-anim layui-anim-upbit">
