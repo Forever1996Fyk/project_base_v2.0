@@ -1,9 +1,11 @@
 package com.javaweb.MichaelKai.pojo;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.Mapping;
 
 import java.io.Serializable;
 
@@ -16,6 +18,7 @@ import java.io.Serializable;
  */
 @Data
 @Document(indexName = HotPost.INDEX, type = HotPost.ORDER_TYPE, shards = 6, replicas = 2, refreshInterval = "-1")
+@Mapping(mappingPath = "hotPostSearch_mapping.json")
 public class HotPost implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -25,12 +28,13 @@ public class HotPost implements Serializable {
 	public static final String ORDER_TYPE = "hot_post";
 	
 	//热帖标识
+	@Id
 	private String id;
 	//热帖标题
-	@Field(type = FieldType.text, searchAnalyzer = "ik", analyzer = "ik")
+	@Field(type = FieldType.text, searchAnalyzer = "ik_max_word", analyzer = "ik_smart")
 	private String title;
 	//热帖内容
-	@Field(type = FieldType.text, searchAnalyzer = "ik", analyzer = "ik")
+	@Field(type = FieldType.text, searchAnalyzer = "ik_max_word", analyzer = "ik_smart")
 	private String content;
 	//热帖类型
 	private Integer type;
