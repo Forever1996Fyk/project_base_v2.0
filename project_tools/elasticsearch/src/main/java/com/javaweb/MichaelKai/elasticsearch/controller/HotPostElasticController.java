@@ -24,6 +24,10 @@ public class HotPostElasticController {
     @Autowired
     private HotPostElasticService hotPostElasticService;
 
+    /**
+     * 将数据库中的数据,添加到elastic中
+     * @throws Exception
+     */
     @PostMapping("/elastic/add")
     public void add() throws Exception {
         List<Map<String, Object>> hotPosts = hotPostElasticService.getHotPosts(null);
@@ -35,9 +39,16 @@ public class HotPostElasticController {
         hotPostElasticService.addHostPostsToES(list);
     }
 
+    /**
+     * elastic 分页查询
+     * @param map
+     * @return
+     */
     @GetMapping("/elastic/query")
-    public Result query(@RequestParam Map<String, Object> map) {
-        List<Map<String, Object>> list = hotPostElasticService.searchHotPost(map);
+    public Result query(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                        @RequestParam(value = "limit", required = false, defaultValue = "0") int limit,
+                        @RequestParam Map<String, Object> map) {
+        List<Map<String, Object>> list = hotPostElasticService.searchHotPost(map, page, limit);
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), list);
     }
 

@@ -1,6 +1,5 @@
 package com.javaweb.MichaelKai.elasticsearch.service.impl;
 
-import com.javaweb.MichaelKai.common.utils.BeanUtil;
 import com.javaweb.MichaelKai.common.utils.MapUtil;
 import com.javaweb.MichaelKai.elasticsearch.service.HotPostElasticService;
 import com.javaweb.MichaelKai.mapper.HotPostMapper;
@@ -17,6 +16,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -39,6 +39,8 @@ public class HotPostElasticServiceImpl implements HotPostElasticService {
 
     @Autowired
     private JestClient jestClient;
+    @Autowired
+    private ElasticsearchTemplate elasticsearchTemplate;
 
 
     @Override
@@ -73,12 +75,12 @@ public class HotPostElasticServiceImpl implements HotPostElasticService {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         if (!CollectionUtils.isEmpty(map) && map.containsKey("keyword")) {
             Object keyword = map.get("keyword");
-            boolQueryBuilder.should(QueryBuilders.commonTermsQuery("title", keyword));
-            boolQueryBuilder.should(QueryBuilders.commonTermsQuery("content", keyword));
-            boolQueryBuilder.should(QueryBuilders.commonTermsQuery("type", keyword));
-            boolQueryBuilder.should(QueryBuilders.commonTermsQuery("sort", keyword));
-            boolQueryBuilder.should(QueryBuilders.commonTermsQuery("remark", keyword));
-            boolQueryBuilder.should(QueryBuilders.commonTermsQuery("status", keyword));
+            boolQueryBuilder.should(QueryBuilders.commonTermsQuery("title", keyword)).boost(5);
+            boolQueryBuilder.should(QueryBuilders.commonTermsQuery("content", keyword)).boost(4);
+            boolQueryBuilder.should(QueryBuilders.commonTermsQuery("type", keyword)).boost(3);
+            boolQueryBuilder.should(QueryBuilders.commonTermsQuery("sort", keyword)).boost(2);
+            boolQueryBuilder.should(QueryBuilders.commonTermsQuery("remark", keyword)).boost(1);
+            boolQueryBuilder.should(QueryBuilders.commonTermsQuery("status", keyword)).boost(0);
         }
 
         //高亮操作
@@ -93,6 +95,7 @@ public class HotPostElasticServiceImpl implements HotPostElasticService {
         searchSourceBuilder.query(boolQueryBuilder).size(10);
         Search search = new Search.Builder(searchSourceBuilder.toString())
                 .addIndex(HotPost.INDEX).addType(HotPost.ORDER_TYPE).build();
+
 
         try {
             SearchResult result = jestClient.execute(search);
@@ -139,6 +142,8 @@ public class HotPostElasticServiceImpl implements HotPostElasticService {
 
     @Override
     public List<Map<String, Object>> searchHotPost(Map<String, Object> map, int start, int pageSize) {
+        //分页参数
+
         return null;
     }
 }
