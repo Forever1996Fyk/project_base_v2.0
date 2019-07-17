@@ -31,16 +31,18 @@ public class HotPost implements Serializable {
 	@Id
 	private String id;
 	//热帖标题
-	@Field(type = FieldType.text, searchAnalyzer = "ik_max_word", analyzer = "ik_smart")
+	@Field(type = FieldType.text, searchAnalyzer = "ik_max_word", analyzer = "ik_max_word")
 	private String title;
 	//热帖内容
-	@Field(type = FieldType.text, searchAnalyzer = "ik_max_word", analyzer = "ik_smart")
+	@Field(type = FieldType.text, searchAnalyzer = "ik_max_word", analyzer = "ik_max_word")
 	private String content;
 	//热帖类型
 	private Integer type;
 	//排名
 	private Integer sort;
 	//备注
+	//热帖内容
+	@Field(type = FieldType.text, analyzer = "ik_max_word")
 	private String remark;
 	//状态:0  已禁用 1 正在使用
 	private Integer status;
