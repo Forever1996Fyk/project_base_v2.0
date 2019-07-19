@@ -39,8 +39,6 @@ public class HotPostElasticServiceImpl implements HotPostElasticService {
 
     @Autowired
     private JestClient jestClient;
-    @Autowired
-    private ElasticsearchTemplate elasticsearchTemplate;
 
 
     @Override
