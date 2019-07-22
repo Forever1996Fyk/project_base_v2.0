@@ -200,8 +200,8 @@ CREATE TABLE `schedule_job` (
 
 CREATE TABLE `tb_hot_post` (
   `id` varchar(32) NOT NULL COMMENT '热帖标识',
-  `title` varchar(200) DEFAULT NULL COMMENT '热帖标题',
-  `content` varchar(32) DEFAULT NULL COMMENT '热帖内容',
+  `title` text DEFAULT NULL COMMENT '热帖标题',
+  `content` text DEFAULT NULL COMMENT '热帖内容',
 	`type` int(4) DEFAULT NULL COMMENT '热帖类型',
   `sort` int(4) DEFAULT NULL COMMENT '排名',
   `remark` varchar(200) DEFAULT NULL COMMENT '备注',

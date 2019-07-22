@@ -83,7 +83,7 @@ public class HotPostController {
 
     /**
      * 获取所有
-     * @param start 开始记录
+     * @param page 开始记录
      * @param limit 分页大小
      * @param map 参数
      * @return

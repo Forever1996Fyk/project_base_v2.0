@@ -218,6 +218,45 @@ layui.use(['layer', 'carousel', 'element', 'table'], function() {
         });
     };
 
+    var tableObject = table.render({
+        id:"id"
+        ,elem: '#hotPostListTable'
+        , height: 500
+        , url: '/api/elastic/query'//数据接口
+        , page: true
+        , limit: 10
+        , parseData: function (res) {
+            return {
+                "code": res.code,
+                "msg": res.message,
+                "count": res.data.total,
+                "data": res.data.rows
+            }
+        }
+        , cols: [[ //表头,field要与实体类字段相同
+            , {field: 'title', title: '标题', align: 'center'}
+            , {field: 'content', title: '内容', align: 'center'}
+            //, {title: '操作', toolbar: '#btn', align: 'center'}
+        ]]
+    });
+
+    //今日热帖
+    $('.hotPost').click(function () {
+        tableObject.reload({});
+    });
+
+    var active = {
+        //搜索
+        search:function () {
+            tableObject.reload({
+                where:{
+                    keyword: $('#keyword').val()
+                }
+            })
+        }
+
+    };
+
     //定时任务每30分钟执行一次
     setInterval(function () {
         getMonitor();
@@ -227,5 +266,10 @@ layui.use(['layer', 'carousel', 'element', 'table'], function() {
     setInterval(function () {
         getOnlineUserList();
     }, 1000 * 60 * 10);
+
+    $('.layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    });
 
 });
