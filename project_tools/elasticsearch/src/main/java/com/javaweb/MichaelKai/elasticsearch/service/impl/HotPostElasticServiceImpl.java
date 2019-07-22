@@ -77,10 +77,6 @@ public class HotPostElasticServiceImpl implements HotPostElasticService {
             Object keyword = map.get("keyword");
             boolQueryBuilder.should(QueryBuilders.commonTermsQuery("title", keyword)).boost(5);
             boolQueryBuilder.should(QueryBuilders.commonTermsQuery("content", keyword)).boost(4);
-            boolQueryBuilder.should(QueryBuilders.commonTermsQuery("type", keyword)).boost(3);
-            boolQueryBuilder.should(QueryBuilders.commonTermsQuery("sort", keyword)).boost(2);
-            boolQueryBuilder.should(QueryBuilders.commonTermsQuery("remark", keyword)).boost(1);
-            boolQueryBuilder.should(QueryBuilders.commonTermsQuery("status", keyword)).boost(0);
         }
 
         //高亮操作

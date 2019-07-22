@@ -81,10 +81,12 @@ public class ShiroConfig {
         filterMap.put("/system/toForget", "anon");
         filterMap.put("/system/toResetpass", "anon");
 
+        filterMap.put("/api/elastic/**", "anon");
+
         filterMap.put("/app/api/**", "anon");
 
         //需要将拦截的接口放在最后拦截
-        //filterMap.put("/**", "auth");
+        filterMap.put("/**", "auth");
 
         //这是过滤规则
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);
