@@ -473,7 +473,7 @@ public class PageController {
     }
 
     /**
-     * 新建任务
+     * 编辑任务
      * @return
      */
     @GetMapping("/quartz/scheduleJob/edit")
@@ -483,5 +483,22 @@ public class PageController {
         return "system/quartz/addScheduleJob";
     }
 
+    /**
+     * 工作流 模型管理列表
+     * @return
+     */
+    @GetMapping("/activiti/modelList")
+    public String activitiModelList() {
+        return "system/workflow/model/modelList";
+    }
+
+    /**
+     * 工作流 创建模型
+     * @return
+     */
+    @GetMapping("/activiti/createModel")
+    public String createModel() {
+        return "system/workflow/model/createModel";
+    }
 
 }

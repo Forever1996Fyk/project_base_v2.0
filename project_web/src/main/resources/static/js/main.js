@@ -204,6 +204,30 @@ layui.use(['element', 'form', 'layer', 'upload', 'table', 'layedit'], function (
         });
     });
 
+    //提交数据后，跳转页面
+    $(document).on("click", ".ajax-submit-redirect", function (e) {
+        e.preventDefault();
+        var form = $(this).parents("form");
+        var url = form.attr("action");
+        var data = serializeObject(form.serializeArray());
+        var type = data.id?'PUT':'POST';
+        if (editor != undefined) {
+            data.content = layedit.getContent(editor);
+        }
+        $.ajax({
+            url: url,
+            type: type,
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success:function (res) {
+                if (res.data === null) {
+                    res.data = 'submit[refresh]';
+                }
+                $.fn.Messager(res);
+            }
+        });
+    });
+
     /* 删除del方式异步 */
     $(document).on("click", ".ajax-del", function (e) {
         e.preventDefault();

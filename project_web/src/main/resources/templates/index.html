@@ -39,7 +39,7 @@
                 </a>
             </li>
             <li class="layui-nav-item timo-nav-user">
-                <a class="timo-header-nickname" th:text="${user.nickName}">TIMO</a>
+                <a class="timo-header-nickname" th:text="${user?.nickName}">TIMO</a>
                 <div class="layui-nav-child">
                     <div class="timo-nav-child-box">
                         <div><a class="open-popup" data-title="个人信息" th:attr="data-url=@{/system/userInfo}"
@@ -60,11 +60,11 @@
         <div class="layui-side-scroll">
             <div class="layui-side-user">
                 <img class="layui-side-user-avatar open-popup" th:attr="data-url=@{/system/userInfo}"
-                     th:src="@{'/api/attachments/'+${user.userIcon}+'/userIcon/image'}" alt="头像">
+                     th:src="@{'/api/attachments/'+${user?.userIcon}+'/userIcon/image'}" alt="头像">
                 <div>
-                    <p class="layui-side-user-name" th:text="${user.nickName}">TIMO</p>
+                    <p class="layui-side-user-name" th:text="${user?.nickName}">TIMO</p>
                     <p class="layui-side-user-designation">在线</p>
-                    <input type="hidden" id="curUserId" th:value="${user.id}">
+                    <input type="hidden" id="curUserId" th:value="${user?.id}">
                 </div>
             </div>
             <!-- 导航区域 -->

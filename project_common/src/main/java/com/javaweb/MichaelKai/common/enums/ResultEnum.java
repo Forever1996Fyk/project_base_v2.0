@@ -14,6 +14,15 @@ public enum ResultEnum {
     ERROR(400, "错误"),
 
     /**
+     * 工作流问题
+     */
+    MODEL_DATA_ISNULL(500, "模型数据为空，请先设计流程并成功保存"),
+    MODEL_DATA_ERROR(500, "数据模型错误"),
+
+    START_FAIL(500, "启动失败"),
+    TASK_COMPLETE_FAIL(500, "任务完成失败"),
+
+    /**
      * 账户问题
      */
     USER_EXIST(401, "该用户名已经存在"),
