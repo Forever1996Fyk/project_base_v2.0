@@ -151,19 +151,4 @@ public class ActivitiController {
         return new Result(true, ResultEnum.SUCCESS.getValue(), "流程发布" + ResultEnum.SUCCESS.getMessage());
     }
 
-    /**
-     * 根据id启动流程
-     * @param id
-     * @return
-     */
-    @PostMapping("/startProcess")
-    public Result startProcess(@RequestParam String id) {
-        try {
-
-            return new Result(true, ResultEnum.SUCCESS.getValue(), "启动" + ResultEnum.SUCCESS.getMessage());
-        } catch (Exception e) {
-            throw new ResultException(ResultEnum.START_FAIL.getValue(), ResultEnum.START_FAIL.getMessage());
-        }
-
-    }
 }
