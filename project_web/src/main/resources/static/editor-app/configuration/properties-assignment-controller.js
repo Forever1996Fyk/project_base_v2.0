@@ -32,7 +32,244 @@ var KisBpmAssignmentCtrl = [ '$scope', '$modal', function($scope, $modal) {
     $modal(opts);
 }];
 
-var KisBpmAssignmentPopupCtrl = [ '$scope', function($scope) {
+var KisBpmAssignmentPopupCtrl = [ '$scope', '$http', function($scope, $http) {
+
+	/*---------------------流程设计器扩展用户与用户组--------------------*/
+
+    //参数初始化
+    $scope.gridData = [];//表格数据
+    $scope.gridDataName = 'gridData';
+    $scope.selectTitle = '选择代理人';
+    $scope.columnData = [];//表格列数据
+    $scope.columnDataName = 'columnData';
+    $scope.selectType = 0;//0-代理人，1-候选人，2-候选组
+    $scope.totalServerItems = 0;//表格总条数
+    //分页初始化
+    $scope.pagingOptions = {
+        pageSizes: [10, 20, 30],//page 行数可选值
+        pageSize: 10, //每页行数
+        currentPage: 1, //当前显示页数
+    };
+    //Grid 筛选
+    $scope.projects = [];
+    $scope.selectedProject = -1;
+
+    //异步请求项目列表数据
+    $scope.getProjectDataAsync = function(){
+        $http({
+            method: 'GET',
+            url: /*ACTIVITI.CONFIG.contextRoot + */'/api/getUsers'
+        }).then(function successCallback(response) {
+            $scope.projects = response.data;
+            if($scope.projects.length > 0){
+                $scope.selectedProject = $scope.projects[0].id;
+            }
+            $scope.dataWatch();
+        }, function errorCallback(response) {
+            // 请求失败执行代码
+            console.log("项目列表请求失败！");
+        });
+    }
+    $scope.getProjectDataAsync();
+    //数据监视
+    $scope.dataWatch = function (){
+        //分页数据监视
+        $scope.$watch('pagingOptions', function (newValue, oldValue) {
+            $scope.getPagedDataAsync($scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize, $scope.selectedProject);
+        },true);
+
+        //当切换类型时，初始化当前页
+        $scope.$watch('selectType', function (newValue, oldValue) {
+            if(newValue != oldValue){
+                $scope.pagingOptions.currentPage = 1;
+                $scope.getPagedDataAsync($scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize, $scope.selectedProject);
+            }
+        },true);
+
+        //切换平台
+        $scope.change = function(x){
+            $scope.selectedProject = x;
+            $scope.getPagedDataAsync($scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize, $scope.selectedProject);
+        };
+    };
+
+    //异步请求表格数据
+    $scope.getPagedDataAsync = function(pageNum, pageSize, projectId){
+        var url;
+        if($scope.selectType == 2){
+            url = '/model/getGroupList';
+            $scope.columnData = $scope.groupColumns;
+        }else{
+            url =  '/api/getUsers';
+            $scope.columnData = $scope.userColumns;
+        }
+        $http({
+            method: 'POST',
+            url: ACTIVITI.CONFIG.contextRoot+url,
+            params:{
+                'start': pageNum,
+                'limit': pageSize
+            },
+        }).then(function successCallback(response) {
+            $scope.gridData = response.data.rows;
+            $scope.totalServerItems = response.data.total;
+        }, function errorCallback(response) {
+            // 请求失败执行代码
+            $scope.gridData = [];
+            $scope.totalServerItems = 0;
+        });
+    }
+    //表格属性配置
+    $scope.gridOptions = {
+        data: $scope.gridDataName,
+        multiSelect: false,//不可多选
+        enablePaging: true,
+        pagingOptions: $scope.pagingOptions,
+        totalServerItems: 'totalServerItems',
+        i18n:'zh-cn',
+        showFooter: true,
+        showSelectionCheckbox: false,
+        columnDefs : $scope.columnDataName,
+        beforeSelectionChange: function (event) {
+            var data = event.entity.pkid;
+
+            if($scope.selectType == 0){//选代理人
+                event.entity.checked = !event.selected;
+                $scope.assignment.assignee = data;
+            }else if($scope.selectType == 1){//候选人
+                var obj = {value: data};
+                if(!array_contain($scope.assignment.candidateUsers, obj.value)){
+                    $scope.assignment.candidateUsers.push(obj);
+                }
+            }else if($scope.selectType == 2){//候选组
+                var obj = {value: $scope.getGroupData(event.entity)};
+                if(!array_contain($scope.assignment.candidateGroups, obj.value)){
+                    $scope.assignment.candidateGroups.push(obj);
+                }
+            }
+            return true;
+        }
+    };
+
+    $scope.getGroupData = function(data){
+        var prefix = ['${projectId}_','${bankEnterpriseId}_','${coreEnterpriseId}_','${chainEnterpriseId}_'];
+        var result = prefix[data.enterpriseType] + data.id;
+        return result;
+    };
+
+    //选择用户时表头
+    $scope.userColumns = [
+        {
+            field : 'id',
+            type:'number',
+            displayName : '用户Id',
+            minWidth: 100,
+            width : '18%'
+        },
+        {
+            field : 'nickName',
+            displayName : '昵称',
+            minWidth: 100,
+            width : '25%'
+        },
+        {
+            field : 'account',
+            displayName : '登录账号',
+            minWidth: 100,
+            width : '25%'
+        },
+        {
+            field : 'userName',
+            displayName : '姓名',
+            minWidth: 100,
+            width : '25%'
+        }
+    ];
+    $scope.displayText = function(enterpriseType){
+        var tmp = '';
+        switch(enterpriseType){
+            case 0:
+                tmp = '运营';
+                break;
+            case 1:
+                tmp = '银行';
+                break;
+            case 2:
+                tmp = '核心';
+                break;
+            case 3:
+                tmp = '链属';
+                break;
+            default:
+                tmp = 'N/A';
+                break;
+        }
+        return tmp;
+    }
+    //选择用户组时表头
+    $scope.groupColumns = [
+        {
+            field : 'pkid',
+            type:'number',
+            displayName : '角色Id',
+            minWidth: 100,
+            width : '16%'
+        },
+        {
+            field : 'roleCode',
+            displayName : '角色code',
+            minWidth: 100,
+            width : '16%'
+        },
+        {
+            field : 'name',
+            displayName : '角色名称',
+            minWidth: 100,
+            width : '25%'
+        },
+        {
+            field : 'type',
+            type:'number',
+            displayName : '角色类型',
+            minWidth: 100,
+            width : '18%',
+            cellTemplate : '<span>{{row.entity.type==1?"公有":"私有"}}</span>'
+        },
+        {
+            field : 'enterpriseType',
+            displayName : '业务类型',
+            minWidth: 100,
+            width : '18%'
+            ,cellTemplate : '<span>{{displayText(row.entity.enterpriseType);}}</span>'
+        }
+    ];
+
+    //代理人(审批人)
+    $scope.selectAssignee = function () {
+        $scope.selectType = 0;
+        $scope.selectTitle = '选择代理人';
+    };
+
+    //候选人
+    $scope.selectCandidate = function () {
+        $scope.selectType = 1;
+        $scope.selectTitle = '选择候选人';
+    };
+
+    //候选组
+    $scope.selectGroup = function () {
+        $scope.selectType = 2;
+        $scope.selectTitle = '选择候选组';
+    };
+
+//声明----如果有此 contains 直接用最好
+function array_contain(array, obj){
+    for (var i = 0; i < array.length; i++){
+        if (array[i].value == obj)//如果要求数据类型也一致，这里可使用恒等号===
+            return true;
+    }
+    return false;
+}
     	
     // Put json representing assignment on scope
     if ($scope.property.value !== undefined && $scope.property.value !== null

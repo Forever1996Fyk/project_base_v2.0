@@ -24,6 +24,12 @@ public interface ActivitiService {
     void startProcess(String id, String businessKey);
 
     /**
+     * 启动流程
+     * @param deploymentId 流程部署id
+     */
+    void startProcess(String deploymentId);
+
+    /**
      * 根据用户id查询待办任务列表
      * @param userId
      * @return

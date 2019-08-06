@@ -17,10 +17,12 @@ public enum ResultEnum {
      * 工作流问题
      */
     MODEL_DATA_ISNULL(500, "模型数据为空，请先设计流程并成功保存"),
-    MODEL_DATA_ERROR(500, "数据模型错误"),
+    MODEL_DATA_ERROR(500, "数据模型不符要求，请至少设计一条主线流程"),
 
     START_FAIL(500, "启动失败"),
     TASK_COMPLETE_FAIL(500, "任务完成失败"),
+
+    DEPLOYMENT_ID_ISNULL(500, "流程部署id为空, 请部署流程"),
 
     /**
      * 账户问题

@@ -3,11 +3,13 @@ package com.javaweb.MichaelKai.activiti.controller;
 import com.github.pagehelper.PageInfo;
 import com.javaweb.MichaelKai.activiti.service.ActivitiService;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
+import com.javaweb.MichaelKai.common.exception.ResultException;
 import com.javaweb.MichaelKai.common.utils.AppUtil;
 import com.javaweb.MichaelKai.common.vo.PageResult;
 import com.javaweb.MichaelKai.common.vo.Result;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -35,10 +37,8 @@ public class ActivitiProcessController {
      * @return
      **/
     @PostMapping("/startProcess")
-    public Result startProcess(@RequestParam String key) {
-        String busniss_key = key + ":" + AppUtil.randomId();
-        activitiService.startProcess(key, busniss_key);
-
+    public Result startProcess(@RequestParam String deploymentId) {
+        activitiService.startProcess(deploymentId);
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage());
     }
 

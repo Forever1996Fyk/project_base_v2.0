@@ -17,12 +17,15 @@ import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
+import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.image.ProcessDiagramGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
@@ -54,8 +57,25 @@ public class ActivitiServiceImpl implements ActivitiService {
     private ProcessEngineConfigurationImpl processEngineConfiguration;
 
     @Override
-    public void startProcess(String id, String businessKey) {
-        runtimeService.startProcessInstanceByKey(id, businessKey);
+    public void startProcess(String deploymentId, String businessKey) {
+        ProcessDefinition processDefinition = getProcessDefinition(deploymentId);
+        runtimeService.startProcessInstanceByKey(processDefinition.getKey(), businessKey);
+    }
+
+    @Override
+    public void startProcess(String deploymentId) {
+        ProcessDefinition processDefinition = getProcessDefinition(deploymentId);
+        runtimeService.startProcessInstanceByKey(processDefinition.getKey());
+    }
+
+    private ProcessDefinition getProcessDefinition(String deploymentId) {
+        if (StringUtils.isEmpty(deploymentId)) {
+            throw new ResultException(ResultEnum.DEPLOYMENT_ID_ISNULL.getValue(), ResultEnum.DEPLOYMENT_ID_ISNULL.getMessage());
+        }
+        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+                .deploymentId(deploymentId)
+                .singleResult();
+        return processDefinition;
     }
 
     @Override

@@ -42,41 +42,55 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
                 break;
             case 'start':
                 active.start(obj.data);
+                break;
             case 'export':
                 active.export(obj.data);
-            case 'design':
-                active.design(obj.data);
-            case 'del':
-                active.delete(obj.data);
                 break;
         }
     });
 
     var active = {
-        //设计流程图
-        design:function (data) {
-            var url = '/modeler.html?modelId=' + data.id;
-            window.location.href = ctxPath + url;
-        },
         //发布
         deploy:function (data) {
-            layer.open({
-                type: 2
-                ,title: '编辑'
-                ,content: '/system/actionLog/edit?id=' + data.id
-                ,maxmin: true
-                ,area: ['500px', '450px']
+            layer.confirm ('确定部署流程吗?', function (index) {
+                $.ajax({
+                    url: ctxPath + '/api/activiti/deployment',
+                    type: 'post',
+                    data: {id : data.id},
+                    success:function(res){
+                        if (res.code === 200) {
+                            layer.msg(res.message);
+                            //刷新表格
+                            tableObject.reload({
+                                page: '{curr:1}'
+                            });
+                        } else {
+                            layer.msg(res.message);
+                        }
+                    }
+                })
             })
         },
 
         //启动流程
         start:function (data) {
-            layer.open({
-                type: 2
-                ,title: '编辑'
-                ,content: '/system/actionLog/edit?id=' + data.id
-                ,maxmin: true
-                ,area: ['500px', '450px']
+            layer.confirm ('确定启动流程吗?', function (index) {
+                $.ajax({
+                    url: ctxPath + '/api/activiti/startProcess',
+                    type: 'post',
+                    data: {deploymentId : data.deploymentId},
+                    success:function(res){
+                        if (res.code === 200) {
+                            layer.msg(res.message);
+                            //刷新表格
+                            tableObject.reload({
+                                page: '{curr:1}'
+                            });
+                        } else {
+                            layer.msg(res.message);
+                        }
+                    }
+                })
             })
         },
 
@@ -93,9 +107,16 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
 
         //删除
         delete:function (data) {
+            var checkStatus = table.checkStatus('id')//注意这个id不是html中table元素上的id，而是table:render中定义的id
+                ,ids = [];
+            if (checkStatus.data.length !== 1) {
+                layer.msg('请选择一条数据');
+            }
+
+            var id = checkStatus.data[0].id;
             layer.confirm ('确定删除吗?', function (index) {
                 $.ajax({
-                    url: '/api/actionLog?id=' + data.id,
+                    url: ctxPath + '/api/activiti/delModel?id=' + id,
                     type: 'delete',
                     success:function(res){
                         if (res.code === 200) {
@@ -125,11 +146,24 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
             layer.open({
                 type: 2
                 ,title: '创建模型'
-                ,content: '/system/activiti/createModel'
+                ,content: ctxPath + '/system/activiti/createModel'
                 ,maxmin: true
                 ,area: ['500px', '450px']
             })
-        }
+        },
+
+        //设计流程图
+        design: function () {
+            var checkStatus = table.checkStatus('id')//注意这个id不是html中table元素上的id，而是table:render中定义的id
+                ,ids = [];
+            if (checkStatus.data.length !== 1) {
+                layer.msg('请选择一条数据');
+            }
+            var id = checkStatus.data[0].id;
+
+            var url = '/modeler.html?modelId=' + id;
+            window.location.href = ctxPath + url;
+        },
 
     };
     $('.layui-btn').on('click', function(){
