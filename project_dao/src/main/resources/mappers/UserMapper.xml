@@ -129,9 +129,15 @@
 
     <!-- 根据roleId获取用户 -->
     <select id="getUserByRoleId" resultType="Map">
-        SELECT a.id id, a.user_name userName, a.nick_name nickName, a.phone phone, a.email email
+        SELECT a.id id, a.user_name userName, a.nick_name nickName, a.phone phone, a.email email, a.account account
         FROM tb_user a LEFT JOIN tb_user_role b ON b.user_id = a.id
         WHERE b.role_id = #{roleId}
+    </select>
+
+    <!-- 获取所有的用户角色关联数据 -->
+    <select id="getAllUserRoles" resultType="Map">
+        SELECT a.id id, a.user_id userId, a.role_id roleId
+        FROM tb_user_role a
     </select>
 
 

@@ -15,9 +15,13 @@
             <div class="pull-left layui-form-pane search-box">
                 <form id="frmSearch">
                     <div class="layui-inline">
-                        <label class="layui-form-label">创建用户 </label>
+                        <label class="layui-form-label">模型名称</label>
                         <div class="layui-input-block">
-                            <input type="text" name="name" placeholder="请输入用户名称" autocomplete="off" class="layui-input">
+                            <input type="text" name="name" placeholder="请输入模型名称" autocomplete="off" class="layui-input">
+                        </div>
+                        <label class="layui-form-label">模型key</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="key" placeholder="请输入模型key" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -30,6 +34,8 @@
             </div>
             <div class="pull-right screen-btn-group">
                 <div class="btn-group-right">
+                    <button class="layui-btn layui-btn-warm" data-title="同步数据" data-type="synchronizeData">
+                        <i class="fa fa-refresh"></i> 同步数据</button>
                     <button class="layui-btn layui-btn-normal" data-title="创建模型" data-type="createModel">
                         <i class="fa fa-plus"></i> 创建模型</button>
                     <button class="layui-btn" data-title="设计流程图" data-type="design">

@@ -116,6 +116,11 @@ public interface UserMapper {
     void addUserRole(@Param(value = "list")List<UserRoleVo> list);
 
     /**
+     * 添加用户角色
+     */
+    List<Map<String, Object>> getAllUserRoles();
+
+    /**
      * 删除用户角色
      * @param userId
      */

@@ -59,7 +59,7 @@ public class RoleController {
      * @return
      */
     @DeleteMapping("/role")
-    public Result editRoleById(@RequestParam String id) {
+    public Result deleteRoleById(@RequestParam String id) {
         roleService.delRoleById(id);
         return new Result(true, ResultEnum.SUCCESS.getValue(), "删除" + ResultEnum.SUCCESS.getMessage());
     }
@@ -70,7 +70,7 @@ public class RoleController {
      * @return
      */
     @DeleteMapping("/roles/{ids}")
-    public Result editRoleByIds(@PathVariable("ids") String[] ids) {
+    public Result deleteRoleByIds(@PathVariable("ids") String[] ids) {
         roleService.delRoleByIds(Arrays.asList(ids));
         return new Result(true, ResultEnum.SUCCESS.getValue(), "批量删除" + ResultEnum.SUCCESS.getMessage());
     }
@@ -94,7 +94,7 @@ public class RoleController {
      * @return
      */
     @GetMapping("/getRoles")
-    public Result getUsers(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+    public Result getRoles(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
                            @RequestParam(value = "limit", required = false, defaultValue = "0") int limit,
                            @RequestParam Map<String, Object> map) {
         PageInfo<Map<String, Object>> pageList = roleService.getRoles(start, limit, map);
@@ -107,7 +107,7 @@ public class RoleController {
      * @return
      */
     @GetMapping("/role/authList")
-    public Result getRoles(@RequestParam String id) {
+    public Result getAuthList(@RequestParam String id) {
         //获取所有权限
         Map<String, Object> map = new HashMap<>();
         map.put("flag", "1");

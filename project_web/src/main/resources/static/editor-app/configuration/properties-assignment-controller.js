@@ -20,7 +20,7 @@
 /*
  * Assignment
  */
-var KisBpmAssignmentCtrl = [ '$scope', '$modal', function($scope, $modal) {
+var KisBpmAssignmentCtrl = [ '$scope', '$modal','$http', function($scope, $modal,$http) {
 
     // Config for the modal window
     var opts = {
@@ -32,244 +32,7 @@ var KisBpmAssignmentCtrl = [ '$scope', '$modal', function($scope, $modal) {
     $modal(opts);
 }];
 
-var KisBpmAssignmentPopupCtrl = [ '$scope', '$http', function($scope, $http) {
-
-	/*---------------------流程设计器扩展用户与用户组--------------------*/
-
-    //参数初始化
-    $scope.gridData = [];//表格数据
-    $scope.gridDataName = 'gridData';
-    $scope.selectTitle = '选择代理人';
-    $scope.columnData = [];//表格列数据
-    $scope.columnDataName = 'columnData';
-    $scope.selectType = 0;//0-代理人，1-候选人，2-候选组
-    $scope.totalServerItems = 0;//表格总条数
-    //分页初始化
-    $scope.pagingOptions = {
-        pageSizes: [10, 20, 30],//page 行数可选值
-        pageSize: 10, //每页行数
-        currentPage: 1, //当前显示页数
-    };
-    //Grid 筛选
-    $scope.projects = [];
-    $scope.selectedProject = -1;
-
-    //异步请求项目列表数据
-    $scope.getProjectDataAsync = function(){
-        $http({
-            method: 'GET',
-            url: /*ACTIVITI.CONFIG.contextRoot + */'/api/getUsers'
-        }).then(function successCallback(response) {
-            $scope.projects = response.data;
-            if($scope.projects.length > 0){
-                $scope.selectedProject = $scope.projects[0].id;
-            }
-            $scope.dataWatch();
-        }, function errorCallback(response) {
-            // 请求失败执行代码
-            console.log("项目列表请求失败！");
-        });
-    }
-    $scope.getProjectDataAsync();
-    //数据监视
-    $scope.dataWatch = function (){
-        //分页数据监视
-        $scope.$watch('pagingOptions', function (newValue, oldValue) {
-            $scope.getPagedDataAsync($scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize, $scope.selectedProject);
-        },true);
-
-        //当切换类型时，初始化当前页
-        $scope.$watch('selectType', function (newValue, oldValue) {
-            if(newValue != oldValue){
-                $scope.pagingOptions.currentPage = 1;
-                $scope.getPagedDataAsync($scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize, $scope.selectedProject);
-            }
-        },true);
-
-        //切换平台
-        $scope.change = function(x){
-            $scope.selectedProject = x;
-            $scope.getPagedDataAsync($scope.pagingOptions.currentPage, $scope.pagingOptions.pageSize, $scope.selectedProject);
-        };
-    };
-
-    //异步请求表格数据
-    $scope.getPagedDataAsync = function(pageNum, pageSize, projectId){
-        var url;
-        if($scope.selectType == 2){
-            url = '/model/getGroupList';
-            $scope.columnData = $scope.groupColumns;
-        }else{
-            url =  '/api/getUsers';
-            $scope.columnData = $scope.userColumns;
-        }
-        $http({
-            method: 'POST',
-            url: ACTIVITI.CONFIG.contextRoot+url,
-            params:{
-                'start': pageNum,
-                'limit': pageSize
-            },
-        }).then(function successCallback(response) {
-            $scope.gridData = response.data.rows;
-            $scope.totalServerItems = response.data.total;
-        }, function errorCallback(response) {
-            // 请求失败执行代码
-            $scope.gridData = [];
-            $scope.totalServerItems = 0;
-        });
-    }
-    //表格属性配置
-    $scope.gridOptions = {
-        data: $scope.gridDataName,
-        multiSelect: false,//不可多选
-        enablePaging: true,
-        pagingOptions: $scope.pagingOptions,
-        totalServerItems: 'totalServerItems',
-        i18n:'zh-cn',
-        showFooter: true,
-        showSelectionCheckbox: false,
-        columnDefs : $scope.columnDataName,
-        beforeSelectionChange: function (event) {
-            var data = event.entity.pkid;
-
-            if($scope.selectType == 0){//选代理人
-                event.entity.checked = !event.selected;
-                $scope.assignment.assignee = data;
-            }else if($scope.selectType == 1){//候选人
-                var obj = {value: data};
-                if(!array_contain($scope.assignment.candidateUsers, obj.value)){
-                    $scope.assignment.candidateUsers.push(obj);
-                }
-            }else if($scope.selectType == 2){//候选组
-                var obj = {value: $scope.getGroupData(event.entity)};
-                if(!array_contain($scope.assignment.candidateGroups, obj.value)){
-                    $scope.assignment.candidateGroups.push(obj);
-                }
-            }
-            return true;
-        }
-    };
-
-    $scope.getGroupData = function(data){
-        var prefix = ['${projectId}_','${bankEnterpriseId}_','${coreEnterpriseId}_','${chainEnterpriseId}_'];
-        var result = prefix[data.enterpriseType] + data.id;
-        return result;
-    };
-
-    //选择用户时表头
-    $scope.userColumns = [
-        {
-            field : 'id',
-            type:'number',
-            displayName : '用户Id',
-            minWidth: 100,
-            width : '18%'
-        },
-        {
-            field : 'nickName',
-            displayName : '昵称',
-            minWidth: 100,
-            width : '25%'
-        },
-        {
-            field : 'account',
-            displayName : '登录账号',
-            minWidth: 100,
-            width : '25%'
-        },
-        {
-            field : 'userName',
-            displayName : '姓名',
-            minWidth: 100,
-            width : '25%'
-        }
-    ];
-    $scope.displayText = function(enterpriseType){
-        var tmp = '';
-        switch(enterpriseType){
-            case 0:
-                tmp = '运营';
-                break;
-            case 1:
-                tmp = '银行';
-                break;
-            case 2:
-                tmp = '核心';
-                break;
-            case 3:
-                tmp = '链属';
-                break;
-            default:
-                tmp = 'N/A';
-                break;
-        }
-        return tmp;
-    }
-    //选择用户组时表头
-    $scope.groupColumns = [
-        {
-            field : 'pkid',
-            type:'number',
-            displayName : '角色Id',
-            minWidth: 100,
-            width : '16%'
-        },
-        {
-            field : 'roleCode',
-            displayName : '角色code',
-            minWidth: 100,
-            width : '16%'
-        },
-        {
-            field : 'name',
-            displayName : '角色名称',
-            minWidth: 100,
-            width : '25%'
-        },
-        {
-            field : 'type',
-            type:'number',
-            displayName : '角色类型',
-            minWidth: 100,
-            width : '18%',
-            cellTemplate : '<span>{{row.entity.type==1?"公有":"私有"}}</span>'
-        },
-        {
-            field : 'enterpriseType',
-            displayName : '业务类型',
-            minWidth: 100,
-            width : '18%'
-            ,cellTemplate : '<span>{{displayText(row.entity.enterpriseType);}}</span>'
-        }
-    ];
-
-    //代理人(审批人)
-    $scope.selectAssignee = function () {
-        $scope.selectType = 0;
-        $scope.selectTitle = '选择代理人';
-    };
-
-    //候选人
-    $scope.selectCandidate = function () {
-        $scope.selectType = 1;
-        $scope.selectTitle = '选择候选人';
-    };
-
-    //候选组
-    $scope.selectGroup = function () {
-        $scope.selectType = 2;
-        $scope.selectTitle = '选择候选组';
-    };
-
-//声明----如果有此 contains 直接用最好
-function array_contain(array, obj){
-    for (var i = 0; i < array.length; i++){
-        if (array[i].value == obj)//如果要求数据类型也一致，这里可使用恒等号===
-            return true;
-    }
-    return false;
-}
+var KisBpmAssignmentPopupCtrl = [ '$scope','$modal', function($scope, $modal) {
     	
     // Put json representing assignment on scope
     if ($scope.property.value !== undefined && $scope.property.value !== null
@@ -284,6 +47,12 @@ function array_contain(array, obj){
     if ($scope.assignment.candidateUsers == undefined || $scope.assignment.candidateUsers.length == 0)
     {
     	$scope.assignment.candidateUsers = [{value: ''}];
+    }
+
+
+    if ($scope.assignment.assignee == undefined || $scope.assignment.assignee == '')
+    {
+        $scope.assignment.assignee =  '';
     }
     
     // Click handler for + button after enum value
@@ -311,6 +80,28 @@ function array_contain(array, obj){
     $scope.removeCandidateGroupValue = function(index) {
         $scope.assignment.candidateGroups.splice(index, 1);
     };
+
+    //Open the dialog to select users
+    $scope.choseAssignment = function(flag) {
+
+        var opts = {
+            template:  'editor-app/configuration/properties/assignment-popup-popup.html?version=' + Date.now(),
+            scope: $scope
+        };
+        $scope.choseAssignmentFlag = flag;
+        // Open the dialog
+        $modal(opts);
+    }
+
+    //Open the dialog to select candidateGroups
+    $scope.choseCandidateGroups = function(){
+        var opts = {
+            template:  'editor-app/configuration/properties/assignment-candidateGroup.html?version=' + Date.now(),
+            scope: $scope
+        };
+        // Open the dialog
+        $modal(opts);
+    }
 
     $scope.save = function() {
 
@@ -384,4 +175,242 @@ function array_contain(array, obj){
 	        }
     	}
     };
+
+    //因新打开的界面上选定的数据要传输到当前modal中，所以使用此方式，这是angular.js中不同控制器之间传输数据的方式
+    $scope.$on('choseAssigneesStr', function(event,data,nameData){
+        var infos = data.split(",");
+        var nameInfos =nameData.split(",");
+        // $scope.assignment.candidateUsers= [];
+        for(var i=0;i<infos.length;i++)
+        {
+            $scope.assignment.candidateUsers.push({value:infos[i],nameValue:nameInfos[i]});
+            // $scope.assignment.candidateUsers[i].value = infos[i];
+        }
+        //清空第一个
+        if( (!$scope.assignment.candidateUsers[0].value )||$scope.assignment.candidateUsers[0]=='' )
+        {
+            //清空第一个元素
+            $scope.assignment.candidateUsers.splice(0,1);
+        }
+    });
+
+
+    $scope.$on('choseAssigneeStr', function(event,data){
+        $scope.assignment.assignee = data;
+    });
+    $scope.$on('choseAssigneeNameStr', function(event,data){
+        $scope.assignment.assigneeshowname = data;
+    });
+    $scope.$on('choseCandidateGroupsStr', function(event,data,nameData){
+        // $scope.assignment.candidateGroups[0].value = data;
+        var infos = data.split(",");
+        var nameInfos =nameData.split(",");
+
+        for(var i=0;i<infos.length;i++)
+        {
+            // $scope.assignment.candidateGroups[i].value = infos[i];
+            $scope.assignment.candidateGroups.push({value:infos[i],nameValue:nameInfos[i]});
+        }
+
+        //清空第一个
+        if( (!$scope.assignment.candidateGroups[0].value )||$scope.assignment.candidateGroups[0]=='' )
+        {
+            //清空第一个元素
+            $scope.assignment.candidateGroups.splice(0,1);
+        }
+
+    });
+}];
+
+var KisBpmChoseAssignmentCtrl = ['$scope', '$http', function($scope, $http) {
+
+    $scope.paginationConf = {
+        currentPage: 1,
+        totalItems: 1,
+        itemsPerPage: 15,
+        pagesLength: 15,
+        perPageOptions: [10, 20, 30, 40, 50],
+        onChange: function(){
+
+        }
+    };
+    //初始化左边菜单栏数据，并触发第一个菜单的点击事件
+    var roles = [];
+    var initId;
+    $scope.getAllRoles = function (successCallback) {
+        $http({
+            method: 'get',
+            headers: {'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+            url: '/api/getRoles/noPage'})
+
+            .success(function (data, status, headers, config) {
+                var obj = data.data;
+                for (var i=0; i<obj.length; i++) {
+                    if (i==0) {
+                        initId = obj[i].id + "";
+                        $scope.getAllAccountByRole(initId);
+                    }
+                    roles.push({id:obj[i].id,name:obj[i].roleName});
+                }
+                $scope.roles = roles;
+            })
+            .error(function (data, status, headers, config) {
+            });
+    };
+    $scope.getAllRoles(function(){});
+
+    function getDetail(value,page,limit)
+    {
+
+        $http({
+            method: 'get',
+            headers: {'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+            url: '/api/getUserByRoleId?roleId=' + value + "&page=" + page + "&limit=" + limit})
+            .success(function (data, status, headers, config) {
+                //封装数据
+                var obj = data.data.rows;
+                if (obj != null) {
+                    var accounts = [];
+                    for (var i = 0; i < obj.length; i++) {
+                        accounts.push({id:obj[i].id, code : obj[i].account, name : obj[i].userName, index:i});
+                    }
+                    $scope.accounts=accounts;
+                }
+                refreshPage(value, page, limit, data.data.total);
+            })
+            .error(function (data, status, headers, config) {
+            });
+    }
+
+    function refreshPage(value,currentPage,perPage,totals) {
+        //初始化表格
+        $scope.paginationConf = {
+            currentPage: currentPage,
+            totalItems: totals,
+            itemsPerPage: perPage,
+            pagesLength: 5,
+            perPageOptions: [10, 20, 30, 40, 50],
+            onChange: function(){
+                var currentPage = $scope.paginationConf.currentPage;
+                getDetail(value, currentPage, perPage);
+            }
+        };
+    }
+
+    //模态框左侧组的点击事件：根据所点击的组获取当前组的所有用户
+    $scope.getAllAccountByRole = function(value) {
+        //初始化表格
+        getDetail(value,1,10);
+    };
+
+    // Close button handler
+    $scope.close = function() {
+        $scope.$hide();
+    };
+    $scope.formData = {};
+    $scope.candidateUser={};
+
+    //Save Data
+    $scope.save = function() {
+        if ($scope.choseAssignmentFlag == "assignee") {
+
+            var choseAssignees = $scope.accounts;
+            var choseAssigneesStr = "";
+            var choseAssigneesNameStr = "";
+            for (var i=0;i<choseAssignees.length; i++) {
+                if (choseAssignees[i].checked) {
+                    choseAssigneesStr = choseAssignees[i].id;
+                    choseAssigneesNameStr = choseAssignees[i].name;
+                    break;
+                }
+            }
+            $scope.$emit('choseAssigneeStr', choseAssigneesStr);
+            $scope.$emit('choseAssigneeNameStr', choseAssigneesNameStr);
+        } else if ($scope.choseAssignmentFlag == "assignees") {
+            var choseAssignees = $scope.accounts;
+            var choseAssigneesStr = "";
+            var choseAssigneesNameStr = "";
+            for (var i=0;i<choseAssignees.length; i++) {
+                if (choseAssignees[i].selected) {
+                    choseAssigneesStr += choseAssignees[i].id + ",";
+                    choseAssigneesNameStr +=choseAssignees[i].name + ",";
+                }
+            }
+            choseAssigneesStr = choseAssigneesStr.substring(0,choseAssigneesStr.length-1);
+            choseAssigneesNameStr = choseAssigneesNameStr.substring(0,choseAssigneesNameStr.length-1);
+            $scope.$emit('choseAssigneesStr', choseAssigneesStr,choseAssigneesNameStr);
+        }
+        $scope.close();
+    };
+    $scope.selectAll = function($event) {
+        var checkbox = $event.target;
+        var choseAssignees = $scope.accounts;
+        for (var i=0;i<choseAssignees.length; i++) {
+            if (checkbox.checked) {
+                choseAssignees[i].selected = true;
+            } else {
+                choseAssignees[i].selected = false;
+            }
+        }
+        $scope.accounts = choseAssignees;
+    }
+}];
+
+var KisBpmChoseCandidateGroupsCtrl = ['$scope', '$http', function($scope, $http) {
+
+    var candidateGroups = [];
+    $scope.getAllRoles = function (successCallback) {
+        $http({
+            method: 'get',
+            headers: {'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+            url: '/api/getRoles/noPage'})
+            .success(function (data, status, headers, config) {
+                var obj = data.data;
+                for (var i=0; i<obj.length; i++) {
+                    candidateGroups.push({id:obj[i].id,name:obj[i].roleName,description:obj[i].remark});
+                }
+                $scope.candidateGroups = candidateGroups;
+            })
+            .error(function (data, status, headers, config) {
+            });
+    };
+    $scope.getAllRoles(function() {
+    });
+
+    // Close button handler
+    $scope.close = function() {
+        $scope.$hide();
+    };
+
+    $scope.save = function() {
+        var choseCandidateGroups = $scope.candidateGroups;
+        var choseCandidateGroupsStr = "";
+        var choseAssigneesNameStr = "";
+        for (var i=0;i<choseCandidateGroups.length; i++) {
+            if (choseCandidateGroups[i].selected) {
+                choseCandidateGroupsStr += choseCandidateGroups[i].id + ",";
+                choseAssigneesNameStr +=choseCandidateGroups[i].name + ",";
+            }
+        }
+        choseCandidateGroupsStr = choseCandidateGroupsStr.substring(0,choseCandidateGroupsStr.length-1);
+        choseAssigneesNameStr = choseAssigneesNameStr.substring(0,choseAssigneesNameStr.length-1);
+        $scope.$emit('choseCandidateGroupsStr', choseCandidateGroupsStr,choseAssigneesNameStr);
+        $scope.close();
+    }
+
+    $scope.selectAll = function($event) {
+        var checkbox = $event.target;
+        var candidateGroups = $scope.candidateGroups;
+        for (var i=0;i<candidateGroups.length; i++) {
+            if (checkbox.checked) {
+                candidateGroups[i].selected = true;
+            } else {
+                candidateGroups[i].selected = false;
+            }
+        }
+        $scope.candidateGroups = candidateGroups;
+    }
 }];

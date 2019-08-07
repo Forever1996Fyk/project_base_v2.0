@@ -24,6 +24,8 @@ public enum ResultEnum {
 
     DEPLOYMENT_ID_ISNULL(500, "流程部署id为空, 请部署流程"),
 
+    ACT_SYNCHRONIZE_DATA_FAIL(500, "同步数据失败"),
+
     /**
      * 账户问题
      */

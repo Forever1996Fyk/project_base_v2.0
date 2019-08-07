@@ -178,6 +178,19 @@ public class UserServiceImpl implements UserService {
         return userMapper.getUserByRoleId(id);
     }
 
+    @Override
+    public List<Map<String, Object>> getAllUserRoles() {
+        return userMapper.getAllUserRoles();
+    }
+
+    @Override
+    public PageInfo<Map<String, Object>> getUserByRoleId(int pageNum, int pageSize, String id) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Map<String, Object>> list = this.getUserByRoleId(id);
+        PageInfo<Map<String, Object>> page = new PageInfo<Map<String, Object>>(list);
+        return page;
+    }
+
 
     private Boolean checkParam(String key, String val) {
         Map<String, Object> map = new HashMap<>();

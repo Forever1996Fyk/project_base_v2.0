@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 @Aspect
 @Component
 @Slf4j
-public class HttpAspect {
+public class HttpAspectAop {
 
     @Autowired
     private ExceptionHandle exceptionHandle;

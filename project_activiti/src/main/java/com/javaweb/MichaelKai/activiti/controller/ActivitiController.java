@@ -8,15 +8,23 @@ import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.exception.ResultException;
 import com.javaweb.MichaelKai.common.vo.PageResult;
 import com.javaweb.MichaelKai.common.vo.Result;
+import com.javaweb.MichaelKai.service.RoleService;
+import com.javaweb.MichaelKai.service.UserService;
 import com.javaweb.MichaelKai.vo.ActivitiModelVo;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
+import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.identity.Group;
+import org.activiti.engine.identity.User;
+import org.activiti.engine.impl.persistence.entity.GroupEntity;
+import org.activiti.engine.impl.persistence.entity.UserEntity;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.Model;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +46,13 @@ public class ActivitiController {
     @Autowired
     private RepositoryService repositoryService;
     @Autowired
+    private IdentityService identityService;
+    @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private RoleService roleService;
 
     /**
      * 获取所有的模型列表(分页)
@@ -149,6 +163,74 @@ public class ActivitiController {
         model.setDeploymentId(deployment.getId());
         repositoryService.saveModel(model);
         return new Result(true, ResultEnum.SUCCESS.getValue(), "流程发布" + ResultEnum.SUCCESS.getMessage());
+    }
+
+    /**
+     * 同步用户,角色数据 到Activit表中
+     * @return
+     */
+    @PostMapping("/synchronizeData")
+    public Result synchronizeData() {
+
+        try {
+            //同步用户
+            synchronizeUser();
+
+            //同步角色 组
+            synchronizeGroup();
+
+            //同步用户-用户组关联
+            synchronizeMemberShip();
+
+            return new Result(true, ResultEnum.SUCCESS.getValue(), "同步" + ResultEnum.SUCCESS.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResultException(ResultEnum.ACT_SYNCHRONIZE_DATA_FAIL.getValue(), ResultEnum.ACT_SYNCHRONIZE_DATA_FAIL.getMessage());
+        }
+    }
+
+    private void synchronizeMemberShip() {
+        List<Map<String, Object>> allUserRoles = userService.getAllUserRoles();
+
+        if (!CollectionUtils.isEmpty(allUserRoles)) {
+            for (Map<String, Object> allUserRole : allUserRoles) {
+                identityService.deleteMembership(allUserRole.get("userId").toString(), allUserRole.get("roleId").toString());
+                identityService.createMembership(allUserRole.get("userId").toString(), allUserRole.get("roleId").toString());
+            }
+        }
+    }
+
+    private void synchronizeGroup() {
+        List<Map<String, Object>> roles = roleService.getRoles(null);
+        Group group;
+        if (!CollectionUtils.isEmpty(roles)) {
+            for (Map<String, Object> role : roles) {
+                group = new GroupEntity();
+                group.setId(role.get("id").toString());
+                group.setName(role.get("roleName").toString());
+                identityService.deleteGroup(role.get("id").toString());
+                identityService.saveGroup(group);
+            }
+        }
+    }
+
+    private void synchronizeUser() {
+        List<Map<String, Object>> users = userService.getUsers(null);
+        User au;
+
+        if (!CollectionUtils.isEmpty(users)) {
+            for (Map<String, Object> user : users) {
+                au = new UserEntity();
+                au.setId(user.get("id").toString());
+                au.setFirstName(user.get("userName").toString());
+                au.setLastName(user.get("nickName").toString());
+                au.setEmail(user.get("email").toString());
+                au.setPassword(user.get("password").toString());
+                identityService.deleteUser(user.get("id").toString());
+                identityService.saveUser(au);
+            }
+        }
+
     }
 
 }

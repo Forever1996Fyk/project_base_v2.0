@@ -113,4 +113,16 @@ public interface UserService {
      * @return
      */
     List<Map<String,Object>> getUserByRoleId(String id);
+
+    /**
+     * 添加用户角色
+     */
+    List<Map<String, Object>> getAllUserRoles();
+
+    /**
+     * 根据roleId获取用户 分页
+     * @param id
+     * @return
+     */
+    PageInfo<Map<String,Object>> getUserByRoleId(int start, int pageSize, String id);
 }

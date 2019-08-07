@@ -111,6 +111,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
                 ,ids = [];
             if (checkStatus.data.length !== 1) {
                 layer.msg('请选择一条数据');
+                return;
             }
 
             var id = checkStatus.data[0].id;
@@ -150,6 +151,16 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
                 ,maxmin: true
                 ,area: ['500px', '450px']
             })
+        },
+
+        synchronizeData: function () {
+              $.ajax({
+                  url: ctxPath + '/api/activiti/synchronizeData',
+                  type: 'POST',
+                  success: function (res) {
+                      layer.msg(res.message);
+                  }
+              })
         },
 
         //设计流程图

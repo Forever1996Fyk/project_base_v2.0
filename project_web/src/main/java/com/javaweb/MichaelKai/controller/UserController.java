@@ -99,7 +99,7 @@ public class UserController {
      */
     @DeleteMapping("/user")
     @ActionLog(name = "删除用户", LOG_TYPE_ENUM = LogTypeEnum.USER_DEL)
-    public Result editUserById(@RequestParam String id) {
+    public Result deleteUserById(@RequestParam String id) {
         userService.delUserById(id);
         return new Result(true, ResultEnum.SUCCESS.getValue(), "删除" + ResultEnum.SUCCESS.getMessage());
     }
@@ -111,7 +111,7 @@ public class UserController {
      */
     @DeleteMapping("/users/{ids}")
     @ActionLog(name = "删除用户", LOG_TYPE_ENUM = LogTypeEnum.USER_DEL)
-    public Result editUserByIds(@PathVariable("ids") String[] ids) {
+    public Result deleteUserByIds(@PathVariable("ids") String[] ids) {
         userService.delUserByIds(Arrays.asList(ids));
         return new Result(true, ResultEnum.SUCCESS.getValue(), "批量删除" + ResultEnum.SUCCESS.getMessage());
     }
@@ -179,6 +179,21 @@ public class UserController {
             ShiroKit.resetCookieRememberMe();
         }
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), user);
+    }
+
+    /**
+     * 根据roleId获取用户 分页
+     * @param page
+     * @param limit
+     * @param roleId
+     * @return
+     */
+    @GetMapping("/getUserByRoleId")
+    public Result getUserByRoleId(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                  @RequestParam(value = "limit", required = false, defaultValue = "30") int limit,
+                                  @RequestParam String roleId) {
+        PageInfo<Map<String, Object>> pageList = userService.getUserByRoleId(page, limit, roleId);
+        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
     }
 
 }
