@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
+import com.javaweb.MichaelKai.activiti.service.ActAssigneeService;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.exception.ResultException;
 import com.javaweb.MichaelKai.common.vo.PageResult;
@@ -21,10 +23,14 @@ import org.activiti.engine.identity.Group;
 import org.activiti.engine.identity.User;
 import org.activiti.engine.impl.persistence.entity.GroupEntity;
 import org.activiti.engine.impl.persistence.entity.UserEntity;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.Model;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -132,6 +138,43 @@ public class ActivitiController {
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage());
     }
 
+
+    /**
+     * @Description 流程管理列表
+     *
+     * @Author YuKai Fan
+     * @Date 20:48 2019/8/7
+     * @Param
+     * @return
+     **/
+    @GetMapping("/getActProcessDeploys")
+    public Result getActProcessDeploys(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                @RequestParam(value = "limit", required = false, defaultValue = "0") int limit,
+                                @RequestParam Map<String, Object> map) {
+        ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
+
+        List<ProcessDefinition> processDefinitions;
+        //根据deploymentId, name查询流程
+        if (map.containsKey("deploymentId") && !StringUtils.isEmpty(map.get("deploymentId"))) {
+            processDefinitionQuery.deploymentId(map.get("deploymentId").toString());
+        }
+        if (map.containsKey("name") && !StringUtils.isEmpty(map.get("name"))) {
+            processDefinitionQuery.processDefinitionNameLike("%" + map.get("name").toString() + "%");
+        }
+        if (map.containsKey("key") && !StringUtils.isEmpty(map.get("key"))) {
+            processDefinitionQuery.processDefinitionKey(map.get("key").toString());
+        }
+
+        processDefinitions = processDefinitionQuery.listPage(page - 1, limit);
+        List<com.javaweb.MichaelKai.activiti.pojo.ProcessDefinition> list = Lists.newArrayList();
+        processDefinitions
+                .forEach(processDefinition -> list.add(new com.javaweb.MichaelKai.activiti.pojo.ProcessDefinition(processDefinition)));
+        PageInfo pageList = new PageInfo<>(list);
+
+        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
+    }
+
+
     /**
      * 根据id部署流程
      * @param id
@@ -163,6 +206,39 @@ public class ActivitiController {
         model.setDeploymentId(deployment.getId());
         repositoryService.saveModel(model);
         return new Result(true, ResultEnum.SUCCESS.getValue(), "流程发布" + ResultEnum.SUCCESS.getMessage());
+    }
+
+    /**
+     * @Description 删除流程定义 级联 删除流程节点绑定信息
+     *
+     * @Author YuKai Fan
+     * @Date 21:34 2019/8/7
+     * @Param
+     * @return
+     **/
+    @DeleteMapping("/delProcessDeploy")
+    public Result delProcessDeploy(@RequestParam String id) {
+        try {
+            /*List<ActivityImpl> activityList = actAssigneeService.getActivityList(id);
+            for (ActivityImpl activity : activityList) {
+                String nodeId = activity.getId();
+                if (StringUtils.isEmpty(nodeId) || "start".equals(nodeId) || "end".equals(nodeId)) {
+                    continue;
+                }
+                *//** 接触节点和代办关联 *//**//*
+                actAssigneeService.deleteByNodeId(nodeId);*//*
+            }*/
+            //级联删除,会删除和当前规则相关的所有信息，包括历史
+            repositoryService.deleteDeployment(id, true);
+
+            //通知正在走这条流程的用户,流程失败,因为流程改变
+
+            return new Result(true, ResultEnum.SUCCESS.getValue(), "删除" + ResultEnum.SUCCESS.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResultException(ResultEnum.ACT_PROCESS_DEPLOY_DEL_FAIL.getValue(), ResultEnum.ACT_PROCESS_DEPLOY_DEL_FAIL.getMessage());
+        }
+
     }
 
     /**

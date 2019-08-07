@@ -4,8 +4,8 @@
     <title>后台主页</title>
 </head>
 <link th:href="@{/css/login.css}" rel="stylesheet" type="text/css" />
-<body class="layui-layout-body">
-<div class="layui-layout layui-layout-admin">
+<body class="layui-layout-body kit-theme">
+<div class="layui-layout layui-layout-admin kit-layout-admin">
     <!-- 导航栏 -->
     <div class="layui-header">
         <a href="#" class="layui-logo">
@@ -16,7 +16,7 @@
             <i class="layui-icon layui-icon-shrink-right"></i>
             <i class="layui-icon layui-icon-spread-left"></i>
         </a>
-        <ul class="layui-nav layui-layout-right">
+        <ul class="layui-nav layui-layout-right kit-nav">
             <!--<li class="layui-nav-item timo-search">
               <input class="timo-search-input" type="search" placeholder="搜索">
               <button class="timo-search-button"><i class="fa fa-search"></i></button>
@@ -37,6 +37,21 @@
                 <a class="timo-screen-full" href="#">
                     <i class="fa layui-icon layui-icon-screen-full"></i>
                 </a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <i class="layui-icon">&#xe63f;</i> 皮肤</a>
+                </a>
+                <div class="layui-nav-child skin">
+                    <div class="timo-nav-child-box skinChild">
+                        <div><a href="javascript:;" data-skin="default" style="color:#393D49;"><i class="layui-icon">&#xe658;</i> 默认</a></div>
+                        <div><a href="javascript:;" data-skin="orange" style="color:#ff6700;"><i class="layui-icon">&#xe658;</i> 橘子橙</a></div>
+                        <div><a href="javascript:;" data-skin="green" style="color:#00a65a;"><i class="layui-icon">&#xe658;</i> 春天绿</a></div>
+                        <div><a href="javascript:;" data-skin="pink" style="color:#FA6086;"><i class="layui-icon">&#xe658;</i> 少女粉</a></div>
+                        <div><a href="javascript:;" data-skin="blue.1" style="color:#00c0ef;"><i class="layui-icon">&#xe658;</i> 天空蓝</a></div>
+                        <div><a href="javascript:;" data-skin="red" style="color:#dd4b39;"><i class="layui-icon">&#xe658;</i> 枫叶红</a></div>
+                    </div>
+                </div>
             </li>
             <li class="layui-nav-item timo-nav-user">
                 <a class="timo-header-nickname" th:text="${user?.nickName}">TIMO</a>

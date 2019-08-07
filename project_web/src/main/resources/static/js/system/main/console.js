@@ -57,7 +57,7 @@ layui.use(['layer', 'carousel', 'element', 'table'], function() {
             type: 'line',
             name: '登陆日志',
             smooth: !0,
-            itemStyle: {normal: {areaStyle: {type: "default"}}},
+            itemStyle: {normal: {areaStyle: {type: "static.css.themes.default"}}},
             data: []
         }]
 

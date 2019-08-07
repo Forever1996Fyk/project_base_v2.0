@@ -501,4 +501,13 @@ public class PageController {
         return "system/workflow/model/createModel";
     }
 
+    /**
+     * 工作流 流程管理列表
+     * @return
+     */
+    @GetMapping("/activiti/processList")
+    public String activitiProcessList() {
+        return "system/workflow/process/processList";
+    }
+
 }
