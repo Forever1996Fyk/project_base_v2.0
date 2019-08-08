@@ -145,28 +145,9 @@ public class ActivitiServiceImpl implements ActivitiService {
     }
 
     @Override
-    public void completeTask(String taskId, String userId, String result) {
-        //使用这种方式，如果代办人已经有其他权限时，会抛出异常
-        try {
-            taskService.claim(taskId, userId);
-        } catch (Exception e) {
-            throw new ResultException(ResultEnum.TASK_COMPLETE_FAIL.getValue(), ResultEnum.TASK_COMPLETE_FAIL.getMessage());
-        }
-
-        //获取任务
-        Task task = taskService.createTaskQuery()
-                .taskId(taskId)
-                .singleResult();
-
-        //获取流程实例
-        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
-                .processInstanceId(task.getProcessInstanceId())
-                .singleResult();
-
-        //业务处理
-
+    public void completeTask(String taskId, Map<String, Object> variables) {
         //完成任务
-        taskService.complete(taskId);
+        taskService.complete(taskId, variables);
     }
 
     @Override

@@ -163,6 +163,18 @@ layui.use(['element', 'form', 'layer', 'upload', 'table', 'layedit'], function (
         }
     };
 
+    $.fn.MessagerACT = function (result) {
+        if (result.code === 200) {
+            layer.msg(result.message);
+            setTimeout(function () {
+                parent.location.reload();
+                return;
+            }, 2000);
+        } else {
+            layer.msg(result.message);
+        }
+    };
+
     /*
     表单转为json数据
      */
@@ -301,16 +313,20 @@ layui.use(['element', 'form', 'layer', 'upload', 'table', 'layedit'], function (
 
     });
 
-    /* 工作流重新提交 */
-    $(document).on("click", ".ajax-submit-return", function () {
+    /* 工作流重新提交, 取消申请 */
+    $(document).on("click", ".ajax-submit-return,.ajax-cancelApply, .ajax-pass, .ajax-not-pass", function (e) {
+        e.preventDefault();
         var url = $(this).attr("data-url");
         var taskId = $(this).attr("taskId");
+        var flag = $(this).attr("flag");
         var type = $(this).attr("type");//重新提交流程类型
         var form = $(this).parents("form");
         var data = serializeObject(form.serializeArray());
 
-        if (taskId != undefined && type != undefined) {
-            url = url + '/' + taskId + '/' + type + '/true';
+        if (type != undefined) {
+            url = url + '/' + taskId + '/' + type + '/' + flag;
+        } else {
+            url = url + '/' + taskId + '/' + flag;
         }
 
         $.ajax({
@@ -319,7 +335,8 @@ layui.use(['element', 'form', 'layer', 'upload', 'table', 'layedit'], function (
             contentType: 'application/json',
             data: JSON.stringify(data),
             success: function (res) {
-                $.fn.Messager(res);
+                console.log(res);
+                $.fn.MessagerACT(res);
             }
         })
 

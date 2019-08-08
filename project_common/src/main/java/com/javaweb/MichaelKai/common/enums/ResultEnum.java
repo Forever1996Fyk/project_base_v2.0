@@ -13,6 +13,9 @@ public enum ResultEnum {
     SUCCESS(200, "成功"),
     ERROR(400, "错误"),
 
+    APPROVED(200, "通过"),
+    NOT_APPROVED(200, "不通过"),
+
     /**
      * 工作流问题
      */
@@ -27,9 +30,7 @@ public enum ResultEnum {
     ACT_SYNCHRONIZE_DATA_FAIL(500, "同步数据失败"),
     ACT_PROCESS_DEPLOY_DEL_FAIL(500, "流程定义删除失败"),
 
-    ACT_PROCESS__RETURN_SUBMIT_TYPE_ERROR(500, "流程重新提交类型错误"),
-    ACT_PROCESS__RETURN_SUBMIT_ID_ERROR(500, "流程重新提交id错误"),
-    ACT_PROCESS__RETURN_SUBMIT_TASK_ID_ERROR(500, "流程重新提交任务id错误"),
+    ACT_PROCESS__RETURN_SUBMIT_ERROR(500, "流程重新提交错误"),
 
     /**
      * 账户问题

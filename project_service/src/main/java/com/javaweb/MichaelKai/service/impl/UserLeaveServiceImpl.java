@@ -42,7 +42,7 @@ public class UserLeaveServiceImpl implements UserLeaveService {
     public UserLeave addUserLeave(UserLeave userLeave) {
         userLeave.setId(AppUtil.randomId());
         userLeave.setStatus(StatusEnum.Normal.getValue());
-        userLeave.setUrlPath("/leave/readOnlyLeave/" + userLeave.getId());
+        userLeave.setUrlPath("/system/leave/readOnlyLeave/" + userLeave.getId());
 
         //根据processDefinitionKey启动流程实例
         Map<String, Object> map = Maps.newHashMap();

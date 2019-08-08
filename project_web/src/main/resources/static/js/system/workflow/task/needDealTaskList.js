@@ -66,9 +66,9 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function () {
             layer.open({
                 type: 2
                 , title: '办理'
-                , content: ctxPath + '/system/activiti/needDealTaskHandle/' + data.id
+                , content: ctxPath + '/system/activiti/handleTask/' + data.id
                 , maxmin: true
-                , area: ['500px', '450px']
+                , area: ['700px', '500px']
             })
         },
 

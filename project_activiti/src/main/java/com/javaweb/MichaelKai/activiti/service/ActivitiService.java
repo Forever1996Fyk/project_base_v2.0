@@ -64,10 +64,9 @@ public interface ActivitiService {
     /**
      * 任务审批
      * @param taskId 任务id
-     * @param userId 用户id
-     * @param result 结果(通过/拒绝)
+     * @param variables 变量
      */
-    void completeTask(String taskId, String userId, String result);
+    void completeTask(String taskId, Map<String, Object> variables);
 
     /**
      * 更改业务流程状态

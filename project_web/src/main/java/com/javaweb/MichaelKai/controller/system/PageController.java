@@ -537,7 +537,7 @@ public class PageController {
     }
 
     /**
-     * 请假流程申请
+     * 请假流程申请列表
      * @return
      */
     @GetMapping("/activiti/myProcessApplyList")
@@ -564,6 +564,7 @@ public class PageController {
         BaseTask baseTask = (BaseTask) variables.get("leaveTask");
         Map<String, Object> userLeaveById = userLeaveService.getUserLeaveById(baseTask.getId());
         model.addAttribute("leave", userLeaveById);
+        model.addAttribute("taskId", taskId);
         return "system/workflow/leave/needDealLeaveTask";
     }
 
@@ -583,5 +584,39 @@ public class PageController {
     @GetMapping("/activiti/needDealTaskDetail")
     public String needDealTaskDetail() {
         return "system/workflow/task/needDealTaskDetail";
+    }
+
+    /**
+     * @Description 办理任务
+     *
+     * @Author YuKai Fan
+     * @Date 21:15 2019/8/8
+     * @Param
+     * @return
+     **/
+    @GetMapping("/activiti/handleTask/{id}")
+    public String handleTask(@PathVariable("id") String taskId, Model model) {
+        Map<String, Object> variables = taskService.getVariables(taskId);
+        BaseTask baseTask = (BaseTask) variables.get("leaveTask");
+
+        model.addAttribute("urlPath", baseTask.getUrlPath());
+        model.addAttribute("taskId", taskId);
+        return "system/workflow/task/handleTask";
+    }
+
+    /**
+     * @Description 请假申请信息 只读
+     *
+     * @Author YuKai Fan
+     * @Date 21:22 2019/8/8
+     * @Param
+     * @return
+     **/
+    @GetMapping("/leave/readOnlyLeave/{leaveId}")
+    public String readOnlyLeave(@PathVariable("leaveId") String leaveId, Model model) {
+        Map<String, Object> userLeaveById = userLeaveService.getUserLeaveById(leaveId);
+
+        model.addAttribute("leave", userLeaveById);
+        return "/system/workflow/leave/readOnlyLeave";
     }
 }
