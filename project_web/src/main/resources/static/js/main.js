@@ -301,6 +301,43 @@ layui.use(['element', 'form', 'layer', 'upload', 'table', 'layedit'], function (
 
     });
 
+    /* 工作流重新提交 */
+    $(document).on("click", ".ajax-submit-return", function () {
+        var url = $(this).attr("data-url");
+        var taskId = $(this).attr("taskId");
+        var type = $(this).attr("type");//重新提交流程类型
+        var form = $(this).parents("form");
+        var data = serializeObject(form.serializeArray());
+
+        if (taskId != undefined && type != undefined) {
+            url = url + '/' + taskId + '/' + type + '/true';
+        }
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (res) {
+                $.fn.Messager(res);
+            }
+        })
+
+
+        /*$.ajax({
+            url: url,
+            type: type,
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success:function (res) {
+                if (res.data === null) {
+                    res.data = 'submit[refresh]';
+                }
+                $.fn.Messager(res);
+            }
+        });*/
+    });
+
     /* 添加/修改弹出层 */
     $(document).on("click", ".open-popup, .open-popup-param", function () {
         var title = $(this).data("title");

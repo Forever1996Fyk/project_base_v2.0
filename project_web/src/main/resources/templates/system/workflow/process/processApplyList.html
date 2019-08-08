@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:mo="https://gitee.com/aun/Timo">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+  <link rel="stylesheet" th:href="@{/css/template.css}" type="text/css">
+</head>
+<body class="timo-layout-page">
+<div class="layui-fluid layadmin-maillist-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md2">
+      <div class="layadmin-contact-box" >
+          <a class="open-popup" data-title="申请" th:attr="data-url=@{/system/activiti/leaveApply}" data-size="480,400">
+            <div class="layadmin-text-center">
+              <img src="/images/user-picture-default.jpg">
+              <div class="layadmin-maillist-img layadmin-font-blod">请假流程</div>
+            </div>
+          </a>
+      </div>
+    </div>
+
+    <div class="layui-col-md2">
+      <div class="layadmin-contact-box" >
+        <a href="javascript:;">
+          <div class="layadmin-text-center">
+            <img src="/images/user-picture-default.jpg">
+            <div class="layadmin-maillist-img layadmin-font-blod">请假流程</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 公共部分导入 -->
+<script th:replace="/common/template :: script"></script>
+
+</body>
+</html>

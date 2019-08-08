@@ -10,9 +10,6 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.subject.Subject;
 
-import java.util.Map;
-import java.util.Set;
-
 /**
  * @program: project_parent
  * @description: shiro工具类

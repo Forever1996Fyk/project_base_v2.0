@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:base="https://github.com/Forever1996Fyk/project_base_v2.0">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+    <link rel="stylesheet" th:href="@{/lib/zTree_v3/css/zTreeStyle/zTreeStyle.css}" type="text/css">
+</head>
+<body>
+<div class="layui-form timo-compile">
+    <form th:action="@{/api/activiti/userLeave}">
+        <input type="hidden" name="id" th:if="${leave}" th:value="${leave.id}"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">开始时间</label>
+            <div class="layui-input-inline">
+                <input class="layui-input" id="startTime" placeholder="yyyy-MM-dd" name="startTime"  th:value="${leave.startTime}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">结束时间</label>
+            <div class="layui-input-inline">
+                <input class="layui-input" id="endTime" placeholder="yyyy-MM-dd" name="endTime" th:value="${leave.endTime}">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">请假原因</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入请假原因" class="layui-textarea" name="reason">[[${leave?.reason}]]</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item timo-finally">
+            <button class="layui-btn layui-btn-normal ajax-submit-return" th:attr="data-url=@{/api/activiti/completeTaskSL}, taskId=${taskId}, type=leave"><i class="fa fa-check-circle"></i>重新提交</button>
+            <button class="layui-btn ajax-cancelApply"><i class="fa fa-check-circle"></i>取消申请</button>
+            <button class="layui-btn btn-secondary close-popup"><i class="fa fa-times-circle"></i> 关闭</button>
+        </div>
+    </form>
+</div>
+<script th:replace="/common/template :: script"></script>
+<script type="text/javascript" th:src="@{/js/system/workflow/userLeave/userLeaveEdit.js}"></script>
+</body>
+</html>

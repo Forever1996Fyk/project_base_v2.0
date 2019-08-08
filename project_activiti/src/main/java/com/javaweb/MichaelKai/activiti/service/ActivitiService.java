@@ -7,6 +7,7 @@ import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.task.Task;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: project_base
@@ -44,7 +45,14 @@ public interface ActivitiService {
      * @param processDefinitionKey
      * @return
      */
-    PageInfo<Task> getTaskByUserId(int page, int limit, String userId, String processDefinitionKey);
+    PageInfo getTaskByUserId(int page, int limit, String userId, String processDefinitionKey);
+
+    /**
+     * 根据taskId.获取流程变量
+     * @param taskId
+     * @return
+     */
+    Map<String, Object> getVariables(String taskId);
 
     /**
      * 根据taskId获取任务信息

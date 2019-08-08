@@ -20,6 +20,7 @@
         <module>jwt</module>
         <module>quartz</module>
         <module>elasticsearch</module>
+        <module>shiro</module>
     </modules>
 
     <dependencies>

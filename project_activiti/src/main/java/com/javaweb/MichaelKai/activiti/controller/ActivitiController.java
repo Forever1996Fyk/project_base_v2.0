@@ -182,30 +182,35 @@ public class ActivitiController {
      */
     @PostMapping("/deployment")
     public Result deploy(@RequestParam String id) throws IOException {
-        Model model = repositoryService.getModel(id);
-        byte[] bytes = repositoryService.getModelEditorSource(model.getId());
+        try {
+            Model model = repositoryService.getModel(id);
+            byte[] bytes = repositoryService.getModelEditorSource(model.getId());
 
-        if (bytes == null) {
-            return new Result(false, ResultEnum.MODEL_DATA_ISNULL.getValue(), ResultEnum.MODEL_DATA_ISNULL.getMessage());
+            if (bytes == null) {
+                return new Result(false, ResultEnum.MODEL_DATA_ISNULL.getValue(), ResultEnum.MODEL_DATA_ISNULL.getMessage());
+            }
+            JsonNode jsonNode = objectMapper.readTree(bytes);
+
+            BpmnModel bpmnModel = new BpmnJsonConverter().convertToBpmnModel(jsonNode);
+            if (bpmnModel.getProcesses().size() == 0) {
+                return new Result(false, ResultEnum.MODEL_DATA_ERROR.getValue(), ResultEnum.MODEL_DATA_ERROR.getMessage());
+            }
+
+            byte[] bpmnBytes = new BpmnXMLConverter().convertToXML(bpmnModel);
+
+            //发布流程
+            String processName = model.getName() + ".bpmn20.xml";
+            Deployment deployment = repositoryService.createDeployment()
+                    .name(model.getName())
+                    .addString(processName, new String(bpmnBytes, "UTF-8"))
+                    .deploy();
+            model.setDeploymentId(deployment.getId());
+            repositoryService.saveModel(model);
+            return new Result(true, ResultEnum.SUCCESS.getValue(), "流程发布" + ResultEnum.SUCCESS.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ResultException(ResultEnum.ERROR.getValue(), e.getMessage());
         }
-        JsonNode jsonNode = objectMapper.readTree(bytes);
-
-        BpmnModel bpmnModel = new BpmnJsonConverter().convertToBpmnModel(jsonNode);
-        if (bpmnModel.getProcesses().size() == 0) {
-            return new Result(false, ResultEnum.MODEL_DATA_ERROR.getValue(), ResultEnum.MODEL_DATA_ERROR.getMessage());
-        }
-
-        byte[] bpmnBytes = new BpmnXMLConverter().convertToXML(bpmnModel);
-
-        //发布流程
-        String processName = model.getName() + ".bpmn20.xml";
-        Deployment deployment = repositoryService.createDeployment()
-                .name(model.getName())
-                .addString(processName, new String(bpmnBytes, "UTF-8"))
-                .deploy();
-        model.setDeploymentId(deployment.getId());
-        repositoryService.saveModel(model);
-        return new Result(true, ResultEnum.SUCCESS.getValue(), "流程发布" + ResultEnum.SUCCESS.getMessage());
     }
 
     /**

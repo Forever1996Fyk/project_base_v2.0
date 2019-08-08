@@ -2,9 +2,11 @@ package com.javaweb.MichaelKai.activiti.service.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import com.javaweb.MichaelKai.pojo.BaseTask;
 import com.javaweb.MichaelKai.activiti.service.ActivitiService;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.exception.ResultException;
+import com.javaweb.MichaelKai.service.UserService;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
@@ -17,7 +19,6 @@ import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
-import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -35,6 +36,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: project_base
@@ -55,6 +57,8 @@ public class ActivitiServiceImpl implements ActivitiService {
     private RepositoryService repositoryService;
     @Autowired
     private ProcessEngineConfigurationImpl processEngineConfiguration;
+    @Autowired
+    private UserService userService;
 
     @Override
     public void startProcess(String deploymentId, String businessKey) {
@@ -87,13 +91,49 @@ public class ActivitiServiceImpl implements ActivitiService {
     }
 
     @Override
-    public PageInfo<Task> getTaskByUserId(int page, int limit, String userId, String processDefinitionKey) {
+    public PageInfo getTaskByUserId(int page, int limit, String userId, String processDefinitionKey) {
         List<Task> tasks = taskService.createTaskQuery()
-                .processDefinitionKey(processDefinitionKey)
                 .taskCandidateOrAssigned(userId).listPage(page - 1, limit);
 
-        PageInfo<Task> list = new PageInfo<>(tasks);
-        return list;
+        List<com.javaweb.MichaelKai.activiti.pojo.Task> list = Lists.newArrayList();
+
+        for (Task task : tasks) {
+            Map<String, Object> variables = taskService.getVariables(task.getId());
+            BaseTask userLeave = (BaseTask) variables.get("leaveTask");
+            com.javaweb.MichaelKai.activiti.pojo.Task taskEntity = new com.javaweb.MichaelKai.activiti.pojo.Task(task);
+            taskEntity.setReason(userLeave.getReason());
+            taskEntity.setUrlPath(userLeave.getUrlPath());
+
+            Map<String, Object> userById = userService.getUserById(userLeave.getUserId());
+            taskEntity.setUserName(userById.get("userName").toString());
+
+            //判断当前办理人是否是自己
+            if (userId.equals(userLeave.getUserId())) {
+                if (variables.containsKey("flag") && !StringUtils.isEmpty(variables.get("flag"))) {
+                    //判断流程是否通过
+                    if (!(boolean) variables.get("flag")) {//如果flag为false，则表示不通过,对应的前端操作不相同
+                        taskEntity.setFlag(true);
+                    } else {
+                        taskEntity.setFlag(false);
+                    }
+                } else {
+                    taskEntity.setFlag(true);
+                }
+
+            } else {//如果不是自己则flag为false
+                taskEntity.setFlag(false);
+            }
+
+            list.add(taskEntity);
+        }
+
+        PageInfo pageList = new PageInfo(list);
+        return pageList;
+    }
+
+    @Override
+    public Map<String, Object> getVariables(String taskId) {
+        return taskService.getVariables(taskId);
     }
 
     @Override

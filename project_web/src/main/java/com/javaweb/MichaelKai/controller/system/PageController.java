@@ -4,12 +4,14 @@ import com.javaweb.MichaelKai.common.constants.Constant;
 import com.javaweb.MichaelKai.common.utils.DateUtil;
 import com.javaweb.MichaelKai.common.utils.HttpServletUtil;
 import com.javaweb.MichaelKai.common.utils.SpringContextUtil;
+import com.javaweb.MichaelKai.pojo.BaseTask;
 import com.javaweb.MichaelKai.pojo.Notice;
 import com.javaweb.MichaelKai.pojo.NoticeUser;
 import com.javaweb.MichaelKai.pojo.User;
 import com.javaweb.MichaelKai.quartz.service.ScheduleJobService;
 import com.javaweb.MichaelKai.service.*;
 import com.javaweb.MichaelKai.shiro.ShiroKit;
+import org.activiti.engine.TaskService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -48,6 +51,10 @@ public class PageController {
     private NoticeService noticeService;
     @Autowired
     private ScheduleJobService scheduleJobService;
+    @Autowired
+    private TaskService taskService;
+    @Autowired
+    private UserLeaveService userLeaveService;
 
     /**
      * 跳转到注册页面
@@ -510,4 +517,71 @@ public class PageController {
         return "system/workflow/process/processList";
     }
 
+
+    /**
+     * 工作流 流程申请列表
+     * @return
+     */
+    @GetMapping("/activiti/processApplyList")
+    public String activitiProcessApply() {
+        return "system/workflow/process/processApplyList";
+    }
+
+    /**
+     * 请假流程申请
+     * @return
+     */
+    @GetMapping("/activiti/leaveApply")
+    public String leaveApply() {
+        return "system/workflow/leave/leaveApply";
+    }
+
+    /**
+     * 请假流程申请
+     * @return
+     */
+    @GetMapping("/activiti/myProcessApplyList")
+    public String myProcessApply() {
+        return "system/workflow/leave/userLeave";
+    }
+
+    /**
+     * 待办任务列表
+     * @return
+     */
+    @GetMapping("/activiti/needDealTaskList")
+    public String needDealTaskList() {
+        return "system/workflow/task/needDealTaskList";
+    }
+
+    /**
+     * 待办任务编辑
+     * @return
+     */
+    @GetMapping("/activiti/needDealTaskEdit/{taskId}")
+    public String needDealTaskEdit(@PathVariable("taskId") String taskId, Model model) {
+        Map<String, Object> variables = taskService.getVariables(taskId);
+        BaseTask baseTask = (BaseTask) variables.get("leaveTask");
+        Map<String, Object> userLeaveById = userLeaveService.getUserLeaveById(baseTask.getId());
+        model.addAttribute("leave", userLeaveById);
+        return "system/workflow/leave/needDealLeaveTask";
+    }
+
+    /**
+     * 待办任务办理
+     * @return
+     */
+    @GetMapping("/activiti/needDealTaskHandle")
+    public String needDealTaskHandle() {
+        return "system/workflow/task/needDealTaskHandle";
+    }
+
+    /**
+     * 待办任务详情
+     * @return
+     */
+    @GetMapping("/activiti/needDealTaskDetail")
+    public String needDealTaskDetail() {
+        return "system/workflow/task/needDealTaskDetail";
+    }
 }
