@@ -554,6 +554,7 @@ public class PageController {
         return "system/workflow/task/needDealTaskList";
     }
 
+
     /**
      * 待办任务编辑
      * @return
@@ -584,4 +585,33 @@ public class PageController {
     public String needDealTaskDetail() {
         return "system/workflow/task/needDealTaskDetail";
     }
+
+    /**
+     * 已办任务列表
+     * @return
+     */
+    @GetMapping("/activiti/alreadyTaskList")
+    public String alreadyTaskList() {
+        return "system/workflow/task/alreadyTaskList";
+    }
+
+    /**
+     * 运行中的任务列表
+     * @return
+     */
+    @GetMapping("/activiti/runningTaskList")
+    public String runningTaskList() {
+        return "system/workflow/task/runningTaskList";
+    }
+
+    /**
+     * 已结束的任务列表
+     * @return
+     */
+    @GetMapping("/activiti/finishTaskList")
+    public String finishTaskList() {
+        return "system/workflow/task/finishTaskList";
+    }
+
+
 }

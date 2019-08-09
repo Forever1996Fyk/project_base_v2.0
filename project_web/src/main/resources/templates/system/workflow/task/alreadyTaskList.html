@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:base="https://github.com/Forever1996Fyk/project_base_v2.0">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+</head>
+<body class="timo-layout-page">
+<div class="layui-card">
+    <div class="layui-card-header timo-card-header">
+        <span><i class="fa fa-bars"></i>我的已办任务</span>
+        <i class="layui-icon layui-icon-refresh refresh-btn"></i>
+        <a th:href="@{/system/user/export}"><i class="fa fa-download"></i></a>
+    </div>
+    <div class="layui-card-body">
+        <div class="layui-row timo-card-screen put-row">
+            <div class="pull-left layui-form-pane search-box">
+                <form id="frmSearch">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">搜索条件</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="userName" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <!-- 这里使用a标签，因为在form标签中按钮会直接触发action,导致请求两次接口 -->
+                        <a class="layui-btn" data-type="search">
+                            <i class="fa fa-search"></i>
+                        </a>
+                    </div>
+                </form>
+            </div>
+            <!--<div class="pull-right screen-btn-group">
+                <div class="btn-group-right">
+                    <button class="layui-btn open-popup" data-title="添加" th:attr="data-url=@{/system/userLeave/add}"  data-size="auto">
+                        <i class="fa fa-plus"></i> 添加</button>
+                    <div class="btn-group">
+                        <button class="layui-btn">操作<span class="caret"></span></button>
+                        <dl class="layui-nav-child layui-anim layui-anim-upbit">
+                            <dd><a class="ajax-status" th:href="@{/api/userLeaves/}">删除</a></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>-->
+        </div>
+        <div class="timo-table-wrap">
+            <table class="layui-table timo-table" id="alreadyTaskListTable" lay-filter="tblist">
+            </table>
+        </div>
+    </div>
+</div>
+<!-- 公共部分导入 -->
+<script th:replace="/common/template :: script"></script>
+<script type="text/javascript" th:src="@{/js/system/workflow/task/alreadyTaskList.js}"></script>
+
+</body>
+</html>

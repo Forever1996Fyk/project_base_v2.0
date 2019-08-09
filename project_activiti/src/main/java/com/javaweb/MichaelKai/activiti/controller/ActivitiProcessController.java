@@ -2,10 +2,8 @@ package com.javaweb.MichaelKai.activiti.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
-import com.javaweb.MichaelKai.activiti.service.ActivitiService;
+import com.javaweb.MichaelKai.activiti.service.ActivitiProcessService;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
-import com.javaweb.MichaelKai.common.exception.ResultException;
-import com.javaweb.MichaelKai.common.utils.AppUtil;
 import com.javaweb.MichaelKai.common.utils.MapUtil;
 import com.javaweb.MichaelKai.common.vo.PageResult;
 import com.javaweb.MichaelKai.common.vo.Result;
@@ -13,7 +11,6 @@ import com.javaweb.MichaelKai.pojo.User;
 import com.javaweb.MichaelKai.pojo.UserLeave;
 import com.javaweb.MichaelKai.service.UserLeaveService;
 import com.javaweb.MichaelKai.shiro.ShiroKit;
-import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +29,7 @@ import java.util.Map;
 public class ActivitiProcessController {
 
     @Autowired
-    private ActivitiService activitiService;
+    private ActivitiProcessService activitiProcessService;
     @Autowired
     private UserLeaveService userLeaveService;
 
@@ -46,7 +43,7 @@ public class ActivitiProcessController {
      **/
     @PostMapping("/startProcess")
     public Result startProcess(@RequestParam String deploymentId) {
-        activitiService.startProcess(deploymentId);
+        activitiProcessService.startProcess(deploymentId);
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage());
     }
 
@@ -64,7 +61,7 @@ public class ActivitiProcessController {
                                 @RequestParam Map<String, Object> map) {
 
         User user = ShiroKit.getUser();
-        PageInfo pageList = activitiService.getTaskByUserId(page, limit,
+        PageInfo pageList = activitiProcessService.getTaskByUserId(page, limit,
                 user.getId(), null);
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
     }
@@ -98,14 +95,50 @@ public class ActivitiProcessController {
         }
 
         //受理后，任务列表数据减少
-        activitiService.completeTask(map.get("taskId").toString(), map.get("userId").toString(), map.get("result").toString());
+        activitiProcessService.completeTask(map.get("taskId").toString(), map.get("userId").toString(), map.get("result").toString());
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage());
     }
 
     @PostMapping("/queryProHighLighted")
     public Result queryProHighLighted(@RequestParam String processInstanceId) throws Exception {
-        String imageByteArray = activitiService.queryProHighLighted(processInstanceId);
+        String imageByteArray = activitiProcessService.queryProHighLighted(processInstanceId);
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), imageByteArray);
+    }
+
+    /**
+     * 获取正在运行或者已结束的任务
+     * @return
+     */
+    @GetMapping("/getStatusTasks")
+    public Result getStatusTasks(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                 @RequestParam(value = "limit", required = false, defaultValue = "0") int limit,
+                                 @RequestParam Map<String, Object> map) {
+        PageInfo pageList = new PageInfo<>();
+        if (map.containsKey("status") && !StringUtils.isEmpty(map.get("status"))) {
+            if ("running".equals(map.get("status"))) {
+                pageList = activitiProcessService.getUnfinishedTask(page, limit, map);
+            } else {
+                pageList = activitiProcessService.getFinishedTask(page, limit, map);
+            }
+        }
+
+        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
+    }
+
+    /**
+     * 获取当前用户办理的任务
+     * @return
+     */
+    @GetMapping("/getUserHistoryTask")
+    public Result getUserHistoryTask(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                 @RequestParam(value = "limit", required = false, defaultValue = "0") int limit,
+                                 @RequestParam Map<String, Object> map) {
+        User user = ShiroKit.getUser();
+        map.put("userId", user.getId());
+
+        PageInfo pageList = activitiProcessService.getUserHistoryTask(page, limit, map);
+
+        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
     }
 
 }

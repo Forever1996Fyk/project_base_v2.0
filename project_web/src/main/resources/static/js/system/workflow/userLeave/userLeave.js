@@ -26,10 +26,10 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function () {
             , {field: 'userId', title: '用户标识', align: 'center'}
             , {field: 'startTime', title: '开始时间', align: 'center'}
             , {field: 'endTime', title: '结束时间', align: 'center'}
-            , {field: 'leaveReason', title: '请假原因', align: 'center'}
+            , {field: 'reason', title: '请假原因', align: 'center'}
             , {field: 'leaveDays', title: '请假天数', align: 'center'}
             , {field: 'processInstanceId', title: '流程实例id', align: 'center'}
-            , {field: 'urlPath', title: '用户请假路径', align: 'center'}
+            , {field: 'urlPath', title: '只读申请信息url路径', align: 'center'}
             , {
                 field: 'status', title: '状态', align: 'center', templet: function (data) {
                     var result;
