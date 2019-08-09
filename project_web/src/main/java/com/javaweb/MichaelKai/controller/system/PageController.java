@@ -554,6 +554,7 @@ public class PageController {
         return "system/workflow/task/needDealTaskList";
     }
 
+
     /**
      * 待办任务编辑
      * @return
@@ -587,6 +588,7 @@ public class PageController {
     }
 
     /**
+<<<<<<< HEAD
      * @Description 办理任务
      *
      * @Author YuKai Fan
@@ -618,5 +620,52 @@ public class PageController {
 
         model.addAttribute("leave", userLeaveById);
         return "/system/workflow/leave/readOnlyLeave";
+    }
+    /**
+     * 已办任务列表
+     * @return
+     */
+    @GetMapping("/activiti/alreadyTaskList")
+    public String alreadyTaskList() {
+        return "system/workflow/task/alreadyTaskList";
+    }
+
+    /**
+     * 运行中的任务列表
+     * @return
+     */
+    @GetMapping("/activiti/runningTaskList")
+    public String runningTaskList() {
+        return "system/workflow/task/runningTaskList";
+    }
+
+    /**
+     * 已结束的任务列表
+     * @return
+     */
+    @GetMapping("/activiti/finishTaskList")
+    public String finishTaskList() {
+        return "system/workflow/task/finishTaskList";
+    }
+
+    /**
+     * 查看流程图
+     * @return
+     */
+    @GetMapping("/activiti/viewProcImage/{processInstanceId}")
+    public String viewProcImage(@PathVariable("processInstanceId") String processInstanceId, Model model) {
+
+        model.addAttribute("processInstanceId", processInstanceId);
+        return "system/workflow/process/viewProcImage";
+    }
+
+    /**
+     * 查看流程详情
+     * @return
+     */
+    @GetMapping("/activiti/viewProcDetail/{processInstanceId}")
+    public String viewProcDetail(@PathVariable("processInstanceId") String processInstanceId, Model model) {
+        model.addAttribute("processInstanceId", processInstanceId);
+        return "system/workflow/process/viewProcDetail";
     }
 }

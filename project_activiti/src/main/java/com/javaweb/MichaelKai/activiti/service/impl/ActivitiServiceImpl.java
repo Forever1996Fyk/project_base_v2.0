@@ -1,40 +1,41 @@
 package com.javaweb.MichaelKai.activiti.service.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
-import com.javaweb.MichaelKai.pojo.BaseTask;
 import com.javaweb.MichaelKai.activiti.service.ActivitiService;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.exception.ResultException;
+import com.javaweb.MichaelKai.service.RoleService;
 import com.javaweb.MichaelKai.service.UserService;
+import com.javaweb.MichaelKai.vo.ActivitiModelVo;
+import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.model.BpmnModel;
-import org.activiti.engine.HistoryService;
+import org.activiti.editor.constants.ModelDataJsonConstants;
+import org.activiti.editor.language.json.converter.BpmnJsonConverter;
+import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.DelegateExecution;
-import org.activiti.engine.history.HistoricActivityInstance;
-import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
-import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
-import org.activiti.engine.impl.pvm.PvmTransition;
-import org.activiti.engine.impl.pvm.process.ActivityImpl;
+import org.activiti.engine.identity.Group;
+import org.activiti.engine.identity.User;
+import org.activiti.engine.impl.persistence.entity.GroupEntity;
+import org.activiti.engine.impl.persistence.entity.UserEntity;
+import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.repository.Model;
 import org.activiti.engine.repository.ProcessDefinition;
-import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.Task;
-import org.activiti.image.ProcessDiagramGenerator;
+import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import sun.misc.BASE64Encoder;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -48,224 +49,208 @@ import java.util.Map;
 @Transactional
 public class ActivitiServiceImpl implements ActivitiService {
     @Autowired
-    private RuntimeService runtimeService;
-    @Autowired
-    private TaskService taskService;
-    @Autowired
-    private HistoryService historyService;
-    @Autowired
     private RepositoryService repositoryService;
     @Autowired
-    private ProcessEngineConfigurationImpl processEngineConfiguration;
+    private IdentityService identityService;
+    @Autowired
+    private ObjectMapper objectMapper;
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private TaskService taskService;
 
     @Override
-    public void startProcess(String deploymentId, String businessKey) {
-        ProcessDefinition processDefinition = getProcessDefinition(deploymentId);
-        runtimeService.startProcessInstanceByKey(processDefinition.getKey(), businessKey);
-    }
-
-    @Override
-    public void startProcess(String deploymentId) {
-        ProcessDefinition processDefinition = getProcessDefinition(deploymentId);
-        runtimeService.startProcessInstanceByKey(processDefinition.getKey());
-    }
-
-    private ProcessDefinition getProcessDefinition(String deploymentId) {
-        if (StringUtils.isEmpty(deploymentId)) {
-            throw new ResultException(ResultEnum.DEPLOYMENT_ID_ISNULL.getValue(), ResultEnum.DEPLOYMENT_ID_ISNULL.getMessage());
-        }
-        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
-                .deploymentId(deploymentId)
-                .singleResult();
-        return processDefinition;
-    }
-
-    @Override
-    public List<Task> getTaskByUserId(String userId, String processDefinitionKey) {
-        List<Task> list = taskService.createTaskQuery()
-                .processDefinitionKey(processDefinitionKey)
-                .taskCandidateOrAssigned(userId).list();
-        return list;
-    }
-
-    @Override
-    public PageInfo getTaskByUserId(int page, int limit, String userId, String processDefinitionKey) {
-        List<Task> tasks = taskService.createTaskQuery()
-                .taskCandidateOrAssigned(userId).listPage(page - 1, limit);
-
-        List<com.javaweb.MichaelKai.activiti.pojo.Task> list = Lists.newArrayList();
-
-        for (Task task : tasks) {
-            Map<String, Object> variables = taskService.getVariables(task.getId());
-            BaseTask userLeave = (BaseTask) variables.get("leaveTask");
-            com.javaweb.MichaelKai.activiti.pojo.Task taskEntity = new com.javaweb.MichaelKai.activiti.pojo.Task(task);
-            taskEntity.setReason(userLeave.getReason());
-            taskEntity.setUrlPath(userLeave.getUrlPath());
-
-            Map<String, Object> userById = userService.getUserById(userLeave.getUserId());
-            taskEntity.setUserName(userById.get("userName").toString());
-
-            //判断当前办理人是否是自己
-            if (userId.equals(userLeave.getUserId())) {
-                if (variables.containsKey("flag") && !StringUtils.isEmpty(variables.get("flag"))) {
-                    //判断流程是否通过
-                    if (!(boolean) variables.get("flag")) {//如果flag为false，则表示不通过,对应的前端操作不相同
-                        taskEntity.setFlag(true);
-                    } else {
-                        taskEntity.setFlag(false);
-                    }
-                } else {
-                    taskEntity.setFlag(true);
-                }
-
-            } else {//如果不是自己则flag为false
-                taskEntity.setFlag(false);
-            }
-
-            list.add(taskEntity);
-        }
-
-        PageInfo pageList = new PageInfo(list);
+    public PageInfo<Model> getModels(int page, int limit, Map<String, Object> map) {
+        List<Model> models = repositoryService.createModelQuery()
+                .orderByCreateTime().desc()
+                .listPage(page - 1, limit);
+        PageInfo pageList = new PageInfo<>(models);
         return pageList;
     }
 
     @Override
-    public Map<String, Object> getVariables(String taskId) {
-        return taskService.getVariables(taskId);
-    }
+    public String createNewModel(HttpServletRequest request, HttpServletResponse response, ActivitiModelVo activitiModelVo) {
+        try {
+            //初始化一个空模型
+            Model model = repositoryService.newModel();
 
-    @Override
-    public Task getTaskById(String taskId) {
-        Task task = taskService.createTaskQuery()
-                .taskId(taskId)
-                .singleResult();
-        return task;
-    }
+            //设置节点信息
+            ObjectNode modelNode = objectMapper.createObjectNode();
+            modelNode.put(ModelDataJsonConstants.MODEL_NAME, activitiModelVo.getName());
+            modelNode.put(ModelDataJsonConstants.MODEL_DESCRIPTION, activitiModelVo.getDescription());
+            modelNode.put(ModelDataJsonConstants.MODEL_REVISION, activitiModelVo.getRevision());
 
-    @Override
-    public void completeTask(String taskId, Map<String, Object> variables) {
-        //完成任务
-        taskService.complete(taskId, variables);
-    }
+            model.setName(activitiModelVo.getName());
+            model.setKey(activitiModelVo.getKey());
+            model.setMetaInfo(modelNode.toString());
 
-    @Override
-    public void updateBizStatus(DelegateExecution execution, String status) {
-        String processBusinessKey = execution.getProcessBusinessKey();
-        //根据key处理业务状态
+            //保存模型
+            repositoryService.saveModel(model);
 
-    }
+            //完善ModelEditorSource
+            String id = model.getId();
+            ObjectNode editorNode = objectMapper.createObjectNode();
+            editorNode.put("id", "canvas");
+            editorNode.put("resourceId", "canvas");
+            ObjectNode stencilSetNode = objectMapper.createObjectNode();
+            stencilSetNode.put("namespace", "http://b3mn.org/stencilset/bpmn2.0#");
+            editorNode.put("stencilset", stencilSetNode);
+            repositoryService.addModelEditorSource(id, editorNode.toString().getBytes("UTF-8"));
 
-    @Override
-    public List<String> getUsersForSL(DelegateExecution execution) {
-        return null;
-    }
-
-    @Override
-    public List<String> getUsersForSP(DelegateExecution execution) {
-        return null;
-    }
-
-    @Override
-    public void queryProImg(String processInstanceId) throws Exception {
-        HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
-                .processInstanceId(processInstanceId)
-                .singleResult();
-
-        //根据流程定义获取输入流
-        InputStream inputStream = repositoryService.getProcessDiagram(historicProcessInstance.getProcessDefinitionId());
-        BufferedImage bi = ImageIO.read(inputStream);
-        File file = new File("my-process-bpmn20.png");
-        if (!file.exists()) {
-            file.createNewFile();
+            return id;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ResultException(ResultEnum.ERROR.getValue(), "模型创建失败");
         }
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        ImageIO.write(bi, "png", fileOutputStream);
-        fileOutputStream.close();
-        inputStream.close();
     }
 
     @Override
-    public String queryProHighLighted(String processInstanceId) throws Exception {
-        //获取历史流程实例
-        HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
-                .processInstanceId(processInstanceId).singleResult();
-        //获取流程图
-        BpmnModel bpmnModel = repositoryService.getBpmnModel(historicProcessInstance.getProcessDefinitionId());
+    public void delModel(String id) {
+        repositoryService.deleteModel(id);
+    }
 
-        ProcessDiagramGenerator diagramGenerator = processEngineConfiguration.getProcessDiagramGenerator();
-        ProcessDefinitionEntity definitionEntity = (ProcessDefinitionEntity) repositoryService.getProcessDefinition(historicProcessInstance.getProcessDefinitionId());
+    @Override
+    public PageInfo<com.javaweb.MichaelKai.activiti.pojo.ProcessDefinition> getActProcessDeploys(int page, int limit, Map<String, Object> map) {
+        ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
 
-        List<HistoricActivityInstance> highLightedActivitiList = historyService.createHistoricActivityInstanceQuery()
-                .processInstanceId(processInstanceId)
-                .list();
-
-        //高亮环节id集合
-        List<String> highLightedActivitis = Lists.newArrayList();
-
-        //高亮线路id集合
-        List<String> highLightedFlows = getHighLightedFlows(definitionEntity, highLightedActivitiList);
-
-
-        for (HistoricActivityInstance historicActivityInstance : highLightedActivitiList) {
-            String activityId = historicActivityInstance.getActivityId();
-            highLightedActivitis.add(activityId);
+        List<ProcessDefinition> processDefinitions;
+        //根据deploymentId, name查询流程
+        if (map.containsKey("deploymentId") && !StringUtils.isEmpty(map.get("deploymentId"))) {
+            processDefinitionQuery.deploymentId(map.get("deploymentId").toString());
+        }
+        if (map.containsKey("name") && !StringUtils.isEmpty(map.get("name"))) {
+            processDefinitionQuery.processDefinitionNameLike("%" + map.get("name").toString() + "%");
+        }
+        if (map.containsKey("key") && !StringUtils.isEmpty(map.get("key"))) {
+            processDefinitionQuery.processDefinitionKey(map.get("key").toString());
         }
 
-        //配置字体
-        InputStream inputStream = diagramGenerator.generateDiagram(bpmnModel, "png", highLightedActivitis, highLightedFlows,
-                "宋体", "微软雅黑", "黑体", null, 2.0);
-        BufferedImage bi = ImageIO.read(inputStream);
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ImageIO.write(bi, "png", bos);
-        byte[] bytes = bos.toByteArray();//转换成字节
-        BASE64Encoder encoder = new BASE64Encoder();
-        String png_base64 = encoder.encodeBuffer(bytes);//转换成base64串
-        png_base64 = png_base64.replaceAll("\n", "").replaceAll("\r", "");//删除 \r\n
-        bos.close();
-        inputStream.close();
-        return png_base64;
+        processDefinitions = processDefinitionQuery.listPage(page - 1, limit);
+        List<com.javaweb.MichaelKai.activiti.pojo.ProcessDefinition> list = Lists.newArrayList();
+        processDefinitions
+                .forEach(processDefinition -> list.add(new com.javaweb.MichaelKai.activiti.pojo.ProcessDefinition(processDefinition)));
+        PageInfo pageList = new PageInfo<>(list);
 
+        return pageList;
     }
 
     @Override
-    public List<String> getHighLightedFlows(ProcessDefinitionEntity processDefinitionEntity, List<HistoricActivityInstance> historicActivityInstances) {
+    public void deployByModelId(String id) {
+        try {
+            Model model = repositoryService.getModel(id);
+            byte[] bytes = repositoryService.getModelEditorSource(model.getId());
 
-        List<String> highFlows = Lists.newArrayList();//保存高亮的线flowId
-        for (int i = 0; i < historicActivityInstances.size() - 1; i++) {
-            ActivityImpl activity = processDefinitionEntity.findActivity(historicActivityInstances.get(i).getActivityId());
+            if (bytes == null) {
+                throw new ResultException(ResultEnum.MODEL_DATA_ISNULL.getValue(), ResultEnum.MODEL_DATA_ISNULL.getMessage());
+            }
+            JsonNode jsonNode = objectMapper.readTree(bytes);
 
-            List<ActivityImpl> sameStartTimeNodes = Lists.newArrayList();//保存需要开始时间相同的节点
-            ActivityImpl activity1 = processDefinitionEntity.findActivity(historicActivityInstances.get(i + 1).getActivityId());
-
-            //将后面第一个节点放在时间相同节点的集合里
-            sameStartTimeNodes.add(activity1);
-            for (int j = i + 1; j < historicActivityInstances.size() - 1; j++) {
-                //后续第一个节点
-                HistoricActivityInstance historicActivityInstance1 = historicActivityInstances.get(j);
-                //后续第二个节点
-                HistoricActivityInstance historicActivityInstance2 = historicActivityInstances.get(j + 1);
-                if (historicActivityInstance1.getStartTime().equals(historicActivityInstance2.getStartTime())) {
-                    //如果第一个节点和第二个节点开始时间相同保存
-                    ActivityImpl activity2 = processDefinitionEntity.findActivity(historicActivityInstance2.getActivityId());
-                    sameStartTimeNodes.add(activity2);
-                } else {
-                    break;
-                }
+            BpmnModel bpmnModel = new BpmnJsonConverter().convertToBpmnModel(jsonNode);
+            if (bpmnModel.getProcesses().size() == 0) {
+                throw new ResultException(ResultEnum.MODEL_DATA_ERROR.getValue(), ResultEnum.MODEL_DATA_ERROR.getMessage());
             }
 
-            //取出节点的所有出去的线
-            List<PvmTransition> pvmTransitions = activity.getOutgoingTransitions();
-            for (PvmTransition pvmTransition : pvmTransitions) {
-                ActivityImpl pvmActivityImpl = (ActivityImpl) pvmTransition.getDestination();
-                if (sameStartTimeNodes.contains(pvmActivityImpl)) {
-                    highFlows.add(pvmTransition.getId());
-                }
-            }
+            byte[] bpmnBytes = new BpmnXMLConverter().convertToXML(bpmnModel);
 
+            //发布流程
+            String processName = model.getName() + ".bpmn20.xml";
+            Deployment deployment = repositoryService.createDeployment()
+                    .name(model.getName())
+                    .addString(processName, new String(bpmnBytes, "UTF-8"))
+                    .deploy();
+            model.setDeploymentId(deployment.getId());
+            repositoryService.saveModel(model);
 
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ResultException(ResultEnum.ERROR.getValue(), e.getMessage());
         }
-        return highFlows;
+    }
+
+    @Override
+    public void delProcessDeployById(String deploymentId) {
+        try {
+            /*List<ActivityImpl> activityList = actAssigneeService.getActivityList(id);
+            for (ActivityImpl activity : activityList) {
+                String nodeId = activity.getId();
+                if (StringUtils.isEmpty(nodeId) || "start".equals(nodeId) || "end".equals(nodeId)) {
+                    continue;
+                }
+                *//** 接触节点和代办关联 *//**//*
+                actAssigneeService.deleteByNodeId(nodeId);*//*
+            }*/
+            //级联删除,会删除和当前规则相关的所有信息，包括历史
+            repositoryService.deleteDeployment(deploymentId, true);
+
+            //通知正在走这条流程的用户,流程失败,因为流程改变
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResultException(ResultEnum.ACT_PROCESS_DEPLOY_DEL_FAIL.getValue(), ResultEnum.ACT_PROCESS_DEPLOY_DEL_FAIL.getMessage());
+        }
+    }
+
+    @Override
+    public void synchronizeData() {
+        try {
+            //同步用户
+            synchronizeUser();
+
+            //同步角色 组
+            synchronizeGroup();
+
+            //同步用户-用户组关联
+            synchronizeMemberShip();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResultException(ResultEnum.ACT_SYNCHRONIZE_DATA_FAIL.getValue(), ResultEnum.ACT_SYNCHRONIZE_DATA_FAIL.getMessage());
+        }
+    }
+
+    private void synchronizeMemberShip() {
+        List<Map<String, Object>> allUserRoles = userService.getAllUserRoles();
+
+        if (!CollectionUtils.isEmpty(allUserRoles)) {
+            for (Map<String, Object> allUserRole : allUserRoles) {
+                identityService.deleteMembership(allUserRole.get("userId").toString(), allUserRole.get("roleId").toString());
+                identityService.createMembership(allUserRole.get("userId").toString(), allUserRole.get("roleId").toString());
+            }
+        }
+    }
+
+    private void synchronizeGroup() {
+        List<Map<String, Object>> roles = roleService.getRoles(null);
+        Group group;
+        if (!CollectionUtils.isEmpty(roles)) {
+            for (Map<String, Object> role : roles) {
+                group = new GroupEntity();
+                group.setId(role.get("id").toString());
+                group.setName(role.get("roleName").toString());
+                identityService.deleteGroup(role.get("id").toString());
+                identityService.saveGroup(group);
+            }
+        }
+    }
+
+    private void synchronizeUser() {
+        List<Map<String, Object>> users = userService.getUsers(null);
+        User au;
+
+        if (!CollectionUtils.isEmpty(users)) {
+            for (Map<String, Object> user : users) {
+                au = new UserEntity();
+                au.setId(user.get("id").toString());
+                au.setFirstName(user.get("userName").toString());
+                au.setLastName(user.get("nickName").toString());
+                au.setEmail(user.get("email").toString());
+                au.setPassword(user.get("password").toString());
+                identityService.deleteUser(user.get("id").toString());
+                identityService.saveUser(au);
+            }
+        }
+
     }
 }

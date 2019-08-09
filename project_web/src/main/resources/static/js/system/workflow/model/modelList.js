@@ -28,8 +28,8 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function() {
             , {field: 'key', title: 'key', align: 'center'}
             , {field: 'version', title: '版本', align: 'center'}
             , {field: 'deploymentId', title: '部署ID', align: 'center'}
-            , {field: 'createTime', title: '创建时间', align: 'center'}
-            , {field: 'lastUpdateTime', title: '最后更新时间', align: 'center'}
+            , {field: 'createTime', title: '创建时间', align: 'center', templet : "<div>{{layui.util.toDateString(d.ordertime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+            , {field: 'lastUpdateTime', title: '最后更新时间', align: 'center', templet : "<div>{{layui.util.toDateString(d.ordertime, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
             , {title: '操作', toolbar: '#btn', align: 'center'}
         ]]
     });

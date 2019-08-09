@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:base="https://github.com/Forever1996Fyk/project_base_v2.0">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+    <link rel="stylesheet" th:href="@{/lib/zTree_v3/css/zTreeStyle/zTreeStyle.css}" type="text/css">
+</head>
+<body>
+<div class="layui-form timo-compile">
+    <input id="processInstanceId" type="hidden" th:value="${processInstanceId}">
+    <div id="image"></div>
+    <div class="layui-form-item">
+        <image id="showImages1" style="display: none;"></image>
+        <image id="showImages2"></image>
+    </div>
+</div>
+<script th:replace="/common/template :: script"></script>
+<script type="text/javascript" th:src="@{/js/system/workflow/process/viewProcess.js}"></script>
+</body>
+</html>

@@ -323,7 +323,7 @@ layui.use(['element', 'form', 'layer', 'upload', 'table', 'layedit'], function (
         var form = $(this).parents("form");
         var data = serializeObject(form.serializeArray());
 
-        if (type != undefined) {
+        if (type !== undefined) {
             url = url + '/' + taskId + '/' + type + '/' + flag;
         } else {
             url = url + '/' + taskId + '/' + flag;

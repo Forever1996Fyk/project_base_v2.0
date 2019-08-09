@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.javaweb.MichaelKai.activiti.rest.editor.main;
+package org.activiti.image.rest.editor.main;
 
 import org.activiti.engine.ActivitiException;
 import org.apache.commons.io.IOUtils;
