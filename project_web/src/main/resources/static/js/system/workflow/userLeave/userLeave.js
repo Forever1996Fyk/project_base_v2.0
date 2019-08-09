@@ -48,45 +48,35 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function () {
      表格点击事件写法,其中tool('这是表格的lay-filter'),监听点击事件         */
     table.on('tool(tblist)', function (obj) {
         switch (obj.event) {
-            case 'edit':
-                active.edit(obj.data);
+            case 'viewProcImage':
+                active.viewProcImage(obj.data);
                 break;
-            case 'del':
-                active.delete(obj.data);
+            case 'viewProcDetail':
+                active.viewProcDetail(obj.data);
                 break;
         }
     });
 
     var active = {
-        //编辑
-        edit: function (data) {
+        //查看流程图
+        viewProcImage: function (data) {
             layer.open({
                 type: 2
-                , title: '编辑'
-                , content: ctxPath + '/system/userLeave/edit?id=' + data.id
+                , title: '查看流程图'
+                , content: ctxPath + '/system/activiti/viewProcImage/' + data.processInstanceId
                 , maxmin: true
-                , area: ['500px', '450px']
+                , area: ['880px', '450px']
             })
         },
 
-        //删除
-        delete: function (data) {
-            layer.confirm('确定删除吗?', function (index) {
-                $.ajax({
-                    url: ctxPath + '/api/userLeave?id=' + data.id,
-                    type: 'delete',
-                    success: function (res) {
-                        if (res.code === 200) {
-                            layer.msg(res.message);
-                            //刷新表格
-                            tableObject.reload({
-                                page: '{curr:1}'
-                            });
-                        } else {
-                            layer.msg(res.message);
-                        }
-                    }
-                })
+        //查看详情
+        viewProcDetail: function (data) {
+            layer.open({
+                type: 2
+                , title: '查看详情'
+                , content: ctxPath + '/system/activiti/viewProcDetail/' + data.processInstanceId
+                , maxmin: true
+                , area: ['500px', '450px']
             })
         },
         //搜索

@@ -27,9 +27,11 @@ public enum ResultEnum {
     ACT_SYNCHRONIZE_DATA_FAIL(500, "同步数据失败"),
     ACT_PROCESS_DEPLOY_DEL_FAIL(500, "流程定义删除失败"),
 
-    ACT_PROCESS__RETURN_SUBMIT_TYPE_ERROR(500, "流程重新提交类型错误"),
-    ACT_PROCESS__RETURN_SUBMIT_ID_ERROR(500, "流程重新提交id错误"),
-    ACT_PROCESS__RETURN_SUBMIT_TASK_ID_ERROR(500, "流程重新提交任务id错误"),
+    ACT_PROCESS_RETURN_SUBMIT_TYPE_ERROR(500, "流程重新提交类型错误"),
+    ACT_PROCESS_RETURN_SUBMIT_ID_ERROR(500, "流程重新提交id错误"),
+    ACT_PROCESS_RETURN_SUBMIT_TASK_ID_ERROR(500, "流程重新提交任务id错误"),
+
+    ACT_PROCESS_IMAGE_ERROR(500, "获取流程图错误"),
 
     /**
      * 账户问题

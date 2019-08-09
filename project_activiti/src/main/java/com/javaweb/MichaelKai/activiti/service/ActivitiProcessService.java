@@ -6,6 +6,8 @@ import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.task.Task;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -138,4 +140,13 @@ public interface ActivitiProcessService {
      * @return
      */
     PageInfo getUserHistoryTask(int page, int limit, Map<String, Object> map);
+
+    /**
+     * 获取高亮流程图
+     * @param request
+     * @param resp
+     * @param processInstanceId
+     * @return
+     */
+    Map<String,Object> getHighLightProcImage(HttpServletRequest request, HttpServletResponse resp, String processInstanceId);
 }

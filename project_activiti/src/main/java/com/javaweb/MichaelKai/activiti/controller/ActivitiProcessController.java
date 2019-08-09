@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
@@ -139,6 +141,17 @@ public class ActivitiProcessController {
         PageInfo pageList = activitiProcessService.getUserHistoryTask(page, limit, map);
 
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
+    }
+
+    /**
+     * 获取高亮流程图
+     * @param processInstanceId
+     * @return
+     */
+    @GetMapping("/getHighLightProcImage")
+    public Result getHighLightProcImage(HttpServletRequest request, HttpServletResponse resp, @RequestParam String processInstanceId) {
+        Map<String, Object> map = activitiProcessService.getHighLightProcImage(request, resp, processInstanceId);
+        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage());
     }
 
 }

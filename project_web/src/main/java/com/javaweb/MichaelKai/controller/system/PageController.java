@@ -613,5 +613,26 @@ public class PageController {
         return "system/workflow/task/finishTaskList";
     }
 
+    /**
+     * 查看流程图
+     * @return
+     */
+    @GetMapping("/activiti/viewProcImage/{processInstanceId}")
+    public String viewProcImage(@PathVariable("processInstanceId") String processInstanceId, Model model) {
+
+        model.addAttribute("processInstanceId", processInstanceId);
+        return "system/workflow/process/viewProcImage";
+    }
+
+    /**
+     * 查看流程详情
+     * @return
+     */
+    @GetMapping("/activiti/viewProcDetail/{processInstanceId}")
+    public String viewProcDetail(@PathVariable("processInstanceId") String processInstanceId, Model model) {
+        model.addAttribute("processInstanceId", processInstanceId);
+        return "system/workflow/process/viewProcDetail";
+    }
+
 
 }

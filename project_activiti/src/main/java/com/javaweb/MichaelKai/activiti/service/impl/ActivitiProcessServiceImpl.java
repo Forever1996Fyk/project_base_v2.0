@@ -2,11 +2,10 @@ package com.javaweb.MichaelKai.activiti.service.impl;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
-import com.javaweb.MichaelKai.activiti.pojo.HistoricTask;
+import com.google.common.collect.Maps;
 import com.javaweb.MichaelKai.activiti.service.ActivitiProcessService;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.exception.ResultException;
-import com.javaweb.MichaelKai.common.utils.MapUtil;
 import com.javaweb.MichaelKai.pojo.BaseTask;
 import com.javaweb.MichaelKai.service.UserService;
 import org.activiti.bpmn.model.BpmnModel;
@@ -18,7 +17,6 @@ import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
-import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.PvmTransition;
@@ -34,6 +32,8 @@ import org.springframework.util.StringUtils;
 import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -314,5 +314,19 @@ public class ActivitiProcessServiceImpl implements ActivitiProcessService {
         List<HistoricTaskInstance> assignessHisTasks = historyService.createHistoricTaskInstanceQuery().taskAssignee(map.get("userId").toString()).listPage(page - 1, limit);
         PageInfo<HistoricTaskInstance> pageInfo = new PageInfo<>(assignessHisTasks);
         return pageInfo;
+    }
+
+    @Override
+    public Map<String, Object> getHighLightProcImage(HttpServletRequest request, HttpServletResponse resp, String processInstanceId) {
+
+        try {
+            String imageBase64 = queryProHighLighted(processInstanceId);
+            Map<String, Object> map = Maps.newHashMap();
+            map.put("images", imageBase64);
+            return map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResultException(ResultEnum.ACT_PROCESS_IMAGE_ERROR.getValue(), ResultEnum.ACT_PROCESS_IMAGE_ERROR.getMessage());
+        }
     }
 }
