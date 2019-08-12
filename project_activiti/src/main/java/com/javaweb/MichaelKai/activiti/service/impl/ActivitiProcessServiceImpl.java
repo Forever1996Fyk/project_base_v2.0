@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.javaweb.MichaelKai.common.constants.ActivitiConstant;
+import org.activiti.engine.history.*;
 import org.activiti.image.HMProcessDiagramGenerator;
 import com.javaweb.MichaelKai.activiti.service.ActivitiProcessService;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
@@ -14,9 +16,6 @@ import com.javaweb.MichaelKai.service.UserService;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.*;
 import org.activiti.engine.delegate.DelegateExecution;
-import org.activiti.engine.history.HistoricActivityInstance;
-import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.activiti.engine.impl.context.Context;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -274,6 +273,36 @@ public class ActivitiProcessServiceImpl implements ActivitiProcessService {
             e.printStackTrace();
             throw new ResultException(ResultEnum.ACT_PROCESS_IMAGE_ERROR.getValue(), ResultEnum.ACT_PROCESS_IMAGE_ERROR.getMessage());
         }
+    }
+
+    @Override
+    public List<Map<String, Object>> getProcessDetail(String processInstanceId) {
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(processInstanceId).singleResult();
+
+        List<Map<String, Object>> approvalList = Lists.newArrayList();
+        //判断当前流程是否运行中
+        if (processInstance != null) {
+            Task task = taskService.createTaskQuery().processInstanceId(processInstanceId).singleResult();
+            Map<String, Object> variables = taskService.getVariables(task.getId());
+            Object o = variables.get(ActivitiConstant.APPROVAL_MESSAGE);
+            if (o != null) {
+                approvalList = (List<Map<String, Object>>) o;
+            }
+        } else {
+            List<HistoricDetail> list = historyService.createHistoricDetailQuery()
+                    .processInstanceId(processInstanceId).list();
+            HistoricVariableUpdate variable;
+            for (HistoricDetail historicDetail : list) {
+                variable = (HistoricVariableUpdate) historicDetail;
+                String variableName = variable.getVariableName();
+                if (ActivitiConstant.APPROVAL_MESSAGE.equals(variableName)) {
+                    approvalList.clear();
+                    approvalList.addAll((List<Map<String, Object>>) variable.getValue());
+                }
+            }
+        }
+        return approvalList;
     }
 
     /**

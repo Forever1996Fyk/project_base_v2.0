@@ -1,11 +1,11 @@
 /**
  * Created by YuKai Fan on 2019-08-08 10:30:23.
  */
-layui.use(['form', 'layer'], function(){
+layui.use(['form', 'layer', 'table'], function(){
     var layer = layui.layer
         ,form = layui.form
+        ,table = layui.table
         ,countNum = 0;
-
 
     var processInstanceId = $("#processInstanceId").val();
     if (processInstanceId === undefined) {

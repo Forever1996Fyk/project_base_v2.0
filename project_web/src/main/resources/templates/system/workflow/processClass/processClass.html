@@ -9,7 +9,6 @@
         <span><i class="fa fa-bars"></i> 管理</span>
         <i class="layui-icon layui-icon-refresh refresh-btn"></i>
         <a th:href="@{/system/user/export}"><i class="fa fa-download"></i></a>
-        <a th:href="@{/system/activiti/myProcessApplyList}"><i class="fa fa-chevron-left" aria-hidden="true"></i> 返回</a>
     </div>
     <div class="layui-card-body">
         <div class="layui-row timo-card-screen put-row">
@@ -29,24 +28,24 @@
                     </div>
                 </form>
             </div>
-            <!--<div class="pull-right screen-btn-group">
+            <div class="pull-right screen-btn-group">
                 <div class="btn-group-right">
-                    <button class="layui-btn open-popup" data-title="添加" th:attr="data-url=@{/system/userLeave/add}"  data-size="auto">
+                    <button class="layui-btn open-popup" data-title="添加" th:attr="data-url=@{/system/activiti/addProcessClass}"  data-size="auto">
                         <i class="fa fa-plus"></i> 添加</button>
                     <div class="btn-group">
                         <button class="layui-btn">操作<span class="caret"></span></button>
                         <dl class="layui-nav-child layui-anim layui-anim-upbit">
-                            <dd><a class="ajax-status" th:href="@{/api/userLeaves/}">删除</a></dd>
+                            <dd><a class="ajax-status" th:href="@{/api/processClasss/}">删除</a></dd>
                         </dl>
                     </div>
                 </div>
-            </div>-->
+            </div>
         </div>
         <div class="timo-table-wrap">
-            <table class="layui-table timo-table" id="userLeaveListTable" lay-filter="tblist">
+            <table class="layui-table timo-table" id="processClassListTable" lay-filter="tblist">
                 <script type="text/html" id="btn">
-                    <a class="layui-btn layui-btn-xs" lay-event="viewProcImage">查看流程图</a>
-                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="viewProcDetail">查看详情</a>
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
                 </script>
             </table>
         </div>
@@ -54,7 +53,7 @@
 </div>
 <!-- 公共部分导入 -->
 <script th:replace="/common/template :: script"></script>
-<script type="text/javascript" th:src="@{/js/system/workflow/userLeave/userLeave.js}"></script>
+<script type="text/javascript" th:src="@{/js/system/workflow/processClass/processClass.js}"></script>
 
 </body>
 </html>

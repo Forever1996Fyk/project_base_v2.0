@@ -113,16 +113,17 @@ public class ActivitiProcessController {
      **/
     @PostMapping("/completeTaskSL/{taskId}/{flag}")
     public Result completeTaskSL(@PathVariable("taskId") String taskId,
-                               @PathVariable("flag") boolean flag) throws Exception {
+                                 @PathVariable("flag") boolean flag,
+                                 @RequestBody Map<String, Object> map) throws Exception {
         Map<String, Object> variables = activitiProcessService.getVariables(taskId);
 
         User user = ShiroKit.getUser();
 
         //处理当前节点的信息
-        Map<String, Object> map = Maps.newHashMap();
         map.put("createTime", new Date());
         map.put("userId", user.getId());
         map.put("userName", user.getUserName());
+        map.put("flag", flag);
 
         Map<String, Object> form = Maps.newHashMap();
         form.put("flag", flag);
@@ -180,7 +181,7 @@ public class ActivitiProcessController {
     }
 
     /**
-     * @Description 已完成的任务
+     * @Description 运行中的任务，已结束的任务
      *
      * @Author YuKai Fan
      * @Date 0:47 2019/8/10
@@ -201,6 +202,18 @@ public class ActivitiProcessController {
         }
 
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
+    }
+
+    /**
+     * 根据流程实例id获取审批信息
+     * @param processInstanceId
+     * @return
+     */
+    @GetMapping("/getProcessDetail")
+    public Result getProcessDetail(@RequestParam String processInstanceId) {
+        List<Map<String, Object>> list = activitiProcessService.getProcessDetail(processInstanceId);
+
+        return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), list);
     }
 
 }

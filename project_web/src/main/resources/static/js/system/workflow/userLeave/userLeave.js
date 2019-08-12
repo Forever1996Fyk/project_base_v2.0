@@ -76,7 +76,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function () {
                 , title: '查看详情'
                 , content: ctxPath + '/system/activiti/viewProcDetail/' + data.processInstanceId
                 , maxmin: true
-                , area: ['500px', '450px']
+                , area: ['1600px', '400px']
             })
         },
         //搜索

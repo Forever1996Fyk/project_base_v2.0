@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.javaweb.MichaelKai.mapper.ProcessClassMapper">
+    <!-- 新增 -->
+    <insert id="addProcessClass">
+        INSERT INTO tb_process_class(
+        <include refid="processClass_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        VALUES (
+        <include refid="processClass_add_val">
+            <property name="alias" value=""/>
+        </include>
+        )
+    </insert>
+
+    <!-- 批量新增 -->
+    <insert id="addProcessClasss">
+        INSERT INTO tb_process_class(
+        <include refid="processClass_add_key">
+            <property name="alias" value=""/>
+        </include>
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            <include refid="processClass_add_val">
+                <property name="alias" value="item."/>
+            </include>
+            )
+        </foreach>
+    </insert>
+
+    <!-- 修改 -->
+    <update id="editProcessClassById">
+        UPDATE tb_process_class
+        <set>
+            <include refid="processClass_set_if">
+                <property name="alias" value=""/>
+            </include>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 批量修改 -->
+    <update id="editProcessClassByIds">
+        UPDATE tb_process_class
+        <set>
+            <include refid="processClass_set_if">
+                <property name="alias" value=""/>
+            </include>
+        </set>
+        WHERE id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 删除 -->
+    <update id="delProcessClassById">
+            update tb_process_class SET status = 0 WHERE id = #{id}
+        </update>
+
+    <!-- 批量删除 -->
+    <update id="delProcessClassByIds">
+        UPDATE tb_process_class SET status = 0 WHERE id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 真删除 -->
+    <delete id="delProcessClassRealById">
+            DELETE FROM tb_process_class WHERE id = #{id}
+        </delete>
+
+    <!-- 真批量删除 -->
+    <delete id="delProcessClassRealByIds">
+        DELETE FROM tb_process_class WHERE id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 清空 -->
+    <delete id="delProcessClassReals">
+            DELETE FROM tb_process_class
+        </delete>
+
+    <!-- 查询用户管理列表 -->
+    <select id="getProcessClasss" parameterType="Map" resultType="Map">
+        SELECT
+        <include refid="processClass_select_cond"/>
+        FROM tb_process_class a
+        <where>
+            <include refid="processClass_where_if"/>
+            AND a.status in (1, 2)
+        </where>
+        ORDER BY a.status ASC, a.create_time DESC
+    </select>
+
+    <!-- 根据id查询用户 -->
+    <select id="getProcessClassById" resultType="Map">
+        SELECT
+        <include refid="processClass_select_cond_one"/>
+        FROM tb_process_class a
+        WHERE a.status in (1, 2) and a.id = #{id}
+    </select>
+
+
+    <!-- 查询的选择项, 增删字段时调整 -->
+    <sql id="processClass_select_cond">
+            a.id id
+                            
+                                            
+                                    , a.name name
+                                            
+                                    , a.type type
+                                            
+                                    , a.class_icon classIcon
+                                            
+                                    , a.apply_url applyUrl
+                                            
+                                    , a.apply_list_url applyListUrl
+                                            
+                                    , a.upcoming_list_url upcomingListUrl
+                                            
+                                    , a.already_list_url alreadyListUrl
+                                            
+                                    , a.status status
+                                            
+                                    , a.create_user_id createUserId
+                                            
+                                    , a.create_time createTime
+                                            
+                                    , a.update_user_id updateUserId
+                                            
+                                    , a.update_time updateTime
+                                    </sql>
+
+    <!-- (单个)查询的选择项, 增删字段时调整 -->
+    <sql id="processClass_select_cond_one">
+            a.id id
+                                                                            , a.name name
+                                                                , a.type type
+                                                                , a.class_icon classIcon
+                                                                , a.apply_url applyUrl
+                                                                , a.apply_list_url applyListUrl
+                                                                , a.upcoming_list_url upcomingListUrl
+                                                                , a.already_list_url alreadyListUrl
+                                                                , a.status status
+                                                                , a.create_user_id createUserId
+                                                                , a.create_time createTime
+                                                                , a.update_user_id updateUserId
+                                                                , a.update_time updateTime
+                                    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="processClass_where_if">
+        <if test="id != null and id != '' and id != 'null' and id != 'undefined'">
+            AND a.id = #{id}
+        </if>
+        <if test="name != null and name != '' and name != 'null' and name != 'undefined'">
+            AND a.name = #{name}
+        </if>
+        <if test="type != null and type != '' and type != 'null' and type != 'undefined'">
+            AND a.type = #{type}
+        </if>
+        <if test="classIcon != null and classIcon != '' and classIcon != 'null' and classIcon != 'undefined'">
+            AND a.class_icon = #{classIcon}
+        </if>
+        <if test="applyUrl != null and applyUrl != '' and applyUrl != 'null' and applyUrl != 'undefined'">
+            AND a.apply_url = #{applyUrl}
+        </if>
+        <if test="applyListUrl != null and applyListUrl != '' and applyListUrl != 'null' and applyListUrl != 'undefined'">
+            AND a.apply_list_url = #{applyListUrl}
+        </if>
+        <if test="upcomingListUrl != null and upcomingListUrl != '' and upcomingListUrl != 'null' and upcomingListUrl != 'undefined'">
+            AND a.upcoming_list_url = #{upcomingListUrl}
+        </if>
+        <if test="alreadyListUrl != null and alreadyListUrl != '' and alreadyListUrl != 'null' and alreadyListUrl != 'undefined'">
+            AND a.already_list_url = #{alreadyListUrl}
+        </if>
+        <if test="status != null">
+            AND a.status = #{status}
+        </if>
+        <if test="createUserId != null and createUserId != '' and createUserId != 'null' and createUserId != 'undefined'">
+            AND a.create_user_id = #{createUserId}
+        </if>
+        <if test="createTime != null and createTime != '' and createTime != 'null' and createTime != 'undefined'">
+            AND a.create_time = #{createTime}
+        </if>
+        <if test="updateUserId != null and updateUserId != '' and updateUserId != 'null' and updateUserId != 'undefined'">
+            AND a.update_user_id = #{updateUserId}
+        </if>
+        <if test="updateTime != null and updateTime != '' and updateTime != 'null' and updateTime != 'undefined'">
+            AND a.update_time = #{updateTime}
+        </if>
+    </sql>
+
+
+    <!-- (批量)新增键, 增删字段时调整 -->
+    <sql id="processClass_add_key">
+            id
+                                                        
+                    , name
+                                            
+                    , type
+                                            
+                    , class_icon
+                                            
+                    , apply_url
+                                            
+                    , apply_list_url
+                                            
+                    , upcoming_list_url
+                                            
+                    , already_list_url
+                                            
+                    , status
+                                                                                                                                                    </sql>
+
+    <!-- (批量)新增值, 增删字段时调整 -->
+    <sql id="processClass_add_val">
+            #{id}
+                                                                            , #{name}
+                                                                , #{type}
+                                                                , #{classIcon}
+                                                                , #{applyUrl}
+                                                                , #{applyListUrl}
+                                                                , #{upcomingListUrl}
+                                                                , #{alreadyListUrl}
+                                                                , #{status}
+                                                                                                                                                    </sql>
+
+    <!-- (批量修改的条件,增减字段时调整) -->
+    <sql id="processClass_set_if">
+        <if test="name != null and name != '' and name != 'null' and name != 'undefined'">
+            name = #{name},
+        </if>
+        <if test="type != null and type != '' and type != 'null' and type != 'undefined'">
+            type = #{type},
+        </if>
+        <if test="classIcon != null and classIcon != '' and classIcon != 'null' and classIcon != 'undefined'">
+            class_icon = #{classIcon},
+        </if>
+        <if test="applyUrl != null and applyUrl != '' and applyUrl != 'null' and applyUrl != 'undefined'">
+            apply_url = #{applyUrl},
+        </if>
+        <if test="applyListUrl != null and applyListUrl != '' and applyListUrl != 'null' and applyListUrl != 'undefined'">
+            apply_list_url = #{applyListUrl},
+        </if>
+        <if test="upcomingListUrl != null and upcomingListUrl != '' and upcomingListUrl != 'null' and upcomingListUrl != 'undefined'">
+            upcoming_list_url = #{upcomingListUrl},
+        </if>
+        <if test="alreadyListUrl != null and alreadyListUrl != '' and alreadyListUrl != 'null' and alreadyListUrl != 'undefined'">
+            already_list_url = #{alreadyListUrl},
+        </if>
+        <if test="status != null">
+            status = #{status},
+        </if>
+    </sql>
+</mapper>

@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package org.activiti.image.rest.diagram.services;
+package com.javaweb.MichaelKai.activiti.rest.diagram.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;

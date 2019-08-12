@@ -1,5 +1,6 @@
 package com.javaweb.MichaelKai.controller.system;
 
+import com.javaweb.MichaelKai.activiti.service.ProcessClassService;
 import com.javaweb.MichaelKai.common.constants.Constant;
 import com.javaweb.MichaelKai.common.utils.DateUtil;
 import com.javaweb.MichaelKai.common.utils.HttpServletUtil;
@@ -55,6 +56,8 @@ public class PageController {
     private TaskService taskService;
     @Autowired
     private UserLeaveService userLeaveService;
+    @Autowired
+    private ProcessClassService processClassService;
 
     /**
      * 跳转到注册页面
@@ -523,8 +526,21 @@ public class PageController {
      * @return
      */
     @GetMapping("/activiti/processApplyList")
-    public String activitiProcessApply() {
+    public String activitiProcessApply(Model model) {
+        List<Map<String, Object>> processClassList = processClassService.getProcessClasss(null);
+        model.addAttribute("processClassList", processClassList);
         return "system/workflow/process/processApplyList";
+    }
+
+    /**
+     * 我的申请列表
+     * @return
+     */
+    @GetMapping("/activiti/myProcessApplyList")
+    public String myProcessApply(Model model) {
+        List<Map<String, Object>> processClassList = processClassService.getProcessClasss(null);
+        model.addAttribute("processClassList", processClassList);
+        return "system/workflow/process/myProcessApplyList";
     }
 
     /**
@@ -540,8 +556,8 @@ public class PageController {
      * 请假流程申请列表
      * @return
      */
-    @GetMapping("/activiti/myProcessApplyList")
-    public String myProcessApply() {
+    @GetMapping("/activiti/leaveApplyList")
+    public String leaveApplyList() {
         return "system/workflow/leave/userLeave";
     }
 
@@ -667,5 +683,34 @@ public class PageController {
     public String viewProcDetail(@PathVariable("processInstanceId") String processInstanceId, Model model) {
         model.addAttribute("processInstanceId", processInstanceId);
         return "system/workflow/process/viewProcDetail";
+    }
+
+    /**
+     * 流程分类管理列表
+     * @return
+     */
+    @GetMapping("/activiti/processClass")
+    public String processClassList() {
+        return "system/workflow/processClass/processClass";
+    }
+
+    /**
+     * 添加流程分类
+     * @return
+     */
+    @GetMapping("/activiti/addProcessClass")
+    public String addProcessClass() {
+        return "system/workflow/processClass/addProcessClass";
+    }
+
+    /**
+     * 添加流程分类
+     * @return
+     */
+    @GetMapping("/activiti/editProcessClass")
+    public String editProcessClass(Model model, String id) {
+        Map<String, Object> processClassById = processClassService.getProcessClassById(id);
+        model.addAttribute("processClass", processClassById);
+        return "system/workflow/processClass/addProcessClass";
     }
 }

@@ -216,6 +216,45 @@ layui.use(['element', 'form', 'layer', 'upload', 'table', 'layedit'], function (
         });
     });
 
+    /* 提交带文件的表单数据 */
+    $(document).on("click", ".ajax-submit-file", function (e) {
+        e.preventDefault();
+        var form = $(this).parents("form");
+        var addUrl = form.attr("action");
+        var type = 'POST';
+        var editUrl = $(this).attr('data-edit-url');
+        var data = serializeObject(form.serializeArray());
+        var img = $('#frmCommon [name=classIcon]')[0].files[0];
+        var url = data.id?editUrl:addUrl;
+
+        data.img = img;
+        if (editor != undefined) {
+            data.content = layedit.getContent(editor);
+        }
+
+        var b = new FormData, d;
+        for (d in data) {
+            b.append(d, data[d]);
+        }
+        console.log(b);
+        $.ajax({
+            url: url,
+            type: type,
+            data: b,
+            processData: false, //当设置为true的时候,jquery ajax 提交的时候不会序列化 data，而是直接使用data
+            contentType: false, //ajax 中 contentType 设置为 false 是为了避免 JQuery 对其操作，从而失去分界符，而使服务器不能正常解析文件
+            xhrFields: {
+                withCredentials: true
+            },
+            success:function (res) {
+                if (res.data === null) {
+                    res.data = 'submit[refresh]';
+                }
+                $.fn.Messager(res);
+            }
+        });
+    });
+
     //提交数据后，跳转页面
     $(document).on("click", ".ajax-submit-redirect", function (e) {
         e.preventDefault();
@@ -399,6 +438,38 @@ layui.use(['element', 'form', 'layer', 'upload', 'table', 'layedit'], function (
             area: size,
             content: [url, 'on']
         });
+    });
+
+    /* 添加/修改弹出层 */
+    $(document).on("click", ".open-popup-redirect", function () {
+        var title = $(this).data("title");
+        var url = $(this).attr("data-url");
+        var paramElem = $(this).attr("param");
+        if ($(this).hasClass("open-popup-param")) {
+            var checkStatus = table.checkStatus('id');//注意这个id不是html中table元素上的id，而是table:render中定义的id
+            var data = checkStatus.data
+                ,ids = [];
+            var param = '';
+            if (data.length === 0) {
+                layer.msg('请选择一条记录');
+                return;
+            }
+            if (data.length > 1 && $(this).data("type") === 'radio') {
+                layer.msg('只允许选中一个');
+                return;
+            }
+            for (var i = 0; i < data.length; i++) {
+                ids.push(checkStatus.data[i].id);
+            }
+            url += "/" + ids;
+        } else {
+            if (paramElem !== undefined) {
+                url += "/" + paramElem;
+            }
+        }
+
+        window.location.href = ctxPath + url;
+
     });
 
     /* 关闭弹出层 */

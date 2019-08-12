@@ -134,4 +134,11 @@ public interface ActivitiProcessService {
      * @return
      */
     Map<String,Object> getHighLightProcImage(HttpServletRequest request, HttpServletResponse resp, String processInstanceId);
+
+    /**
+     * 根据流程实例id获取审批信息
+     * @param processInstanceId
+     * @return
+     */
+    List<Map<String,Object>> getProcessDetail(String processInstanceId);
 }
