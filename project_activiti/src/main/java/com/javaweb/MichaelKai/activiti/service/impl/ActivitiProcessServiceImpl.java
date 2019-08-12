@@ -105,16 +105,16 @@ public class ActivitiProcessServiceImpl implements ActivitiProcessService {
 
         for (Task task : tasks) {
             Map<String, Object> variables = taskService.getVariables(task.getId());
-            BaseTask userLeave = (BaseTask) variables.get("leaveTask");
+            BaseTask baseTask = (BaseTask) variables.get("baseTask");
             com.javaweb.MichaelKai.activiti.pojo.Task taskEntity = new com.javaweb.MichaelKai.activiti.pojo.Task(task);
-            taskEntity.setReason(userLeave.getReason());
-            taskEntity.setUrlPath(userLeave.getUrlPath());
+            taskEntity.setReason(baseTask.getReason());
+            taskEntity.setUrlPath(baseTask.getUrlPath());
 
-            Map<String, Object> userById = userService.getUserById(userLeave.getUserId());
+            Map<String, Object> userById = userService.getUserById(baseTask.getUserId());
             taskEntity.setUserName(userById.get("userName").toString());
 
             //判断当前办理人是否是自己
-            if (userId.equals(userLeave.getUserId())) {
+            if (userId.equals(baseTask.getUserId())) {
                 if (variables.containsKey("flag") && !StringUtils.isEmpty(variables.get("flag"))) {
                     //判断流程是否通过
                     if (!(boolean) variables.get("flag")) {//如果flag为false，则表示不通过,对应的前端操作不相同

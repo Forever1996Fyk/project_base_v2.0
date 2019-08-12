@@ -42,11 +42,11 @@ public class UserLeaveServiceImpl implements UserLeaveService {
     public UserLeave addUserLeave(UserLeave userLeave) {
         userLeave.setId(AppUtil.randomId());
         userLeave.setStatus(StatusEnum.Normal.getValue());
-        userLeave.setUrlPath("/system/leave/readOnlyLeave/" + userLeave.getId());
+        userLeave.setUrlPath(userLeave.getUrlPath() + "/" + userLeave.getId());
 
         //根据processDefinitionKey启动流程实例
         Map<String, Object> map = Maps.newHashMap();
-        map.put("leaveTask", userLeave);
+        map.put("baseTask", userLeave);
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process", map);
 
         userLeave.setProcessInstanceId(processInstance.getId());
@@ -100,8 +100,10 @@ public class UserLeaveServiceImpl implements UserLeaveService {
                 Task task = taskService.createTaskQuery()
                         .processInstanceId(userLeave.get("processInstanceId").toString()).singleResult();
 
-                //当前任务的审批阶段
-                userLeave.put("taskName", task.getName());
+                if (task != null) {
+                    //当前任务的审批阶段
+                    userLeave.put("taskName", task.getName());
+                }
             }
         }
         return userLeaves;

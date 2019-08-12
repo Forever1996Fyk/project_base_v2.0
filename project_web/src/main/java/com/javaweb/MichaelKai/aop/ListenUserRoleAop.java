@@ -240,7 +240,7 @@ public class ListenUserRoleAop {
 
         } else {
             com.javaweb.MichaelKai.pojo.User user1 =
-                    (com.javaweb.MichaelKai.pojo.User) MapUtil.mapToObject(com.javaweb.MichaelKai.pojo.User.class, userById);
+                    MapUtil.mapToObject(com.javaweb.MichaelKai.pojo.User.class, userById, false);
             au.setId(user1.getId());
             au.setFirstName(user1.getUserName());
             au.setLastName(user1.getNickName());
@@ -268,7 +268,7 @@ public class ListenUserRoleAop {
             group.setId(role.getId());
             group.setName(role.getRoleName());
         } else {
-            role = (Role) MapUtil.mapToObject(Role.class, roleById);
+            role = MapUtil.mapToObject(Role.class, roleById, false);
             group.setId(role.getId());
             group.setName(role.getRoleName());
         }

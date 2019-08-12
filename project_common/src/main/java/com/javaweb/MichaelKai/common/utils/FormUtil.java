@@ -140,7 +140,7 @@ public class FormUtil {
 
 	/**
 	 * 将一个Bean转换为Map
-	 * 
+	 *
 	 * @param
 	 * @return
 	 */
@@ -150,12 +150,12 @@ public class FormUtil {
 	}
     /**
      * 将一个Bean属性追加到已存在的Map中
-     * 
+     *
      * @param
      * @return
      */
 	public static <T> Map<String, Object> populate(T bean, Map<String, Object> map) {
-		if (bean == null) {
+		/*if (bean == null) {
 			return null;
 		}
 		try {
@@ -176,13 +176,13 @@ public class FormUtil {
 			}
 		} catch (Exception e) {
 			System.out.println("transBean2Map Error " + e);
-		}
+		}*/
 		return map;
 	}
 
 	/**
 	 * 将一个 Map 对象转化为一个 JavaBean
-	 * 
+	 *
 	 * @param clazz
 	 * @param map
 	 * @return
@@ -193,19 +193,19 @@ public class FormUtil {
 	 * @throws ParseException
 	 */
 	public static <T> T populate(Class<T> clazz, Map<String, Object> map, boolean delUnderLine){
-		try{
+		/*try{
             T obj = clazz.newInstance(); // 创建 JavaBean 对象
 			BeanInfo beanInfo = Introspector.getBeanInfo(clazz); // 获取类属性
 			setPropertyValue(obj, beanInfo, map, delUnderLine);
 			return obj;
 		}catch(Exception e){
 			e.printStackTrace();
-		}
+		}*/
 		return null;
 	}
 	/**
      * 将一个 Map 对象转化为一个 JavaBean
-     * 
+     *
      * @param
      * @param map
      * @return
@@ -216,18 +216,18 @@ public class FormUtil {
      * @throws ParseException
      */
     public static <T> T populate(T obj, Map<String, Object> map, boolean delUnderLine){
-        try{
+       /* try{
             Class<?> clazz = obj.getClass();
             BeanInfo beanInfo = Introspector.getBeanInfo(clazz); // 获取类属性
             setPropertyValue(obj, beanInfo, map, delUnderLine);
             return obj;
         }catch(Exception e){
             e.printStackTrace();
-        }
+        }*/
         return null;
     }
     private  static <T> void setPropertyValue(T obj,BeanInfo beanInfo,Map<String, Object> map, boolean delUnderLine) throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-      // 给 JavaBean 对象的属性赋值
+      /*// 给 JavaBean 对象的属性赋值
       PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
       for (int i = 0; i < propertyDescriptors.length; i++) {
           PropertyDescriptor descriptor = propertyDescriptors[i];
@@ -245,11 +245,11 @@ public class FormUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-      }
+      }*/
     }
 	private static Object[] setValue(PropertyDescriptor descriptor, Object[] args, Object mapValue)
 			throws ParseException {
-		if (descriptor.getPropertyType() == Integer.class || descriptor.getPropertyType() == int.class) {
+		/*if (descriptor.getPropertyType() == Integer.class || descriptor.getPropertyType() == int.class) {
 			if (mapValue instanceof Integer) {
 				args[0] = mapValue;
 			} else {
@@ -308,53 +308,10 @@ public class FormUtil {
 			} else {
 				args[0] = (String) mapValue;
 			}
-		}
+		}*/
 		return args;
 	}
 
-	/**
-	 * 从request中获得参数Map，并返回可读的Map
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@SuppressWarnings({ "rawtypes" })
-	public static Map<String, Object> getParameterMap(HttpServletRequest request) {
-		// 参数Map
-		Map properties = request.getParameterMap();
-		// 返回值Map
-		Map<String, Object> returnMap = new HashMap<String, Object>();
-		Iterator entries = properties.entrySet().iterator();
-		Map.Entry entry;
-		String name = "";
-		String value = "";
-		while (entries.hasNext()) {
-			entry = (Map.Entry) entries.next();
-			name = (String) entry.getKey();
-			Object valueObj = entry.getValue();
-			if (null == valueObj) {
-              value = null;
-          } else if (valueObj instanceof String[]) {
-              value = "";
-              String[] values = (String[]) valueObj;
-              for (int i = 0; i < values.length; i++) {
-                if("null".equalsIgnoreCase(values[i])){
-                  value = value+",";
-                }else{
-                  value = values[i] + ",";
-                }
-              }
-              value = value.substring(0, value.length() - 1);
-          } else if("null".equalsIgnoreCase(valueObj.toString())){
-            value = null;
-          }else {
-              
-              value = valueObj.toString();
-          }
-			returnMap.put(name, value);
-		}
-		return returnMap;
-	}
 	/**
 	 * 根据key获取map中对应的值
 	 * @description 

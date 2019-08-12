@@ -33,7 +33,7 @@ public class HotPostElasticController {
         List<Map<String, Object>> hotPosts = hotPostElasticService.getHotPosts(null);
         List<HotPost> list = new ArrayList<>();
         for (Map<String, Object> hotPost : hotPosts) {
-            HotPost hotPostEntity = (HotPost) MapUtil.mapToObject(HotPost.class, hotPost);
+            HotPost hotPostEntity = MapUtil.mapToObject(HotPost.class, hotPost, false);
             list.add(hotPostEntity);
         }
         hotPostElasticService.addHostPostsToES(list);

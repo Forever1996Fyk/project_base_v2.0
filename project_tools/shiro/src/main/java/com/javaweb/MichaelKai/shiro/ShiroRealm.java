@@ -84,7 +84,8 @@ public class ShiroRealm extends AuthorizingRealm{
         }
 
         try {
-            User user = (User) MapUtil.mapToObject(User.class, users.get(0));
+
+            User user = MapUtil.mapToObject(User.class, users.get(0), false);
             // 对盐进行加密处理
             ByteSource salt = ByteSource.Util.bytes(user.getSalt());
 

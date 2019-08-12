@@ -20,6 +20,12 @@
                 <input class="layui-input" id="endTime" placeholder="yyyy-MM-dd" name="endTime" th:value="${leave?.endTime}">
             </div>
         </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">显示请假url</label>
+            <div class="layui-input-block">
+                <input class="layui-input" id="urlPath" placeholder="请输入显示请假url" name="urlPath" th:value="${leave?.urlPath}">
+            </div>
+        </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">请假原因</label>
             <div class="layui-input-block">

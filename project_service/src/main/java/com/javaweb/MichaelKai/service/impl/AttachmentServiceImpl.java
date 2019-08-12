@@ -123,7 +123,7 @@ public class AttachmentServiceImpl implements  AttachmentService {
                     map.put("attachSha1", FileUpload.getFileSHA1(entry.getValue()));
                     List<Map<String, Object>> attachments = attachmentMapper.getAttachments(map);
                     if (attachments.size() > 0) {
-                        attachment = (Attachment) MapUtil.mapToObject(Attachment.class, attachments.get(0));
+                        attachment = MapUtil.mapToObject(Attachment.class, attachments.get(0), false);
                         return attachment;
                     }
                     attachment = FileUpload.getAttachment(entry.getValue(), FileUpload.attachTypeName(attachType));

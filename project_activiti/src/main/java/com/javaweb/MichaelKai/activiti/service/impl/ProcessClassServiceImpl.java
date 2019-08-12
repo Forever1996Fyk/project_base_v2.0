@@ -43,7 +43,7 @@ public class ProcessClassServiceImpl implements ProcessClassService {
         Attachment attachment = attachmentService.addAttachment(request, userId, FileTypeEnum.PIC.getAttachType());
 
         Map<String, Object> parameterMap = MapUtil.getParameterMap(request);
-        ProcessClass processClass = (ProcessClass) MapUtil.mapToObject(ProcessClass.class, parameterMap);
+        ProcessClass processClass = MapUtil.mapToObject(ProcessClass.class, parameterMap, false);
         processClass.setId(AppUtil.randomId());
         processClass.setStatus(StatusEnum.Normal.getValue());
 
@@ -64,7 +64,7 @@ public class ProcessClassServiceImpl implements ProcessClassService {
         Attachment attachment = attachmentService.addAttachment(request, userId, FileTypeEnum.PIC.getAttachType());
 
         Map<String, Object> parameterMap = MapUtil.getParameterMap(request);
-        ProcessClass processClass = (ProcessClass) MapUtil.mapToObject(ProcessClass.class, parameterMap);
+        ProcessClass processClass = MapUtil.mapToObject(ProcessClass.class, parameterMap, false);
 
         if (attachment != null) {
             processClass.setClassIcon(attachment.getId());

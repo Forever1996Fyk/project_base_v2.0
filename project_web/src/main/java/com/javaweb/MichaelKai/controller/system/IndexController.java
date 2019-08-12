@@ -47,13 +47,13 @@ public class IndexController {
             if (user.getId().equals(AdminConstant.ADMIN_ID)) {
                 List<Map<String, Object>> permissions = permissionService.getPermissions(null);
                 for (Map<String, Object> permissionMap : permissions) {
-                    Permission permission = (Permission) MapUtil.mapToObject(Permission.class, permissionMap);
+                    Permission permission = MapUtil.mapToObject(Permission.class, permissionMap, false);
                     keyMenu.put(permission.getId(), permission);
                 }
             } else {//其他用户从相应的角色中获取菜单
                 List<Map<String, Object>> allPermissionsByUserId = userService.getAllPermissionsByUserId(user.getId());
                 for (Map<String, Object> permissionMap : allPermissionsByUserId) {
-                    Permission permission = (Permission) MapUtil.mapToObject(Permission.class, permissionMap);
+                    Permission permission = MapUtil.mapToObject(Permission.class, permissionMap, false);
                     keyMenu.put(permission.getId(), permission);
                 }
             }

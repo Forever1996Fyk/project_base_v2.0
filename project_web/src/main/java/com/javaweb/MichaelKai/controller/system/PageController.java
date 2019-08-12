@@ -578,7 +578,7 @@ public class PageController {
     @GetMapping("/activiti/needDealTaskEdit/{taskId}")
     public String needDealTaskEdit(@PathVariable("taskId") String taskId, Model model) {
         Map<String, Object> variables = taskService.getVariables(taskId);
-        BaseTask baseTask = (BaseTask) variables.get("leaveTask");
+        BaseTask baseTask = (BaseTask) variables.get("baseTask");
         Map<String, Object> userLeaveById = userLeaveService.getUserLeaveById(baseTask.getId());
         model.addAttribute("leave", userLeaveById);
         model.addAttribute("taskId", taskId);
@@ -615,7 +615,7 @@ public class PageController {
     @GetMapping("/activiti/handleTask/{id}")
     public String handleTask(@PathVariable("id") String taskId, Model model) {
         Map<String, Object> variables = taskService.getVariables(taskId);
-        BaseTask baseTask = (BaseTask) variables.get("leaveTask");
+        BaseTask baseTask = (BaseTask) variables.get("baseTask");
 
         model.addAttribute("urlPath", baseTask.getUrlPath());
         model.addAttribute("taskId", taskId);

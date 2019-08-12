@@ -39,7 +39,7 @@ public class RegController {
     @PostMapping("/reg")
     public Result reg(@RequestBody Map<String, Object> form) {
         try {
-            User user = (User) MapUtil.mapToObject(User.class, form);
+            User user = MapUtil.mapToObject(User.class, form, false);
 
             //验证账号，手机号，昵称是否已存在
             Map<String, Object> map = userService.checkUser(user);
@@ -85,7 +85,7 @@ public class RegController {
         map.put("phone", form.get("phone"));
         List<Map<String, Object>> users = userService.getUsers(map);
         if (users.size() > 0 && users.size() == 1) {
-            User user = (User) MapUtil.mapToObject(User.class, users.get(0));
+            User user = MapUtil.mapToObject(User.class, users.get(0), false);
 
             //获取新盐
             String salt = MD5Util.createSalt();

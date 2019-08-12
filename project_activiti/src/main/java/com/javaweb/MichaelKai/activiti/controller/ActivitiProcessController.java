@@ -87,7 +87,7 @@ public class ActivitiProcessController {
         Map<String, Object> variable = Maps.newHashMap();
         switch (type) {
             case "leave":
-                UserLeave userLeave = (UserLeave) MapUtil.mapToObject(UserLeave.class, map);
+                UserLeave userLeave = MapUtil.mapToObject(UserLeave.class, map, false);
                 userLeaveService.editUserLeaveById(userLeave);
 
                 if (flag) {

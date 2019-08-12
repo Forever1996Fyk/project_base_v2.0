@@ -65,7 +65,7 @@ layui.use(['table', 'layer', 'form', 'formSelects'], function () {
                 , title: '查看流程图'
                 , content: ctxPath + '/system/activiti/viewProcImage/' + data.processInstanceId
                 , maxmin: true
-                , area: ['880px', '450px']
+                , area: ['1600px', '700px']
             })
         },
 
