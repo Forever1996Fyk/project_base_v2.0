@@ -1,4 +1,4 @@
-package com.javaweb.MichaelKai.activiti.controller;
+package com.javaweb.MichaelKai.activiti.controller.activiti;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;

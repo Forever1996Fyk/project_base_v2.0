@@ -1,16 +1,17 @@
-package com.javaweb.MichaelKai.activiti.controller;
+package com.javaweb.MichaelKai.activiti.controller.business;
 
+import com.javaweb.MichaelKai.activiti.service.ProcessClassService;
 import com.javaweb.MichaelKai.common.enums.ResultEnum;
 import com.javaweb.MichaelKai.common.vo.Result;
+import com.javaweb.MichaelKai.pojo.ProcessClass;
 import com.javaweb.MichaelKai.pojo.User;
-import com.javaweb.MichaelKai.pojo.UserLeave;
-import com.javaweb.MichaelKai.service.UserLeaveService;
 import com.javaweb.MichaelKai.shiro.ShiroKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.github.pagehelper.PageInfo;
 import com.javaweb.MichaelKai.common.vo.PageResult;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -18,38 +19,38 @@ import java.util.Map;
 
 /**
  * @program: project_base
- * @description: 请假流程表
+ * @description: 流程分类表
  * @author: YuKai Fan
- * @create: 2019-08-08 10:30:23
+ * @create: 2019-08-12 10:14:44
  *
  */
 @RestController
-@RequestMapping("/api/activiti")
-public class UserLeaveController {
+@RequestMapping("/api")
+public class ProcessClassController {
     @Autowired
-    private UserLeaveService userLeaveService;
+    private ProcessClassService processClassService;
 
     /**
-     * 新建请假流程
-     * @param userLeave
+     * 添加
+     * @param request
      * @return
      */
-    @PostMapping("/userLeave")
-    public Result addUserLeave(@RequestBody UserLeave userLeave) {
+    @PostMapping("/processClass")
+    public Result addProcessClass(HttpServletRequest request) throws Exception {
         User user = ShiroKit.getUser();
-        userLeave.setUserId(user.getId());
-        return new Result(true, ResultEnum.SUCCESS.getValue(), "新增" + ResultEnum.SUCCESS.getMessage(), userLeaveService.addUserLeave(userLeave));
+        return new Result(true, ResultEnum.SUCCESS.getValue(), "新增" + ResultEnum.SUCCESS.getMessage(), processClassService.addProcessClass(request, user.getId()));
     }
 
     /**
      * 编辑修改
-     * @param userLeave
+     * @param request
      * @return
      */
-    @PutMapping("/userLeave")
-    public Result editUserLeaveById(@RequestBody UserLeave userLeave) {
-        userLeaveService.editUserLeaveById(userLeave);
-        return new Result(true, ResultEnum.SUCCESS.getValue(), "修改" + ResultEnum.SUCCESS.getMessage(), userLeave);
+    @PostMapping("/editProcessClass")
+    public Result editProcessClassById(HttpServletRequest request) throws Exception {
+        User user = ShiroKit.getUser();
+        processClassService.editProcessClassById(request, user.getId());
+        return new Result(true, ResultEnum.SUCCESS.getValue(), "修改" + ResultEnum.SUCCESS.getMessage());
     }
 
     /**
@@ -57,9 +58,9 @@ public class UserLeaveController {
      * @param id
      * @return
      */
-    @DeleteMapping("/userLeave")
-    public Result delUserLeaveById(@RequestParam String id) {
-        userLeaveService.delUserLeaveById(id);
+    @DeleteMapping("/processClass")
+    public Result delProcessClassById(@RequestParam String id) {
+        processClassService.delProcessClassById(id);
         return new Result(true, ResultEnum.SUCCESS.getValue(), "删除" + ResultEnum.SUCCESS.getMessage());
     }
 
@@ -68,9 +69,9 @@ public class UserLeaveController {
      * @param ids
      * @return
      */
-    @DeleteMapping("/userLeaves/{ids}")
-    public Result delUserLeaveByIds(@PathVariable("ids") String[] ids) {
-        userLeaveService.delUserLeaveByIds(Arrays.asList(ids));
+    @DeleteMapping("/processClasss/{ids}")
+    public Result delProcessClassByIds(@PathVariable("ids") String[] ids) {
+        processClassService.delProcessClassByIds(Arrays.asList(ids));
         return new Result(true, ResultEnum.SUCCESS.getValue(), "批量删除" + ResultEnum.SUCCESS.getMessage());
     }
 
@@ -79,9 +80,9 @@ public class UserLeaveController {
      * @param map 参数
      * @return
      */
-    @GetMapping("/getUserLeaves/noPage")
-    public Result getUserLeaves(@RequestParam Map<String, Object> map) {
-        List<Map<String, Object>> list = userLeaveService.getUserLeaves(map);
+    @GetMapping("/getProcessClasss/noPage")
+    public Result getProcessClasss(@RequestParam Map<String, Object> map) {
+        List<Map<String, Object>> list = processClassService.getProcessClasss(map);
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), list);
     }
 
@@ -92,13 +93,11 @@ public class UserLeaveController {
      * @param map 参数
      * @return
      */
-    @GetMapping("/getUserLeaves")
+    @GetMapping("/getProcessClasss")
     public Result getUsers(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
                            @RequestParam(value = "limit", required = false, defaultValue = "0") int limit,
                            @RequestParam Map<String, Object> map) {
-        User user = ShiroKit.getUser();
-        map.put("userId", user.getId());
-        PageInfo<Map<String, Object>> pageList = userLeaveService.getUserLeaves(page, limit, map);
+        PageInfo<Map<String, Object>> pageList = processClassService.getProcessClasss(page, limit, map);
         return new Result(true, ResultEnum.SUCCESS.getValue(), ResultEnum.SUCCESS.getMessage(), new PageResult<>(pageList.getTotal(), pageList.getList()));
     }
 
